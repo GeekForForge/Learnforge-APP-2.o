@@ -1,214 +1,407 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/widgets/glass_morphic_card.dart';
-import '../models/course_model.dart';
+import 'package:learnforge_app/core/theme/app_colors.dart';
+import 'progress_bar_custom.dart';
 
 class CourseGridCard extends StatelessWidget {
-  final CourseModel course;
-  final VoidCallback onTap;
-  final int index;
+  final String courseId;
+  final String title;
+  final String instructor;
+  final String thumbnail;
+  final double rating;
+  final int totalRatings;
+  final int enrolledCount;
+  final String level;
+  final bool isFree;
+  final double price;
+  final int totalLessons;
+  final int completedLessons;
+  final bool isEnrolled;
+  final VoidCallback? onTap;
+  final VoidCallback? onEnroll;
 
   const CourseGridCard({
     Key? key,
-    required this.course,
-    required this.onTap,
-    this.index = 0,
+    required this.courseId,
+    required this.title,
+    required this.instructor,
+    required this.thumbnail,
+    required this.rating,
+    required this.totalRatings,
+    required this.enrolledCount,
+    required this.level,
+    required this.isFree,
+    required this.price,
+    required this.totalLessons,
+    required this.completedLessons,
+    this.isEnrolled = false,
+    this.onTap,
+    this.onEnroll,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GlassMorphicCard(
-      onTap: onTap,
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final progress = totalLessons > 0 ? completedLessons / totalLessons : 0.0;
+
+    return Container(
+      margin: const EdgeInsets.all(8),
+      child: Stack(
         children: [
-          // Thumbnail with proper error handling
-          _buildThumbnail(),
-          const SizedBox(height: 12),
-
-          // Title
-          Text(
-            course.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: AppColors.white,
-            ),
-          ),
-          const SizedBox(height: 6),
-
-          // Instructor
-          Row(
-            children: [
-              Icon(Icons.person_outline, size: 12, color: AppColors.grey400),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  course.instructor,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: AppColors.grey400,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          // Difficulty badge
+          // Main Card
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
-              color: _getDifficultyColor(course.difficulty).withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: _getDifficultyColor(course.difficulty).withOpacity(0.3),
-              ),
+              color: AppColors.dark800,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 15,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+              border: Border.all(color: AppColors.dark700, width: 1),
             ),
-            child: Text(
-              course.difficulty,
-              style: TextStyle(
-                fontSize: 9,
-                color: _getDifficultyColor(course.difficulty),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(20),
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Course Thumbnail
+                    Stack(
+                      children: [
+                        Container(
+                          height: 120,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                            ),
+                            image: DecorationImage(
+                              image: NetworkImage(thumbnail),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                            ),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.7),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
+                        ),
 
-          // Progress bar
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: course.progress,
-                  minHeight: 6,
-                  backgroundColor: AppColors.dark600,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.neonCyan),
+                        // Level Badge
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getLevelColor(level).withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              level,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Free/Paid Badge
+                        Positioned(
+                          top: 8,
+                          left: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isFree
+                                  ? (AppColors.neonGreen ?? Colors.green)
+                                        .withOpacity(0.9)
+                                  : AppColors.neonPurple.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              isFree ? 'FREE' : '₹${price.toInt()}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Progress for enrolled courses
+                        if (isEnrolled && progress > 0)
+                          Positioned(
+                            bottom: 8,
+                            left: 8,
+                            right: 8,
+                            child: ProgressBarCustom(
+                              progress: progress,
+                              height: 4,
+                              showPercentage: false,
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Course Title
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter',
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          // Instructor Info
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                color: Colors.white.withOpacity(0.6),
+                                size: 12,
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  instructor,
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.7),
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          // Rating and Enrolled Info
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: AppColors.neonYellow ?? Colors.amber,
+                                size: 12,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                rating.toStringAsFixed(1),
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '(${_formatCount(totalRatings)})',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.6),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                              const Spacer(),
+                              Icon(
+                                Icons.people,
+                                color: Colors.white.withOpacity(0.6),
+                                size: 12,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                _formatCount(enrolledCount),
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.6),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // Lessons Info & Action Button
+                          Row(
+                            children: [
+                              // Lessons count
+                              if (isEnrolled) ...[
+                                Icon(
+                                  Icons.play_circle_fill,
+                                  color: AppColors.neonCyan,
+                                  size: 14,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '$completedLessons/$totalLessons',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.7),
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                const Spacer(),
+                              ] else ...[
+                                Icon(
+                                  Icons.video_library,
+                                  color: Colors.white.withOpacity(0.6),
+                                  size: 14,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '$totalLessons lessons',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.7),
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                const Spacer(),
+                              ],
+
+                              // Action Button
+                              if (!isEnrolled)
+                                Container(
+                                  height: 28,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        AppColors.neonPurple,
+                                        AppColors.neonPink,
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: onEnroll,
+                                      borderRadius: BorderRadius.circular(14),
+                                      child: Center(
+                                        child: Text(
+                                          'Enroll',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Inter',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              else
+                                Container(
+                                  height: 28,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors.neonGreen?.withOpacity(0.2) ??
+                                        Colors.green.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
+                                      color:
+                                          AppColors.neonGreen ?? Colors.green,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'Continue',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Progress',
-                    style: TextStyle(fontSize: 10, color: AppColors.grey400),
-                  ),
-                  Text(
-                    '${(course.progress * 100).toInt()}%',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ).animate().scale(duration: 400.ms, curve: Curves.easeOut),
         ],
       ),
-    ).animate().fadeIn(delay: (100 + index * 100).ms);
-  }
-
-  Widget _buildThumbnail() {
-    return Stack(
-      children: [
-        // Use Image.network instead of DecorationImage for proper error handling
-        Container(
-          height: 100,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: AppColors.dark700,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              course.thumbnail,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: AppColors.dark600,
-                  child: Icon(Icons.school, color: AppColors.grey400, size: 40),
-                );
-              },
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  color: AppColors.dark600,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                          : null,
-                      color: AppColors.neonCyan,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-
-        // Gradient overlay
-        Container(
-          height: 100,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.transparent, AppColors.dark900.withOpacity(0.7)],
-            ),
-          ),
-        ),
-
-        // Progress indicator in corner
-        Positioned(
-          top: 8,
-          right: 8,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: AppColors.dark900.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              '${(course.progress * 100).toInt()}%',
-              style: const TextStyle(
-                fontSize: 10,
-                color: AppColors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
-  Color _getDifficultyColor(String difficulty) {
-    switch (difficulty.toLowerCase()) {
+  Color _getLevelColor(String level) {
+    switch (level.toLowerCase()) {
       case 'beginner':
-        return AppColors.neonCyan;
+        return AppColors.neonGreen ?? Colors.green;
       case 'intermediate':
-        return AppColors.neonPurple;
+        return AppColors.neonYellow ?? Colors.amber;
       case 'advanced':
         return AppColors.neonPink;
       default:
-        return AppColors.neonBlue;
+        return AppColors.neonCyan;
     }
+  }
+
+  String _formatCount(int count) {
+    if (count >= 1000000) {
+      return '${(count / 1000000).toStringAsFixed(1)}M';
+    } else if (count >= 1000) {
+      return '${(count / 1000).toStringAsFixed(1)}K';
+    }
+    return count.toString();
   }
 }

@@ -9,6 +9,7 @@ class ChallengeModel {
   final String status; // 'live', 'upcoming', 'completed'
   final int participantCount;
   final String? userRank;
+  final DateTime endDate;
 
   ChallengeModel({
     required this.id,
@@ -19,6 +20,7 @@ class ChallengeModel {
     required this.startTime,
     required this.endTime,
     required this.status,
+    required this.endDate,
     this.participantCount = 0,
     this.userRank,
   });

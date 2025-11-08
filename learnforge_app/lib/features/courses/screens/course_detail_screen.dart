@@ -1,497 +1,599 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:learnforge_app/features/courses/models/course_model.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/text_styles.dart';
-import '../../../core/widgets/glass_morphic_card.dart';
-import '../../../core/widgets/progress_indicator_circular.dart';
-import '../../../core/widgets/gradient_button.dart';
-import '../providers/course_provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:learnforge_app/core/theme/app_colors.dart';
+import 'package:learnforge_app/core/widgets/gradient_button.dart';
+import 'package:learnforge_app/features/courses/providers/selected_course_provider.dart';
+import 'package:learnforge_app/features/courses/widgets/chapter_list.dart';
+import 'package:learnforge_app/features/courses/models/chapter_model.dart';
 
-// Chapter model for type safety
-class Chapter {
-  final String id;
-  final String title;
-  final String? summary;
-  final bool completed;
-  final String? duration;
-  final String? videoUrl;
+class CourseDetailScreen extends ConsumerStatefulWidget {
+  final String courseId;
 
-  Chapter({
-    required this.id,
-    required this.title,
-    this.summary,
-    required this.completed,
-    this.duration,
-    this.videoUrl,
-  });
-
-  factory Chapter.fromMap(Map<String, dynamic> map) {
-    return Chapter(
-      id: map['id']?.toString() ?? '',
-      title: map['title']?.toString() ?? 'Untitled',
-      summary: map['summary']?.toString(),
-      completed: map['completed'] as bool? ?? false,
-      duration: map['duration']?.toString(),
-      videoUrl: map['videoUrl']?.toString(),
-    );
-  }
-}
-
-class CourseDetailScreen extends ConsumerWidget {
-  const CourseDetailScreen({Key? key}) : super(key: key);
+  const CourseDetailScreen({Key? key, required this.courseId})
+    : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final courseAsync = ref.watch(selectedCourseProvider);
+  ConsumerState<CourseDetailScreen> createState() => _CourseDetailScreenState();
+}
 
-    // Handle null case first
-    if (courseAsync == null) {
-      return _buildNoCourseSelected();
-    }
+class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  int _currentPage = 0;
+  bool _isJoined = false;
+  double _progress = 0.65;
 
-    return Scaffold(
-      backgroundColor: AppColors.dark900,
-      appBar: AppBar(
-        title: Text(
-          'Course Details',
-          style: TextStyles.orbitron(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: AppColors.white,
-          ),
-        ),
-        backgroundColor: AppColors.dark800,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: courseAsync.when(
-        loading: () => Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.neonCyan),
-          ),
-        ),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, color: AppColors.neonPurple, size: 64),
-              const SizedBox(height: 16),
-              Text(
-                'Failed to load course',
-                style: TextStyles.inter(fontSize: 18, color: AppColors.white),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  error.toString(),
-                  style: TextStyles.inter(
-                    fontSize: 14,
-                    color: AppColors.grey400,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(height: 16),
-              GradientButton(
-                text: 'Retry',
-                onPressed: () => ref.invalidate(selectedCourseProvider),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-              ),
-            ],
-          ),
-        ),
-        data: (course) {
-          if (course == null) {
-            return _buildNoCourseSelected();
-          }
-
-          final List<Chapter> chapters = _convertChapters(course.chapters);
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildCourseHeader(context, course),
-                const SizedBox(height: 24),
-                _buildProgressSection(course),
-                const SizedBox(height: 24),
-                _buildContinueLearningButton(context, course, chapters),
-                const SizedBox(height: 24),
-                _buildChaptersSection(chapters),
-              ],
-            ),
-          );
-        },
-      ),
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
     );
+    _animationController.forward();
   }
 
-  Widget _buildNoCourseSelected() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.school, color: AppColors.neonCyan, size: 64),
-          const SizedBox(height: 16),
-          Text(
-            'No course selected',
-            style: TextStyles.inter(fontSize: 18, color: AppColors.white),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Please select a course to view details',
-            style: TextStyles.inter(fontSize: 14, color: AppColors.grey400),
-          ),
-        ],
-      ),
-    );
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
-  List<Chapter> _convertChapters(List<dynamic> rawChapters) {
-    return rawChapters.map((chapter) {
-      if (chapter is Map<String, dynamic>) {
-        return Chapter.fromMap(chapter);
-      } else if (chapter is Chapter) {
-        return chapter;
-      } else {
-        return Chapter(
-          id: chapter.hashCode.toString(),
-          title: chapter.toString(),
-          completed: false,
-        );
-      }
-    }).toList();
-  }
+  void _joinCourse() {
+    setState(() {
+      _isJoined = true;
+    });
 
-  Widget _buildCourseHeader(BuildContext context, dynamic course) {
-    return GlassMorphicCard(
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          Container(
-            height: 180,
-            width: double.infinity,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-              child: Stack(
-                children: [
-                  // Use Image.network for better error handling
-                  Image.network(
-                    course.thumbnail,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: AppColors.dark700,
-                        child: Icon(
-                          Icons.broken_image,
-                          color: AppColors.grey400,
-                          size: 48,
-                        ),
-                      );
-                    },
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          AppColors.dark900.withOpacity(0.7),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  course.title,
-                  style: TextStyles.orbitron(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'By ${course.instructor}',
-                  style: TextStyles.inter(
-                    fontSize: 14,
-                    color: AppColors.grey400,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.neonPurple.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: AppColors.neonPurple.withOpacity(0.5),
-                        ),
-                      ),
-                      child: Text(
-                        course.difficulty,
-                        style: TextStyles.inter(
-                          fontSize: 12,
-                          color: AppColors.neonPurple,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      course.rating.toString(),
-                      style: TextStyles.inter(
-                        fontSize: 12,
-                        color: AppColors.grey400,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ).animate().fadeIn().slideY(duration: 400.ms);
-  }
-
-  Widget _buildProgressSection(dynamic course) {
-    return GlassMorphicCard(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Progress',
-                style: TextStyles.inter(fontSize: 14, color: AppColors.grey400),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${course.completedChapters}/${course.totalChapters} Chapters',
-                style: TextStyles.orbitron(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.neonPurple,
-                ),
-              ),
-            ],
-          ),
-          CircularProgressIndicatorCustom(
-            progress: course.progress,
-            size: 90,
-            progressColor: AppColors.neonCyan,
-          ),
-        ],
-      ),
-    ).animate().fadeIn(delay: 200.ms);
-  }
-
-  Widget _buildContinueLearningButton(
-    BuildContext context,
-    dynamic course,
-    List<Chapter> chapters,
-  ) {
-    return GradientButton(
-      text: 'Continue Learning',
-      onPressed: () {
-        _navigateToNextChapter(context, course, chapters);
-      },
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-    ).animate().fadeIn(delay: 400.ms);
-  }
-
-  Widget _buildChaptersSection(List<Chapter> chapters) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Chapters',
-          style: TextStyles.titleLarge.copyWith(color: AppColors.white),
-        ),
-        const SizedBox(height: 12),
-        ChapterList(chapters: chapters).animate().fadeIn(delay: 600.ms),
-      ],
-    );
-  }
-
-  void _navigateToNextChapter(
-    BuildContext context,
-    dynamic course,
-    List<Chapter> chapters,
-  ) {
-    if (chapters.isEmpty) return;
-
-    final nextChapter = chapters.firstWhere(
-      (chapter) => !chapter.completed,
-      orElse: () => chapters.first,
-    );
-
-    // TODO: Implement navigation logic
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Navigating to: ${nextChapter.title}'),
-        backgroundColor: AppColors.neonPurple,
+        backgroundColor: AppColors.neonGreen ?? Colors.green,
+        content: const Text(
+          'Course Enrolled! Happy Learning!',
+          style: TextStyle(color: Colors.white, fontFamily: 'Inter'),
+        ),
         behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
     );
   }
-}
 
-extension on CourseModel {
-  when({
-    required Center Function() loading,
-    required Center Function(dynamic error, dynamic stack) error,
-    required Widget Function(dynamic course) data,
-  }) {}
-}
-
-class ChapterList extends StatelessWidget {
-  final List<Chapter> chapters;
-
-  const ChapterList({Key? key, required this.chapters}) : super(key: key);
+  void _startCourse() {
+    // Navigate to first lesson
+    // context.push('/course/${widget.courseId}/lesson/1');
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (chapters.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(
-          'No chapters available',
-          style: TextStyles.inter(color: AppColors.grey400),
+    final selectedCourse = ref.watch(selectedCourseProvider);
+
+    if (selectedCourse == null) {
+      return Scaffold(
+        backgroundColor: AppColors.dark900,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(color: AppColors.neonCyan),
+              const SizedBox(height: 16),
+              Text(
+                'Loading course...',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 16,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: chapters.length,
-      itemBuilder: (context, index) {
-        final chapter = chapters[index];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: GlassMorphicCard(
-            onTap: () {
-              _onChapterTap(context, chapter);
-            },
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: chapter.completed
-                        ? AppColors.neonCyan.withOpacity(0.2)
-                        : AppColors.dark700,
-                    border: Border.all(
-                      color: chapter.completed
-                          ? AppColors.neonCyan
-                          : AppColors.grey400.withOpacity(0.3),
-                    ),
-                  ),
-                  child: Center(
-                    child: chapter.completed
-                        ? Icon(Icons.check, size: 20, color: AppColors.neonCyan)
-                        : Text(
-                            '${index + 1}',
-                            style: TextStyles.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.white,
-                            ),
+    return Scaffold(
+      backgroundColor: AppColors.dark900,
+      body: Stack(
+        children: [
+          // Animated Background
+          Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.topLeft,
+                radius: 1.5,
+                colors: [
+                  AppColors.neonPurple.withOpacity(0.15),
+                  AppColors.neonCyan.withOpacity(0.1),
+                  AppColors.dark900,
+                ],
+                stops: const [0.1, 0.4, 1.0],
+              ),
+            ),
+          ),
+
+          CustomScrollView(
+            slivers: [
+              // App Bar with Course Image
+              SliverAppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                expandedHeight: 300,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(selectedCourse.thumbnail),
+                            fit: BoxFit.cover,
                           ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.dark900.withOpacity(0.8),
+                              Colors.transparent,
+                              AppColors.dark900.withOpacity(0.9),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  collapseMode: CollapseMode.pin,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
+                pinned: true,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.share, color: Colors.white),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.bookmark_border,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+
+              // Course Content
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        chapter.title,
-                        style: TextStyles.inter(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w600,
+                      // Title and Stats
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  selectedCourse.title,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ).animate().slideX(
+                                  begin: -0.3,
+                                  end: 0,
+                                  duration: 600.ms,
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    _buildStatItem(
+                                      Icons.schedule,
+                                      '${selectedCourse.duration} Hours',
+                                      AppColors.neonCyan,
+                                    ),
+                                    const SizedBox(width: 16),
+                                    _buildStatItem(
+                                      Icons.people,
+                                      '${selectedCourse.enrolledCount} Enrolled',
+                                      AppColors.neonPurple,
+                                    ),
+                                    const SizedBox(width: 16),
+                                    _buildStatItem(
+                                      Icons.star,
+                                      '${selectedCourse.rating} (${selectedCourse.totalRatings})',
+                                      AppColors.neonPink,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Progress Section (if enrolled)
+                      if (_isJoined) _buildProgressSection(),
+
+                      // Course Description
+                      _buildSection(
+                        title: 'Course Overview',
+                        icon: Icons.description,
+                        color: AppColors.neonBlue,
+                        child: Text(
+                          selectedCourse.description,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: 16,
+                            height: 1.6,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
-                      if (chapter.summary != null) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          chapter.summary!,
-                          style: TextStyles.inter(
-                            fontSize: 12,
-                            color: AppColors.grey400,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+
+                      const SizedBox(height: 24),
+
+                      // What You'll Learn
+                      _buildSection(
+                        title: 'What You\'ll Learn',
+                        icon: Icons.checklist,
+                        color: AppColors.neonGreen ?? Colors.green,
+                        child: Column(
+                          children: selectedCourse.learningObjectives
+                              .map((objective) => _buildLearningItem(objective))
+                              .toList(),
                         ),
-                      ],
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Course Content/Chapters
+                      _buildSection(
+                        title: 'Course Content',
+                        icon: Icons.library_books,
+                        color: AppColors.neonCyan,
+                        child: ChapterList(chapters: _generateMockChapters()),
+                      ),
+
+                      const SizedBox(height: 40),
                     ],
                   ),
                 ),
-                if (chapter.duration != null) ...[
-                  const SizedBox(width: 8),
-                  Text(
-                    chapter.duration!,
-                    style: TextStyles.inter(
-                      fontSize: 12,
-                      color: AppColors.grey400,
+              ),
+            ],
+          ),
+
+          // Bottom Action Bar
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.dark900.withOpacity(0.9),
+                    AppColors.dark900,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                border: const Border(
+                  top: BorderSide(color: AppColors.dark700, width: 1),
+                ),
+              ),
+              child: Row(
+                children: [
+                  if (!_isJoined) ...[
+                    Expanded(
+                      child: GradientButton(
+                        text: selectedCourse.isFree
+                            ? 'Enroll for Free'
+                            : 'Enroll for ₹${selectedCourse.price}',
+                        onPressed: _joinCourse,
+                        gradient: const LinearGradient(
+                          colors: [AppColors.neonPurple, AppColors.neonPink],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                      ),
                     ),
-                  ),
+                  ] else ...[
+                    Expanded(
+                      flex: 2,
+                      child: GradientButton(
+                        text: 'Start Learning',
+                        onPressed: _startCourse,
+                        gradient: const LinearGradient(
+                          colors: [AppColors.neonCyan, AppColors.neonBlue],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            color: AppColors.neonPurple.withOpacity(0.5),
+                            width: 2,
+                          ),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.forum,
+                            color: AppColors.neonPurple,
+                          ),
+                          onPressed: () {
+                            // Navigate to discussion
+                            // context.push('/course/${widget.courseId}/discussion');
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
-                const SizedBox(width: 8),
-                Icon(Icons.chevron_right, color: AppColors.grey400),
-              ],
+              ),
             ),
-          ).animate().fadeIn(delay: (100 + index * 50).ms),
-        );
-      },
+          ),
+        ],
+      ),
     );
   }
 
-  void _onChapterTap(BuildContext context, Chapter chapter) {
-    // TODO: Implement chapter navigation
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Opening: ${chapter.title}'),
-        backgroundColor: AppColors.neonCyan,
-        behavior: SnackBarBehavior.floating,
+  Widget _buildStatItem(IconData icon, String text, Color color) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: color, size: 16),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 14,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ],
+    ).animate().fadeIn(delay: 800.ms);
+  }
+
+  Widget _buildProgressSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.only(bottom: 24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.neonCyan.withOpacity(0.1),
+            AppColors.neonPurple.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.neonCyan.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Your Progress',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              Text(
+                '${(_progress * 100).toInt()}%',
+                style: TextStyle(
+                  color: AppColors.neonCyan,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Stack(
+            children: [
+              Container(
+                height: 8,
+                decoration: BoxDecoration(
+                  color: AppColors.dark700,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              Container(
+                    height: 8,
+                    width: MediaQuery.of(context).size.width * _progress * 0.7,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [AppColors.neonCyan, AppColors.neonBlue],
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.neonCyan.withOpacity(0.5),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                  )
+                  .animate(onPlay: (controller) => controller.repeat())
+                  .shimmer(
+                    duration: 2000.ms,
+                    color: AppColors.neonCyan.withOpacity(0.3),
+                  ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Complete the remaining lessons to finish the course',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ],
+      ),
+    ).animate().slideY(begin: 0.5, end: 0, duration: 500.ms);
+  }
+
+  Widget _buildSection({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required Widget child,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.dark800.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.dark700, width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
+    ).animate().fadeIn(delay: 300.ms);
+  }
+
+  Widget _buildLearningItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.check_circle,
+            color: AppColors.neonGreen ?? Colors.green,
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 16,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  List<ChapterModel> _generateMockChapters() {
+    return [
+      ChapterModel(
+        id: '1',
+        title: 'Introduction to the Course',
+        description:
+            'Get started with the basics and understand what you will learn',
+        orderIndex: 1,
+        totalLessons: 3,
+        completedLessons: 3,
+        estimatedMinutes: 30,
+        isLocked: false,
+        lessonIds: ['lesson_1_1', 'lesson_1_2', 'lesson_1_3'],
+      ),
+      ChapterModel(
+        id: '2',
+        title: 'Core Concepts',
+        description: 'Dive deep into the fundamental concepts and principles',
+        orderIndex: 2,
+        totalLessons: 5,
+        completedLessons: 5,
+        estimatedMinutes: 45,
+        isLocked: false,
+        lessonIds: [
+          'lesson_2_1',
+          'lesson_2_2',
+          'lesson_2_3',
+          'lesson_2_4',
+          'lesson_2_5',
+        ],
+      ),
+      ChapterModel(
+        id: '3',
+        title: 'Advanced Topics',
+        description: 'Explore advanced techniques and real-world applications',
+        orderIndex: 3,
+        totalLessons: 4,
+        completedLessons: 2,
+        estimatedMinutes: 60,
+        isLocked: false,
+        lessonIds: ['lesson_3_1', 'lesson_3_2', 'lesson_3_3', 'lesson_3_4'],
+      ),
+      ChapterModel(
+        id: '4',
+        title: 'Final Project',
+        description:
+            'Apply everything you have learned in a comprehensive project',
+        orderIndex: 4,
+        totalLessons: 3,
+        completedLessons: 0,
+        estimatedMinutes: 90,
+        isLocked: true,
+        lessonIds: ['lesson_4_1', 'lesson_4_2', 'lesson_4_3'],
+      ),
+    ];
   }
 }

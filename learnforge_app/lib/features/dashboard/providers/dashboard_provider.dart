@@ -9,7 +9,7 @@ final dashboardStatsProvider = FutureProvider((ref) async {
     dailyGoalProgress: 0.80,
     coursesEnrolled: 3,
     activeCourse: DummyData.getCourses().first,
-    nextLesson: DummyData.getDummyChapters()[2],
+    nextLesson: DummyData.getDummyLessons()[2],
   );
 });
 

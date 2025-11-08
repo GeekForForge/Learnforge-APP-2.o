@@ -1,89 +1,145 @@
 import 'package:uuid/uuid.dart';
-import '../../features/courses/models/course_model.dart';
 import '../../features/arena/models/challenge_model.dart';
 import '../../features/arena/models/leaderboard_model.dart';
 import '../../features/chat/models/message_model.dart';
 import '../../features/todo/models/todo_model.dart';
 import '../../features/notifications/models/notification_model.dart';
+import '../../features/courses/models/course_model.dart';
 
 const uuid = Uuid();
 
 class DummyData {
   // Courses
-  static List<CourseModel> getCourses() {
+  static List<Course> getCourses() {
     return [
-      CourseModel(
+      Course(
         id: uuid.v4(),
         title: 'Flutter Masterclass',
         description:
             'Learn Flutter from scratch and build production-ready apps',
         instructor: 'Sarah Chen',
+        instructorImage: 'https://via.placeholder.com/40?text=SC',
         thumbnail: 'https://via.placeholder.com/300x200?text=Flutter',
-        totalChapters: 12,
-        completedChapters: 5,
-        difficulty: 'Intermediate',
-        estimatedHours: 40,
-        tags: ['Flutter', 'Mobile', 'Dart'],
         rating: 4.8,
-        chapters: getDummyChapters(),
+        totalRatings: 1250,
+        enrolledCount: 5420,
+        level: 'Intermediate',
+        duration: 40, // hours
+        totalLessons: 12,
+        price: 2999.0,
+        isFree: false,
+        isFeatured: true,
+        categories: ['Flutter', 'Mobile', 'Dart'],
+        learningObjectives: [
+          'Build production-ready Flutter apps',
+          'Master state management',
+          'Understand Flutter architecture',
+        ],
+        lessons: getDummyLessons(),
+        createdAt: DateTime.now().subtract(const Duration(days: 30)),
+        updatedAt: DateTime.now(),
+        language: 'English',
+        subtitle: 'Complete Flutter development course',
+        prerequisites: ['Basic programming knowledge'],
       ),
-      CourseModel(
+      Course(
         id: uuid.v4(),
         title: 'Web Development Bootcamp',
         description: 'Master modern web development with React and Node.js',
         instructor: 'Alex Kumar',
+        instructorImage: 'https://via.placeholder.com/40?text=AK',
         thumbnail: 'https://via.placeholder.com/300x200?text=Web+Dev',
-        totalChapters: 15,
-        completedChapters: 8,
-        difficulty: 'Beginner',
-        estimatedHours: 50,
-        tags: ['React', 'JavaScript', 'Web'],
         rating: 4.6,
+        totalRatings: 980,
+        enrolledCount: 3890,
+        level: 'Beginner',
+        duration: 50,
+        totalLessons: 15,
+        price: 0.0,
+        isFree: true,
+        isFeatured: true,
+        categories: ['React', 'JavaScript', 'Web'],
+        learningObjectives: [
+          'Build modern web applications',
+          'Learn React and Node.js',
+          'Deploy full-stack apps',
+        ],
+        lessons: getDummyLessons(),
+        createdAt: DateTime.now().subtract(const Duration(days: 45)),
+        updatedAt: DateTime.now(),
+        language: 'English',
       ),
-      CourseModel(
+      Course(
         id: uuid.v4(),
         title: 'Data Science Essentials',
         description: 'Python, ML, and data analysis for beginners',
         instructor: 'Dr. Priya Patel',
+        instructorImage: 'https://via.placeholder.com/40?text=PP',
         thumbnail: 'https://via.placeholder.com/300x200?text=Data+Science',
-        totalChapters: 10,
-        completedChapters: 3,
-        difficulty: 'Advanced',
-        estimatedHours: 35,
-        tags: ['Python', 'ML', 'Data'],
         rating: 4.7,
+        totalRatings: 1150,
+        enrolledCount: 4230,
+        level: 'Advanced',
+        duration: 35,
+        totalLessons: 10,
+        price: 3999.0,
+        isFree: false,
+        isFeatured: false,
+        categories: ['Python', 'ML', 'Data'],
+        learningObjectives: [
+          'Master Python for data science',
+          'Learn machine learning basics',
+          'Analyze real-world datasets',
+        ],
+        lessons: getDummyLessons(),
+        createdAt: DateTime.now().subtract(const Duration(days: 60)),
+        updatedAt: DateTime.now(),
+        language: 'English',
+        prerequisites: ['Basic Python knowledge'],
       ),
     ];
   }
 
-  static List<ChapterModel> getDummyChapters() {
+  static List<Lesson> getDummyLessons() {
     return [
-      ChapterModel(
+      Lesson(
         id: uuid.v4(),
         title: 'Getting Started with Flutter',
-        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
         description: 'Introduction to Flutter and setting up your environment',
-        durationMinutes: 25,
+        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Lesson+1',
+        duration: 25, // minutes
+        isPreview: true,
         isCompleted: true,
-        videoProgress: 100,
+        resources: ['Setup Guide', 'Installation Steps'],
+        chapterId: 'chapter_1',
+        orderIndex: 1,
       ),
-      ChapterModel(
+      Lesson(
         id: uuid.v4(),
         title: 'Widgets and Layouts',
-        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
         description: 'Understanding Flutter widgets and layout systems',
-        durationMinutes: 35,
+        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Lesson+2',
+        duration: 35,
+        isPreview: true,
         isCompleted: true,
-        videoProgress: 100,
+        resources: ['Widget Cheat Sheet', 'Layout Examples'],
+        chapterId: 'chapter_1',
+        orderIndex: 2,
       ),
-      ChapterModel(
+      Lesson(
         id: uuid.v4(),
         title: 'State Management Basics',
-        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
         description: 'Introduction to state management patterns',
-        durationMinutes: 40,
+        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Lesson+3',
+        duration: 40,
+        isPreview: false,
         isCompleted: false,
-        videoProgress: 45,
+        resources: ['State Management Guide', 'Code Examples'],
+        chapterId: 'chapter_2',
+        orderIndex: 3,
       ),
     ];
   }
@@ -100,6 +156,7 @@ class DummyData {
         points: 100,
         startTime: now,
         endTime: now.add(const Duration(hours: 1)),
+        endDate: now.add(const Duration(hours: 1)),
         status: 'live',
         participantCount: 245,
         userRank: '12',
@@ -112,6 +169,7 @@ class DummyData {
         points: 200,
         startTime: now.add(const Duration(days: 1)),
         endTime: now.add(const Duration(days: 2)),
+        endDate: now.add(const Duration(days: 2)),
         status: 'upcoming',
         participantCount: 189,
       ),
@@ -123,6 +181,7 @@ class DummyData {
         points: 50,
         startTime: now.subtract(const Duration(days: 1)),
         endTime: now.subtract(const Duration(hours: 6)),
+        endDate: now.subtract(const Duration(hours: 6)),
         status: 'completed',
         participantCount: 312,
         userRank: '35',

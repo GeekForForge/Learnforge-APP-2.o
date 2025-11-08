@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
 
-          // Enhanced particle background
+          // Enhanced particle background - FIXED to cover entire screen
           _EnhancedParticleBackground(),
 
           Center(
@@ -299,7 +299,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-// Enhanced particle background
+// Enhanced particle background - FIXED VERSION
 class _EnhancedParticleBackground extends StatelessWidget {
   final List<Color> particleColors = [
     AppColors.neonPurple,
@@ -310,23 +310,41 @@ class _EnhancedParticleBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return IgnorePointer(
-      child: Stack(
-        children: List.generate(
-          15,
-          (index) => Positioned(
-            left: _randomPosition(MediaQuery.of(context).size.width, index),
-            top: _randomPosition(MediaQuery.of(context).size.height, index),
-            child: _AnimatedParticle(index: index),
+      child: SizedBox(
+        width: screenSize.width,
+        height: screenSize.height,
+        child: Stack(
+          children: List.generate(
+            25, // Increased number of particles for better coverage
+            (index) => Positioned(
+              left: _getParticlePosition(screenSize.width, index, true),
+              top: _getParticlePosition(screenSize.height, index, false),
+              child: _AnimatedParticle(index: index),
+            ),
           ),
         ),
       ),
     );
   }
 
-  double _randomPosition(double max, int seed) {
-    final random = (DateTime.now().microsecondsSinceEpoch + seed) % max.toInt();
-    return random.toDouble();
+  double _getParticlePosition(double max, int index, bool isWidth) {
+    // Create a more distributed pattern using mathematical distribution
+    final basePosition = (index / 25) * max;
+
+    // Add some randomness but ensure coverage
+    final randomOffset =
+        (index * 37) % (max * 0.3); // Prime number for better distribution
+
+    if (isWidth) {
+      return (basePosition + randomOffset) % max;
+    } else {
+      // For height, use a different pattern to avoid diagonal lines
+      final heightPattern = (index * 23) % max; // Different prime number
+      return (basePosition + heightPattern) % max;
+    }
   }
 }
 
@@ -344,38 +362,43 @@ class _AnimatedParticle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = colors[index % colors.length];
-    final size = 2.0 + (index % 3).toDouble();
+    final size = 1.5 + (index % 4).toDouble(); // More size variation
 
     return Container(
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.7),
+            color: color.withOpacity(0.6),
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.5),
-                blurRadius: 5,
-                spreadRadius: 1,
+                color: color.withOpacity(0.4),
+                blurRadius: 8,
+                spreadRadius: 2,
               ),
             ],
           ),
         )
         .animate(onPlay: (controller) => controller.repeat(reverse: true))
-        .fade(duration: (1500 + index * 300).ms, curve: Curves.easeInOut)
+        .fade(
+          duration: (1800 + index * 200).ms,
+          curve: Curves.easeInOut,
+          begin: 0.3,
+          end: 0.9,
+        )
         .scale(
-          begin: const Offset(0.3, 0.3),
-          end: const Offset(2.5, 2.5),
-          duration: (2000 + index * 400).ms,
+          begin: const Offset(0.5, 0.5),
+          end: const Offset(2.0, 2.0),
+          duration: (2200 + index * 300).ms,
           curve: Curves.easeInOut,
         )
         .move(
-          duration: (3000 + index * 500).ms,
+          duration: (3500 + index * 400).ms,
           curve: Curves.easeInOut,
           begin: const Offset(0, 0),
           end: Offset(
-            (index.isEven ? 1 : -1) * 20.0,
-            (index % 3 == 0 ? 1 : -1) * 15.0,
+            (index.isEven ? 1 : -1) * 50.0, // Increased movement range
+            (index % 3 == 0 ? 1 : -1) * 40.0, // Increased movement range
           ),
         );
   }
