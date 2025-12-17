@@ -5,18 +5,21 @@ import '../../features/chat/models/message_model.dart';
 import '../../features/todo/models/todo_model.dart';
 import '../../features/notifications/models/notification_model.dart';
 import '../../features/courses/models/course_model.dart';
+import '../../features/courses/models/chapter_model.dart';
 
 const uuid = Uuid();
 
 class DummyData {
-  // Courses
+  // ---------------------------------------------------
+  // COURSES (WITH CHAPTERS + LESSONS)
+  // ---------------------------------------------------
+
   static List<Course> getCourses() {
     return [
       Course(
         id: uuid.v4(),
         title: 'Flutter Masterclass',
-        description:
-            'Learn Flutter from scratch and build production-ready apps',
+        description: 'Learn Flutter from scratch and build production apps.',
         instructor: 'Sarah Chen',
         instructorImage: 'https://via.placeholder.com/40?text=SC',
         thumbnail: 'https://via.placeholder.com/300x200?text=Flutter',
@@ -24,28 +27,30 @@ class DummyData {
         totalRatings: 1250,
         enrolledCount: 5420,
         level: 'Intermediate',
-        duration: 40, // hours
-        totalLessons: 12,
+        duration: 40,
+        totalLessons: 3,
         price: 2999.0,
         isFree: false,
         isFeatured: true,
         categories: ['Flutter', 'Mobile', 'Dart'],
         learningObjectives: [
-          'Build production-ready Flutter apps',
-          'Master state management',
-          'Understand Flutter architecture',
+          'Build production-ready Flutter apps.',
+          'Master state management.',
+          'Understand Flutter architecture.',
         ],
-        lessons: getDummyLessons(),
+        lessons: getFlutterLessons(),
+        chapters: getFlutterChapters(),
         createdAt: DateTime.now().subtract(const Duration(days: 30)),
         updatedAt: DateTime.now(),
         language: 'English',
         subtitle: 'Complete Flutter development course',
         prerequisites: ['Basic programming knowledge'],
       ),
+
       Course(
         id: uuid.v4(),
         title: 'Web Development Bootcamp',
-        description: 'Master modern web development with React and Node.js',
+        description: 'Master modern web development with React and Node.js.',
         instructor: 'Alex Kumar',
         instructorImage: 'https://via.placeholder.com/40?text=AK',
         thumbnail: 'https://via.placeholder.com/300x200?text=Web+Dev',
@@ -54,25 +59,27 @@ class DummyData {
         enrolledCount: 3890,
         level: 'Beginner',
         duration: 50,
-        totalLessons: 15,
+        totalLessons: 3,
         price: 0.0,
         isFree: true,
         isFeatured: true,
         categories: ['React', 'JavaScript', 'Web'],
         learningObjectives: [
-          'Build modern web applications',
-          'Learn React and Node.js',
-          'Deploy full-stack apps',
+          'Build modern web applications.',
+          'Learn React and Node.js.',
+          'Deploy full-stack apps.',
         ],
-        lessons: getDummyLessons(),
+        lessons: getWebLessons(),
+        chapters: getWebChapters(),
         createdAt: DateTime.now().subtract(const Duration(days: 45)),
         updatedAt: DateTime.now(),
         language: 'English',
       ),
+
       Course(
         id: uuid.v4(),
         title: 'Data Science Essentials',
-        description: 'Python, ML, and data analysis for beginners',
+        description: 'Python, ML, and data analysis for beginners.',
         instructor: 'Dr. Priya Patel',
         instructorImage: 'https://via.placeholder.com/40?text=PP',
         thumbnail: 'https://via.placeholder.com/300x200?text=Data+Science',
@@ -81,17 +88,18 @@ class DummyData {
         enrolledCount: 4230,
         level: 'Advanced',
         duration: 35,
-        totalLessons: 10,
+        totalLessons: 3,
         price: 3999.0,
         isFree: false,
         isFeatured: false,
         categories: ['Python', 'ML', 'Data'],
         learningObjectives: [
-          'Master Python for data science',
-          'Learn machine learning basics',
-          'Analyze real-world datasets',
+          'Master Python for data science.',
+          'Learn machine learning basics.',
+          'Analyze real-world datasets.',
         ],
-        lessons: getDummyLessons(),
+        lessons: getDataLessons(),
+        chapters: getDataChapters(),
         createdAt: DateTime.now().subtract(const Duration(days: 60)),
         updatedAt: DateTime.now(),
         language: 'English',
@@ -100,58 +108,253 @@ class DummyData {
     ];
   }
 
-  static List<Lesson> getDummyLessons() {
+  // ---------------------------------------------------
+  // FLUTTER COURSE — CHAPTERS + LESSONS
+  // ---------------------------------------------------
+
+  static List<ChapterModel> getFlutterChapters() {
     return [
-      Lesson(
-        id: uuid.v4(),
-        title: 'Getting Started with Flutter',
-        description: 'Introduction to Flutter and setting up your environment',
-        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
-        thumbnail: 'https://via.placeholder.com/200x120?text=Lesson+1',
-        duration: 25, // minutes
-        isPreview: true,
-        isCompleted: true,
-        resources: ['Setup Guide', 'Installation Steps'],
-        chapterId: 'chapter_1',
+      ChapterModel(
+        id: 'chapter_1',
+        title: 'Introduction to Flutter',
+        description: 'Setup and overview.',
         orderIndex: 1,
+        totalLessons: 2,
+        completedLessons: 2,
+        estimatedMinutes: 60,
+        isLocked: false,
+        lessonIds: ['flutter_l1', 'flutter_l2'],
       ),
-      Lesson(
-        id: uuid.v4(),
-        title: 'Widgets and Layouts',
-        description: 'Understanding Flutter widgets and layout systems',
-        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
-        thumbnail: 'https://via.placeholder.com/200x120?text=Lesson+2',
-        duration: 35,
-        isPreview: true,
-        isCompleted: true,
-        resources: ['Widget Cheat Sheet', 'Layout Examples'],
-        chapterId: 'chapter_1',
+      ChapterModel(
+        id: 'chapter_2',
+        title: 'Flutter Basics',
+        description: 'Widgets and layouts.',
         orderIndex: 2,
-      ),
-      Lesson(
-        id: uuid.v4(),
-        title: 'State Management Basics',
-        description: 'Introduction to state management patterns',
-        videoUrl: 'https://www.youtube.com/embed/1xipg02wu8s',
-        thumbnail: 'https://via.placeholder.com/200x120?text=Lesson+3',
-        duration: 40,
-        isPreview: false,
-        isCompleted: false,
-        resources: ['State Management Guide', 'Code Examples'],
-        chapterId: 'chapter_2',
-        orderIndex: 3,
+        totalLessons: 1,
+        completedLessons: 0,
+        estimatedMinutes: 40,
+        isLocked: false,
+        lessonIds: ['flutter_l3'],
       ),
     ];
   }
 
-  // Arena Challenges
+  static List<Lesson> getFlutterLessons() {
+    return [
+      Lesson(
+        id: 'flutter_l1',
+        title: 'Getting Started with Flutter',
+        description: 'Intro, setup, tools.',
+        videoUrl: 'https://www.youtube.com/watch?v=1xipg02wu8s',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Flutter+1',
+        duration: 25,
+        isPreview: true,
+        isCompleted: true,
+        resources: ['Setup Guide'],
+        chapterId: 'chapter_1',
+      ),
+      Lesson(
+        id: 'flutter_l2',
+        title: 'Widgets & Layouts',
+        description: 'Understanding core widgets.',
+        videoUrl: 'https://www.youtube.com/watch?v=1xipg02wu8s',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Flutter+2',
+        duration: 35,
+        isPreview: true,
+        isCompleted: true,
+        resources: ['Widget Cheat Sheet'],
+        chapterId: 'chapter_1',
+      ),
+      Lesson(
+        id: 'flutter_l3',
+        title: 'State Management Basics',
+        description: 'Provider, setState, BLoC.',
+        videoUrl: 'https://www.youtube.com/watch?v=1xipg02wu8s',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Flutter+3',
+        duration: 40,
+        isPreview: false,
+        isCompleted: false,
+        resources: ['State Mgmt Guide'],
+        chapterId: 'chapter_2',
+      ),
+    ];
+  }
+
+  // ---------------------------------------------------
+  // WEB DEVELOPMENT — CHAPTERS + LESSONS
+  // ---------------------------------------------------
+
+  static List<ChapterModel> getWebChapters() {
+    return [
+      ChapterModel(
+        id: 'web_c1',
+        title: 'HTML & CSS Basics',
+        description: 'Learn structure and styling.',
+        orderIndex: 1,
+        totalLessons: 1,
+        completedLessons: 1,
+        estimatedMinutes: 30,
+        isLocked: false,
+        lessonIds: ['web_l1'],
+      ),
+      ChapterModel(
+        id: 'web_c2',
+        title: 'JavaScript Essentials',
+        description: 'Variables, loops & functions.',
+        orderIndex: 2,
+        totalLessons: 1,
+        completedLessons: 0,
+        estimatedMinutes: 35,
+        isLocked: false,
+        lessonIds: ['web_l2'],
+      ),
+      ChapterModel(
+        id: 'web_c3',
+        title: 'React Basics',
+        description: 'Component-based UI.',
+        orderIndex: 3,
+        totalLessons: 1,
+        completedLessons: 0,
+        estimatedMinutes: 40,
+        isLocked: false,
+        lessonIds: ['web_l3'],
+      ),
+    ];
+  }
+
+  static List<Lesson> getWebLessons() {
+    return [
+      Lesson(
+        id: 'web_l1',
+        title: 'HTML & CSS Crash Course',
+        description: 'Learn basic web page building.',
+        videoUrl: 'https://www.youtube.com/watch?v=1Rs2ND1ryYc',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Web+1',
+        duration: 30,
+        isPreview: true,
+        isCompleted: true,
+        resources: ['HTML Guide'],
+        chapterId: 'web_c1',
+      ),
+      Lesson(
+        id: 'web_l2',
+        title: 'JavaScript Tutorial',
+        description: 'Learn JS from scratch.',
+        videoUrl: 'https://www.youtube.com/watch?v=PkZNo7MFNFg',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Web+2',
+        duration: 40,
+        isPreview: false,
+        isCompleted: false,
+        resources: ['JS Basics'],
+        chapterId: 'web_c2',
+      ),
+      Lesson(
+        id: 'web_l3',
+        title: 'React Basics',
+        description: 'Intro to React components.',
+        videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Web+3',
+        duration: 50,
+        isPreview: false,
+        isCompleted: false,
+        resources: ['React Docs'],
+        chapterId: 'web_c3',
+      ),
+    ];
+  }
+
+  // ---------------------------------------------------
+  // DATA SCIENCE — CHAPTERS + LESSONS
+  // ---------------------------------------------------
+
+  static List<ChapterModel> getDataChapters() {
+    return [
+      ChapterModel(
+        id: 'data_c1',
+        title: 'Python Fundamentals',
+        description: 'Variables, loops & basics.',
+        orderIndex: 1,
+        totalLessons: 1,
+        completedLessons: 0,
+        estimatedMinutes: 25,
+        lessonIds: ['data_l1'],
+      ),
+      ChapterModel(
+        id: 'data_c2',
+        title: 'Data Analysis with Pandas',
+        description: 'DataFrames & operations.',
+        orderIndex: 2,
+        totalLessons: 1,
+        completedLessons: 0,
+        estimatedMinutes: 35,
+        lessonIds: ['data_l2'],
+      ),
+      ChapterModel(
+        id: 'data_c3',
+        title: 'Machine Learning Basics',
+        description: 'Regression & classification.',
+        orderIndex: 3,
+        totalLessons: 1,
+        completedLessons: 0,
+        estimatedMinutes: 45,
+        lessonIds: ['data_l3'],
+      ),
+    ];
+  }
+
+  static List<Lesson> getDataLessons() {
+    return [
+      Lesson(
+        id: 'data_l1',
+        title: 'Python Basics',
+        description: 'Learn syntax & structures.',
+        videoUrl: 'https://www.youtube.com/watch?v=kqtD5dpn9C8',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Data+1',
+        duration: 30,
+        isPreview: true,
+        isCompleted: false,
+        resources: ['Python Guide'],
+        chapterId: 'data_c1',
+      ),
+      Lesson(
+        id: 'data_l2',
+        title: 'Pandas Tutorial',
+        description: 'Analyze datasets.',
+        videoUrl: 'https://www.youtube.com/watch?v=vYX1SFDp3_o',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Data+2',
+        duration: 40,
+        isPreview: false,
+        isCompleted: false,
+        resources: ['Pandas Notebook'],
+        chapterId: 'data_c2',
+      ),
+      Lesson(
+        id: 'data_l3',
+        title: 'Machine Learning Overview',
+        description: 'ML algorithms intro.',
+        videoUrl: 'https://www.youtube.com/watch?v=uwizYVeG6MI',
+        thumbnail: 'https://via.placeholder.com/200x120?text=Data+3',
+        duration: 45,
+        isPreview: false,
+        isCompleted: false,
+        resources: ['ML Cheat Sheet'],
+        chapterId: 'data_c3',
+      ),
+    ];
+  }
+
+  // ---------------------------------------------------
+  // ARENA CHALLENGES
+  // ---------------------------------------------------
+
   static List<ChallengeModel> getChallenges() {
     final now = DateTime.now();
+
     return [
       ChallengeModel(
         id: uuid.v4(),
         title: 'Quick Sort Challenge',
-        description: 'Implement quick sort algorithm in 30 minutes',
+        description: 'Implement quick sort in 30 minutes.',
         difficulty: 'Medium',
         points: 100,
         startTime: now,
@@ -164,7 +367,7 @@ class DummyData {
       ChallengeModel(
         id: uuid.v4(),
         title: 'React Component Marathon',
-        description: 'Build 5 complex React components',
+        description: 'Build 5 complex components.',
         difficulty: 'Hard',
         points: 200,
         startTime: now.add(const Duration(days: 1)),
@@ -176,7 +379,7 @@ class DummyData {
       ChallengeModel(
         id: uuid.v4(),
         title: 'Python Data Analysis Sprint',
-        description: 'Complete data analysis tasks with Pandas',
+        description: 'Solve Pandas data tasks.',
         difficulty: 'Easy',
         points: 50,
         startTime: now.subtract(const Duration(days: 1)),
@@ -188,6 +391,10 @@ class DummyData {
       ),
     ];
   }
+
+  // ---------------------------------------------------
+  // LEADERBOARD
+  // ---------------------------------------------------
 
   static List<LeaderboardEntryModel> getLeaderboard() {
     return [
@@ -201,7 +408,7 @@ class DummyData {
       LeaderboardEntryModel(
         rank: 2,
         userName: 'You',
-        userAvatar: 'https://via.placeholder.com/40?text=You',
+        userAvatar: 'https://via.placeholder.com/40?text=YOU',
         score: 2650,
         timeSpentSeconds: 1450,
         isCurrentUser: true,
@@ -230,16 +437,20 @@ class DummyData {
     ];
   }
 
-  // Chat Messages
+  // ---------------------------------------------------
+  // CHAT MESSAGES
+  // ---------------------------------------------------
+
   static List<MessageModel> getChatMessages() {
     final now = DateTime.now();
+
     return [
       MessageModel(
         id: uuid.v4(),
         senderId: 'mentor_1',
         senderName: 'Your Mentor',
-        senderAvatar: 'https://via.placeholder.com/40?text=Mentor',
-        content: 'Hey! How\'s your progress on the Flutter course?',
+        senderAvatar: 'https://via.placeholder.com/40?text=M',
+        content: 'Hey! How’s your progress?',
         timestamp: now.subtract(const Duration(minutes: 10)),
         isUser: false,
       ),
@@ -247,9 +458,8 @@ class DummyData {
         id: uuid.v4(),
         senderId: 'user_1',
         senderName: 'You',
-        senderAvatar: 'https://via.placeholder.com/40?text=You',
-        content:
-            'I\'m doing great! Just completed the state management chapter.',
+        senderAvatar: 'https://via.placeholder.com/40?text=Y',
+        content: 'I completed the Flutter chapter!',
         timestamp: now.subtract(const Duration(minutes: 9)),
         isUser: true,
       ),
@@ -257,23 +467,27 @@ class DummyData {
         id: uuid.v4(),
         senderId: 'mentor_1',
         senderName: 'Your Mentor',
-        senderAvatar: 'https://via.placeholder.com/40?text=Mentor',
-        content: 'Excellent! 🔥 State management is crucial. Keep it up!',
+        senderAvatar: 'https://via.placeholder.com/40?text=M',
+        content: 'Awesome! Keep it up 🔥',
         timestamp: now.subtract(const Duration(minutes: 5)),
         isUser: false,
       ),
     ];
   }
 
-  // To-Dos
+  // ---------------------------------------------------
+  // TODOS
+  // ---------------------------------------------------
+
   static List<TodoModel> getTodos() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
+
     return [
       TodoModel(
         id: uuid.v4(),
-        title: 'Complete Flutter Course Chapter 5',
-        description: 'Finish state management basics',
+        title: 'Complete Flutter Chapter 5',
+        description: 'Finish state management basics.',
         dueDate: today,
         priority: 'high',
         category: 'learning',
@@ -283,7 +497,7 @@ class DummyData {
       TodoModel(
         id: uuid.v4(),
         title: 'Join Arena Challenge',
-        description: 'Participate in Quick Sort Challenge',
+        description: 'Participate in Quick Sort challenge.',
         dueDate: today,
         priority: 'medium',
         category: 'practice',
@@ -293,55 +507,49 @@ class DummyData {
       TodoModel(
         id: uuid.v4(),
         title: 'Review Previous Lessons',
-        description: 'Go over widgets and layouts',
+        description: 'Go over widgets and layouts.',
         dueDate: today.add(const Duration(days: 1)),
         priority: 'medium',
         category: 'review',
         createdAt: now.subtract(const Duration(days: 2)),
         isCompleted: true,
       ),
-      TodoModel(
-        id: uuid.v4(),
-        title: 'Build Mini Project',
-        description: 'Create a weather app with Flutter',
-        dueDate: today.add(const Duration(days: 3)),
-        priority: 'high',
-        category: 'practice',
-        createdAt: now.subtract(const Duration(days: 5)),
-        isCompleted: false,
-      ),
     ];
   }
 
-  // Notifications
+  // ---------------------------------------------------
+  // NOTIFICATIONS
+  // ---------------------------------------------------
+
   static List<NotificationModel> getNotifications() {
     final now = DateTime.now();
+
     return [
       NotificationModel(
         id: uuid.v4(),
         title: '🔥 Streak Extended!',
-        message: 'You\'ve maintained a 5-day learning streak!',
+        message: 'You maintained a 5-day learning streak!',
         type: 'achievement',
         timestamp: now.subtract(const Duration(hours: 2)),
       ),
       NotificationModel(
         id: uuid.v4(),
         title: '📚 Course Update',
-        message: 'New chapter added to Flutter Masterclass',
+        message: 'New chapter added to Flutter Masterclass.',
         type: 'course',
         timestamp: now.subtract(const Duration(hours: 5)),
       ),
       NotificationModel(
         id: uuid.v4(),
-        title: '⚔️ Challenge Available',
-        message: 'Join the new React Component Marathon',
+        title: '⚔️ New Challenge',
+        message: 'React Component Marathon starts tomorrow!',
         type: 'arena',
         timestamp: now.subtract(const Duration(hours: 12)),
       ),
       NotificationModel(
         id: uuid.v4(),
         title: '⏰ Reminder',
-        message: 'Complete your daily learning goal',
+        message: 'Complete your daily learning goal.',
         type: 'reminder',
         timestamp: now.subtract(const Duration(days: 1)),
         isRead: true,
@@ -349,14 +557,18 @@ class DummyData {
     ];
   }
 
+  // ---------------------------------------------------
+  // MOTIVATIONAL QUOTES
+  // ---------------------------------------------------
+
   static final List<String> motivationalQuotes = [
     '🚀 Every expert was once a beginner!',
-    '💪 Your consistency is your superpower.',
-    '🔥 Progress, not perfection.',
+    '💪 Consistency is your superpower.',
+    '🔥 Progress > Perfection.',
     '🎯 Stay focused on your goals.',
     '⚡ Learn something new today!',
-    '🌟 You\'re doing amazing!',
-    '🏆 Keep crushing those goals!',
+    '🌟 You’re doing amazing!',
+    '🏆 Keep crushing your tasks!',
     '📈 Your growth is limitless.',
   ];
 }

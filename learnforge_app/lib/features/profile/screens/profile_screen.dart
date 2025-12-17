@@ -7,6 +7,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
 import '../../../core/widgets/gradient_button.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../widgets/avatar_picker_modal.dart';
+
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -45,26 +47,72 @@ class ProfileScreen extends ConsumerWidget {
                 glowColor: AppColors.neonPurple,
                 child: Column(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.neonPurple.withOpacity(0.5),
-                          width: 3,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.neonPurple.withOpacity(0.3),
-                            blurRadius: 15,
-                            spreadRadius: 2,
+                    Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.neonPurple.withOpacity(0.5),
+                              width: 3,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.neonPurple.withOpacity(0.3),
+                                blurRadius: 15,
+                                spreadRadius: 2,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: AppColors.dark700,
-                        backgroundImage: NetworkImage(user.avatar),
-                      ),
+                          child: user.avatar.startsWith('assets/')
+                              ? CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: AppColors.dark700,
+                                  backgroundImage: AssetImage(user.avatar),
+                                )
+                              : CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: AppColors.dark700,
+                                  child: Text(
+                                    user.avatar,
+                                    style: const TextStyle(fontSize: 50),
+                                  ),
+                                ),
+                        ),
+                        // Edit button
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: () {
+                              _showAvatarPicker(context, ref, user.avatar);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.neonPurple,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.dark900,
+                                  width: 2,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.neonPurple.withOpacity(0.5),
+                                    blurRadius: 8,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.edit,
+                                color: AppColors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -224,7 +272,22 @@ class ProfileScreen extends ConsumerWidget {
       );
     }
   }
+
+  void _showAvatarPicker(BuildContext context, WidgetRef ref, String currentAvatar) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AvatarPickerModal(
+        currentAvatar: currentAvatar,
+        onAvatarSelected: (newAvatar) {
+          ref.read(authProvider.notifier).updateAvatar(newAvatar);
+        },
+      ),
+    );
+  }
 }
+
 
 class _StatColumn extends StatelessWidget {
   final String label;

@@ -1,40 +1,40 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:learnforge_app/features/courses/models/course_model.dart';
+import '../models/youtube_playlist_model.dart';
 
 class CourseState {
-  final List<Course> courses;
-  final List<Course> featuredCourses;
-  final List<Course> myCourses;
-  final Map<String, CourseProgress> courseProgress;
+  final List<YouTubePlaylist> playlists;
+  final List<YouTubePlaylist> featuredPlaylists;
+  final List<YouTubePlaylist> myPlaylists;
+  final Map<String, double> playlistProgress;
   final bool isLoading;
   final String? error;
   final String selectedCategory;
 
   const CourseState({
-    this.courses = const [],
-    this.featuredCourses = const [],
-    this.myCourses = const [],
-    this.courseProgress = const {},
+    this.playlists = const [],
+    this.featuredPlaylists = const [],
+    this.myPlaylists = const [],
+    this.playlistProgress = const {},
     this.isLoading = false,
     this.error,
     this.selectedCategory = 'All',
   });
 
   CourseState copyWith({
-    List<Course>? courses,
-    List<Course>? featuredCourses,
-    List<Course>? myCourses,
-    Map<String, CourseProgress>? courseProgress,
+    List<YouTubePlaylist>? playlists,
+    List<YouTubePlaylist>? featuredPlaylists,
+    List<YouTubePlaylist>? myPlaylists,
+    Map<String, double>? playlistProgress,
     bool? isLoading,
     String? error,
     String? selectedCategory,
   }) {
     return CourseState(
-      courses: courses ?? this.courses,
-      featuredCourses: featuredCourses ?? this.featuredCourses,
-      myCourses: myCourses ?? this.myCourses,
-      courseProgress: courseProgress ?? this.courseProgress,
+      playlists: playlists ?? this.playlists,
+      featuredPlaylists: featuredPlaylists ?? this.featuredPlaylists,
+      myPlaylists: myPlaylists ?? this.myPlaylists,
+      playlistProgress: playlistProgress ?? this.playlistProgress,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       selectedCategory: selectedCategory ?? this.selectedCategory,
@@ -43,153 +43,89 @@ class CourseState {
 }
 
 class CourseProvider extends StateNotifier<CourseState> {
-  CourseProvider() : super(const CourseState());
+  CourseProvider() : super(const CourseState()) {
+    // Load playlists when provider is created
+    loadPlaylists();
+  }
 
-  // Mock data - Replace with actual API calls
-  final List<Course> _mockCourses = [
-    Course(
-      id: '1',
-      title: 'Advanced Flutter Development',
-      description:
-          'Master advanced Flutter concepts including state management, animations, and performance optimization.',
-      instructor: 'Sarah Johnson',
-      instructorImage:
-          'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
-      thumbnail:
-          'https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=400',
-      rating: 4.8,
-      totalRatings: 1247,
-      enrolledCount: 15420,
-      level: 'Advanced',
-      duration: 28,
-      totalLessons: 45,
-      price: 2999,
-      isFree: false,
-      isFeatured: true,
-      categories: ['Mobile Development', 'Flutter', 'Dart'],
-      learningObjectives: [
-        'Master advanced state management techniques',
-        'Build complex animations and custom widgets',
-        'Optimize app performance',
-        'Implement advanced architecture patterns',
-      ],
-      lessons: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    Course(
-      id: '2',
-      title: 'Machine Learning Fundamentals',
-      description:
-          'Learn the basics of machine learning with Python and TensorFlow.',
-      instructor: 'Dr. Alex Chen',
-      instructorImage:
-          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-      thumbnail:
-          'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400',
-      rating: 4.6,
-      totalRatings: 892,
-      enrolledCount: 10250,
-      level: 'Intermediate',
-      duration: 35,
-      totalLessons: 52,
-      price: 0,
-      isFree: true,
-      isFeatured: true,
-      categories: ['Data Science', 'Python', 'AI'],
-      learningObjectives: [
-        'Understand ML algorithms',
-        'Build and train models',
-        'Evaluate model performance',
-      ],
-      lessons: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    Course(
-      id: '3',
-      title: 'Web Development with React & Node',
-      description: 'Full-stack web development using modern technologies.',
-      instructor: 'Mike Thompson',
-      instructorImage:
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-      thumbnail:
-          'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400',
-      rating: 4.7,
-      totalRatings: 1563,
-      enrolledCount: 18700,
-      level: 'Beginner',
-      duration: 42,
-      totalLessons: 68,
-      price: 2499,
-      isFree: false,
-      isFeatured: false,
-      categories: ['Web Development', 'React', 'Node.js'],
-      learningObjectives: [
-        'Build responsive web applications',
-        'Create RESTful APIs',
-        'Deploy applications to cloud',
-      ],
-      lessons: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-  ];
-
-  Future<void> loadCourses() async {
+  Future<void> loadPlaylists() async {
     try {
       state = state.copyWith(isLoading: true, error: null);
 
-      // Simulate API call
+      // Simulate API call delay
       await Future.delayed(const Duration(seconds: 2));
 
-      final featuredCourses = _mockCourses
-          .where((course) => course.isFeatured)
+      // Use our YouTube playlists data
+      final featuredPlaylists = youtubePlaylists
+          .where(
+            (playlist) => playlist.userProgress > 0.3,
+          ) // Featured if some progress
           .toList();
 
+      // For demo, mark first 2 playlists as "my playlists"
+      final myPlaylists = youtubePlaylists.take(2).toList();
+
       state = state.copyWith(
-        courses: _mockCourses,
-        featuredCourses: featuredCourses,
+        playlists: youtubePlaylists,
+        featuredPlaylists: featuredPlaylists,
+        myPlaylists: myPlaylists,
         isLoading: false,
       );
     } catch (e) {
       state = state.copyWith(
-        error: 'Failed to load courses: $e',
+        error: 'Failed to load playlists: $e',
         isLoading: false,
       );
     }
   }
 
-  Future<void> loadMyCourses() async {
+  Future<void> loadMyPlaylists() async {
     try {
       state = state.copyWith(isLoading: true, error: null);
 
-      // Simulate API call for user's enrolled courses
+      // Simulate API call for user's playlists
       await Future.delayed(const Duration(seconds: 1));
 
-      // For demo, take first 2 courses as enrolled
-      final myCourses = _mockCourses.take(2).toList();
+      // For demo, take first 2 playlists as user's playlists
+      final myPlaylists = youtubePlaylists.take(2).toList();
 
-      state = state.copyWith(myCourses: myCourses, isLoading: false);
+      state = state.copyWith(myPlaylists: myPlaylists, isLoading: false);
     } catch (e) {
       state = state.copyWith(
-        error: 'Failed to load your courses: $e',
+        error: 'Failed to load your playlists: $e',
         isLoading: false,
       );
     }
   }
 
-  Future<void> enrollInCourse(String courseId) async {
+  Future<void> addToMyPlaylists(String playlistId) async {
     try {
-      final course = _mockCourses.firstWhere((c) => c.id == courseId);
-      final updatedMyCourses = [...state.myCourses, course];
+      final playlist = youtubePlaylists.firstWhere((p) => p.id == playlistId);
+      final updatedMyPlaylists = [...state.myPlaylists, playlist];
 
-      state = state.copyWith(myCourses: updatedMyCourses);
+      state = state.copyWith(myPlaylists: updatedMyPlaylists);
 
-      // Simulate API call for enrollment
+      // Simulate API call
       await Future.delayed(const Duration(seconds: 1));
     } catch (e) {
-      state = state.copyWith(error: 'Failed to enroll in course: $e');
+      state = state.copyWith(error: 'Failed to add playlist: $e');
+    }
+  }
+
+  Future<void> updatePlaylistProgress(
+    String playlistId,
+    double progress,
+  ) async {
+    try {
+      final updatedProgress = Map<String, double>.from(state.playlistProgress);
+      updatedProgress[playlistId] = progress;
+
+      state = state.copyWith(playlistProgress: updatedProgress);
+
+      // Simulate API call to save progress
+      await Future.delayed(const Duration(milliseconds: 500));
+    } catch (e) {
+      state = state.copyWith(error: 'Failed to update progress: $e');
     }
   }
 
@@ -197,13 +133,28 @@ class CourseProvider extends StateNotifier<CourseState> {
     state = state.copyWith(selectedCategory: category);
   }
 
-  List<Course> get filteredCourses {
+  List<YouTubePlaylist> get filteredPlaylists {
     if (state.selectedCategory == 'All') {
-      return state.courses;
+      return state.playlists;
     }
-    return state.courses
-        .where((course) => course.categories.contains(state.selectedCategory))
+    return state.playlists
+        .where((playlist) => playlist.category == state.selectedCategory)
         .toList();
+  }
+
+  // Get progress for a specific playlist
+  double getPlaylistProgress(String playlistId) {
+    return state.playlistProgress[playlistId] ?? 0.0;
+  }
+
+  // Mark playlist as started (add some progress)
+  Future<void> startPlaylist(String playlistId) async {
+    await updatePlaylistProgress(playlistId, 0.1); // 10% when started
+  }
+
+  // Mark playlist as completed
+  Future<void> completePlaylist(String playlistId) async {
+    await updatePlaylistProgress(playlistId, 1.0); // 100% when completed
   }
 
   void clearError() {
@@ -211,27 +162,36 @@ class CourseProvider extends StateNotifier<CourseState> {
   }
 }
 
-// Providers
+// Updated Providers
 final courseProvider = StateNotifierProvider<CourseProvider, CourseState>(
   (ref) => CourseProvider(),
 );
 
-final featuredCoursesProvider = Provider<List<Course>>((ref) {
-  return ref.watch(courseProvider).featuredCourses;
+final featuredPlaylistsProvider = Provider<List<YouTubePlaylist>>((ref) {
+  return ref.watch(courseProvider).featuredPlaylists;
 });
 
-final myCoursesProvider = Provider<List<Course>>((ref) {
-  return ref.watch(courseProvider).myCourses;
+final myPlaylistsProvider = Provider<List<YouTubePlaylist>>((ref) {
+  return ref.watch(courseProvider).myPlaylists;
 });
 
-final filteredCoursesProvider = Provider<List<Course>>((ref) {
+final filteredPlaylistsProvider = Provider<List<YouTubePlaylist>>((ref) {
   final courseState = ref.watch(courseProvider);
   if (courseState.selectedCategory == 'All') {
-    return courseState.courses;
+    return courseState.playlists;
   }
-  return courseState.courses
-      .where(
-        (course) => course.categories.contains(courseState.selectedCategory),
-      )
+  return courseState.playlists
+      .where((playlist) => playlist.category == courseState.selectedCategory)
       .toList();
 });
+
+// Provider for YouTube playlists (direct access)
+final youtubePlaylistsProvider = Provider<List<YouTubePlaylist>>((ref) {
+  return youtubePlaylists;
+});
+
+// Provider for search functionality
+final courseSearchProvider = StateProvider<String>((ref) => '');
+
+// Provider for selected playlist
+final selectedPlaylistProvider = StateProvider<YouTubePlaylist?>((ref) => null);

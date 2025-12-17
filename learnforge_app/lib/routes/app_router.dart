@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:learnforge_app/features/courses/models/youtube_playlist_model.dart';
+
+// Courses
+import 'package:learnforge_app/features/courses/screens/course_detail_screen.dart';
+import 'package:learnforge_app/features/courses/screens/courses_screen.dart';
+import 'package:learnforge_app/features/courses/screens/youtube_playlist_screen.dart';
 import 'package:learnforge_app/features/notifications/screens/notification_screen.dart';
 
 // Auth
@@ -9,10 +15,6 @@ import '../features/auth/screens/login_screen.dart';
 
 // Dashboard
 import '../features/dashboard/screens/dashboard_screen.dart';
-
-// Courses
-import '../features/courses/screens/courses_screen.dart';
-import '../features/courses/screens/course_detail_screen.dart';
 
 // Arena
 import '../features/arena/screens/arena_screen.dart';
@@ -31,7 +33,7 @@ final GoRouter appRouter = GoRouter(
   debugLogDiagnostics: true,
   initialLocation: '/splash',
   routes: [
-    // Auth Routes
+    // -------------------- AUTH ROUTES --------------------
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(
       path: '/onboarding',
@@ -39,13 +41,13 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
 
-    // Main App Routes
+    // -------------------- DASHBOARD --------------------
     GoRoute(
       path: '/dashboard',
       builder: (context, state) => const DashboardScreen(),
     ),
 
-    // Courses Routes
+    // -------------------- COURSES --------------------
     GoRoute(
       path: '/courses',
       builder: (context, state) => const CoursesScreen(),
@@ -58,7 +60,7 @@ final GoRouter appRouter = GoRouter(
       },
     ),
 
-    // Arena Routes
+    // -------------------- ARENA --------------------
     GoRoute(path: '/arena', builder: (context, state) => const ArenaScreen()),
     GoRoute(
       path: '/challenge/:id',
@@ -68,7 +70,7 @@ final GoRouter appRouter = GoRouter(
       },
     ),
 
-    // Other Feature Routes
+    // -------------------- OTHER FEATURES --------------------
     GoRoute(path: '/chat', builder: (context, state) => const ChatScreen()),
     GoRoute(path: '/todo', builder: (context, state) => const TodoScreen()),
     GoRoute(
@@ -79,18 +81,31 @@ final GoRouter appRouter = GoRouter(
       path: '/profile',
       builder: (context, state) => const ProfileScreen(),
     ),
-
-    // Redirect route for old course-detail path (if needed)
     GoRoute(
-      path: '/course-detail',
-      redirect: (context, state) {
-        // You can redirect to courses screen or handle this case
-        return '/courses';
+      path: '/playlist/:id',
+      builder: (context, state) {
+        print("DEBUG → youtubePlaylists count: ${youtubePlaylists.length}");
+
+        final playlistId = state.pathParameters['id'] ?? '';
+        print("DEBUG → Received playlist id: $playlistId");
+
+        final playlist = youtubePlaylists.firstWhere(
+          (p) => p.id == playlistId,
+          orElse: () {
+            print("DEBUG → Playlist ID not found, using fallback");
+            return youtubePlaylists.first;
+          },
+        );
+
+        return YouTubePlaylistScreen(playlist: playlist);
       },
     ),
+
+    // -------------------- OPTIONAL REDIRECT --------------------
+    GoRoute(path: '/course-detail', redirect: (context, state) => '/courses'),
   ],
 
-  // Error handling
+  // -------------------- ERROR HANDLING --------------------
   errorBuilder: (context, state) => Scaffold(
     body: Center(
       child: Column(

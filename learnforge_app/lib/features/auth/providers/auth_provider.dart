@@ -20,7 +20,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         id: '1',
         name: 'John Developer',
         email: email,
-        avatar: 'https://via.placeholder.com/100?text=User',
+        avatar: 'assets/images/avatar_default.png',
         createdAt: DateTime.now(),
         streakDays: 5,
         totalXP: 2650,
@@ -34,4 +34,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
   void logout() {
     state = const AuthState.initial();
   }
+
+  void updateAvatar(String newAvatarUrl) {
+    if (state is Authenticated) {
+      final currentUser = (state as Authenticated).user;
+      final updatedUser = currentUser.copyWith(avatar: newAvatarUrl);
+      state = AuthState.authenticated(updatedUser);
+    }
+  }
 }
+

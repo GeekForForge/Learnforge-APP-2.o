@@ -20,6 +20,7 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color grey200 = Color(0xFFE5E7EB);
   static const Color grey400 = Color(0xFF9CA3AF);
+  static const Color grey600 = Color(0xFF4B5563);
 
   // ⚠️ Status colors
   static const Color success = Color(0xFF10B981); // Green

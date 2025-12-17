@@ -1,3 +1,5 @@
+// lib/features/courses/models/chapter_model.dart
+
 class ChapterModel {
   final String id;
   final String title;
@@ -21,6 +23,7 @@ class ChapterModel {
     this.lessonIds = const [],
   });
 
+  /// Convert from JSON map into model
   factory ChapterModel.fromJson(Map<String, dynamic> json) {
     return ChapterModel(
       id: json['id'] ?? '',
@@ -35,6 +38,7 @@ class ChapterModel {
     );
   }
 
+  /// Convert model to JSON map
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -49,14 +53,16 @@ class ChapterModel {
     };
   }
 
-  // Helper methods
+  /// Calculate chapter completion percentage
   double get progress {
     if (totalLessons == 0) return 0.0;
     return completedLessons / totalLessons;
   }
 
+  /// Whether the chapter is fully completed
   bool get isCompleted => completedLessons >= totalLessons;
 
+  /// Convert estimated minutes → formatted duration
   String get formattedDuration {
     final hours = estimatedMinutes ~/ 60;
     final minutes = estimatedMinutes % 60;
@@ -67,13 +73,16 @@ class ChapterModel {
     return '${minutes}m';
   }
 
+  /// Text UI helper
   String get lessonsText {
     if (totalLessons == 1) return '1 lesson';
     return '$totalLessons lessons';
   }
 
+  /// Completed lessons text
   String get completionText => '$completedLessons/$totalLessons completed';
 
+  /// Copy model with updated fields
   ChapterModel copyWith({
     String? id,
     String? title,
@@ -98,22 +107,26 @@ class ChapterModel {
     );
   }
 
-  // Mark a lesson as completed
+  /// Mark a lesson as completed (increment count)
   ChapterModel markLessonComplete(String lessonId) {
     if (!lessonIds.contains(lessonId)) return this;
 
     return copyWith(completedLessons: completedLessons + 1);
   }
 
-  // Unlock chapter
+  /// Unlock chapter
   ChapterModel unlock() {
     return copyWith(isLocked: false);
   }
 
   @override
+  String toString() {
+    return 'ChapterModel(id: $id, title: $title, progress: ${(progress * 100).toStringAsFixed(1)}%)';
+  }
+
+  @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is ChapterModel &&
         other.id == id &&
         other.title == title &&
@@ -135,10 +148,5 @@ class ChapterModel {
         completedLessons.hashCode ^
         estimatedMinutes.hashCode ^
         isLocked.hashCode;
-  }
-
-  @override
-  String toString() {
-    return 'ChapterModel(id: $id, title: $title, progress: ${(progress * 100).toStringAsFixed(1)}%)';
   }
 }
