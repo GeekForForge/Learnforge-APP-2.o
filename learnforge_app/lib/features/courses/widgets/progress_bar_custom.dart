@@ -35,8 +35,7 @@ class ProgressBarCustom extends StatelessWidget {
                 borderRadius: BorderRadius.circular(height / 2),
               ),
             ),
-
-            // Progress
+            // Progress with glowing gradient
             Container(
                   height: height,
                   width:
@@ -72,7 +71,6 @@ class ProgressBarCustom extends StatelessWidget {
                 ),
           ],
         ),
-
         if (showPercentage) ...[
           const SizedBox(height: 8),
           Row(
@@ -103,7 +101,6 @@ class ProgressBarCustom extends StatelessWidget {
   }
 }
 
-// Circular progress variant
 class CircularProgressCustom extends StatelessWidget {
   final double progress;
   final double size;
@@ -136,7 +133,6 @@ class CircularProgressCustom extends StatelessWidget {
             color: backgroundColor ?? AppColors.dark700,
           ),
         ),
-
         // Progress circle
         SizedBox(
           width: size,
@@ -150,7 +146,6 @@ class CircularProgressCustom extends StatelessWidget {
             ),
           ),
         ),
-
         // Percentage text
         if (showPercentage)
           Text(

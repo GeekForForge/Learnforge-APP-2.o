@@ -3,13 +3,16 @@ import '../../../core/constants/dummy_data.dart';
 
 final dashboardStatsProvider = FutureProvider((ref) async {
   await Future.delayed(const Duration(seconds: 1));
+
+  final course = DummyData.getCourses().first;
+
   return DashboardStats(
     streakDays: 5,
     currentXP: 2650,
     dailyGoalProgress: 0.80,
     coursesEnrolled: 3,
-    activeCourse: DummyData.getCourses().first,
-    nextLesson: DummyData.getDummyLessons()[2],
+    activeCourse: course,
+    nextLesson: course.lessons.isNotEmpty ? course.lessons.first : null,
   );
 });
 

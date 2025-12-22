@@ -47,20 +47,27 @@ class CourseGridCard extends StatelessWidget {
       margin: const EdgeInsets.all(8),
       child: Stack(
         children: [
-          // Main Card
+          // Main Card with neon glowing border
           Container(
             decoration: BoxDecoration(
               color: AppColors.dark800,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 15,
+                  color: AppColors.neonPink.withOpacity(0.5),
+                  blurRadius: 20,
                   spreadRadius: 2,
-                  offset: const Offset(0, 4),
+                ),
+                BoxShadow(
+                  color: AppColors.neonBlue.withOpacity(0.4),
+                  blurRadius: 40,
+                  spreadRadius: 12,
                 ),
               ],
-              border: Border.all(color: AppColors.dark700, width: 1),
+              border: Border.all(
+                color: AppColors.neonPurple.withOpacity(0.7),
+                width: 2,
+              ),
             ),
             child: Material(
               color: Colors.transparent,
@@ -71,7 +78,7 @@ class CourseGridCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Course Thumbnail
+                    // Course Thumbnail with overlay gradient and badges
                     Stack(
                       children: [
                         Container(
@@ -88,6 +95,7 @@ class CourseGridCard extends StatelessWidget {
                             ),
                           ),
                         ),
+
                         Container(
                           height: 120,
                           decoration: BoxDecoration(
@@ -118,6 +126,13 @@ class CourseGridCard extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: _getLevelColor(level).withOpacity(0.9),
                               borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _getLevelColor(level).withOpacity(0.7),
+                                  blurRadius: 12,
+                                  spreadRadius: 2,
+                                ),
+                              ],
                             ),
                             child: Text(
                               level,
@@ -126,6 +141,9 @@ class CourseGridCard extends StatelessWidget {
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Inter',
+                                shadows: [
+                                  Shadow(color: Colors.black45, blurRadius: 4),
+                                ],
                               ),
                             ),
                           ),
@@ -142,10 +160,20 @@ class CourseGridCard extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: isFree
-                                  ? (AppColors.neonGreen ?? Colors.green)
-                                        .withOpacity(0.9)
+                                  ? AppColors.neonGreen?.withOpacity(0.9) ??
+                                        Colors.green
                                   : AppColors.neonPurple.withOpacity(0.9),
                               borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: isFree
+                                      ? AppColors.neonGreen?.withOpacity(0.7) ??
+                                            Colors.green.withOpacity(0.7)
+                                      : AppColors.neonPurple.withOpacity(0.7),
+                                  blurRadius: 12,
+                                  spreadRadius: 2,
+                                ),
+                              ],
                             ),
                             child: Text(
                               isFree ? 'FREE' : '₹${price.toInt()}',
@@ -159,7 +187,7 @@ class CourseGridCard extends StatelessWidget {
                           ),
                         ),
 
-                        // Progress for enrolled courses
+                        // Progress bar for enrolled courses
                         if (isEnrolled && progress > 0)
                           Positioned(
                             bottom: 8,
@@ -169,6 +197,7 @@ class CourseGridCard extends StatelessWidget {
                               progress: progress,
                               height: 4,
                               showPercentage: false,
+                              // gradient removed because it's not a valid parameter
                             ),
                           ),
                       ],
@@ -187,6 +216,12 @@ class CourseGridCard extends StatelessWidget {
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Inter',
+                              shadows: [
+                                Shadow(
+                                  color: AppColors.neonPink,
+                                  blurRadius: 6,
+                                ),
+                              ],
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -269,7 +304,6 @@ class CourseGridCard extends StatelessWidget {
                           // Lessons Info & Action Button
                           Row(
                             children: [
-                              // Lessons count
                               if (isEnrolled) ...[
                                 Icon(
                                   Icons.play_circle_fill,
@@ -304,7 +338,6 @@ class CourseGridCard extends StatelessWidget {
                                 const Spacer(),
                               ],
 
-                              // Action Button
                               if (!isEnrolled)
                                 Container(
                                   height: 28,
@@ -312,20 +345,25 @@ class CourseGridCard extends StatelessWidget {
                                     horizontal: 12,
                                   ),
                                   decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        AppColors.neonPurple,
-                                        AppColors.neonPink,
-                                      ],
-                                    ),
+                                    color: AppColors.neonPurple,
                                     borderRadius: BorderRadius.circular(14),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.neonPink.withOpacity(
+                                          0.6,
+                                        ),
+                                        blurRadius: 8,
+                                        spreadRadius: 1,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: onEnroll,
                                       borderRadius: BorderRadius.circular(14),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Enroll',
                                           style: TextStyle(

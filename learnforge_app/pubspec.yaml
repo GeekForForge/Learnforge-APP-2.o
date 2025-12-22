@@ -23,6 +23,10 @@ dependencies:
   youtube_player_flutter: ^9.1.3
   youtube_player_iframe: ^5.2.2
   flutter_inappwebview: ^6.1.5  # Updated to latest stable version
+  font_awesome_flutter: ^10.9.1
+  firebase_core: ^4.3.0
+  firebase_auth: ^6.1.3
+  cloud_firestore: ^6.1.1
 
 dev_dependencies:
   flutter_test:
@@ -33,7 +37,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/
+    - assets/images/avatar_default.png
+    - assets/images/icon.png
+    - assets/images/icon-removebg-preview.png
     - assets/lottie/
     - assets/animations/
 

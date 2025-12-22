@@ -8,6 +8,7 @@ class GlassMorphicCard extends StatelessWidget {
   final double borderRadius;
   final EdgeInsets padding;
   final VoidCallback? onTap;
+  final EdgeInsetsGeometry? margin;
 
   const GlassMorphicCard({
     super.key,
@@ -16,6 +17,7 @@ class GlassMorphicCard extends StatelessWidget {
     this.borderRadius = 16,
     this.padding = const EdgeInsets.all(16),
     this.onTap,
+    this.margin,
   });
 
   @override

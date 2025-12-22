@@ -46,4 +46,27 @@ class UserModel {
       ),
     );
   }
+
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? avatar,
+    int? streakDays,
+    int? totalXP,
+    List<String>? badges,
+    DateTime? createdAt,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      avatar: avatar ?? this.avatar,
+      streakDays: streakDays ?? this.streakDays,
+      totalXP: totalXP ?? this.totalXP,
+      badges: badges ?? this.badges,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
+

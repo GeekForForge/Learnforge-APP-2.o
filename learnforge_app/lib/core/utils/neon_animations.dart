@@ -1,5 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:learnforge_app/core/theme/app_colors.dart';
+
+class NeonParticleBackground extends StatelessWidget {
+  const NeonParticleBackground({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Example: multiple glowing circles floating with neon colors
+        Positioned(
+          top: 100,
+          left: 50,
+          child: _glowingCircle(AppColors.neonPurple),
+        ),
+        Positioned(
+          top: 200,
+          right: 60,
+          child: _glowingCircle(AppColors.neonCyan),
+        ),
+        Positioned(
+          bottom: 120,
+          left: 80,
+          child: _glowingCircle(AppColors.neonPink),
+        ),
+        Positioned(
+          bottom: 200,
+          right: 100,
+          child: _glowingCircle(AppColors.neonBlue),
+        ),
+        // Add more glowing circles or shapes here with different positions and sizes
+      ],
+    );
+  }
+
+  Widget _glowingCircle(Color color) {
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color.withOpacity(0.4),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.7),
+            blurRadius: 30,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+    ).glowPulse(glowColor: color);
+  }
+}
 
 extension NeonAnimations on Widget {
   // Floating animation

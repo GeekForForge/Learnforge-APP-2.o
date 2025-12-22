@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:learnforge_app/core/theme/app_colors.dart';
 import 'package:learnforge_app/features/courses/models/chapter_model.dart';
+import 'package:learnforge_app/features/courses/models/course_model.dart';
+import 'package:learnforge_app/features/courses/models/course_model.dart';
+import 'package:learnforge_app/features/courses/widgets/course_video_player.dart';
 import 'progress_bar_custom.dart';
 
 class ChapterList extends StatefulWidget {
   final List<ChapterModel> chapters;
+  final List<Lesson> lessons;
 
-  const ChapterList({Key? key, required this.chapters}) : super(key: key);
+  const ChapterList({
+    Key? key,
+    required this.chapters,
+    required this.lessons, // ADD THIS
+  }) : super(key: key);
 
   @override
   State<ChapterList> createState() => _ChapterListState();
@@ -31,6 +39,13 @@ class _ChapterListState extends State<ChapterList> {
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Inter',
+                  shadows: [
+                    Shadow(
+                      color: AppColors.neonPurple.withOpacity(0.9),
+                      blurRadius: 8,
+                      offset: const Offset(0, 0),
+                    ),
+                  ],
                 ),
               ),
               Text(
@@ -63,7 +78,7 @@ class _ChapterListState extends State<ChapterList> {
 
         const SizedBox(height: 8),
 
-        // Chapters list
+        // Chapters list with neon glowing effect and animation
         ...widget.chapters.asMap().entries.map((entry) {
           final index = entry.key;
           final chapter = entry.value;
@@ -76,8 +91,34 @@ class _ChapterListState extends State<ChapterList> {
                 isCompleted: isCompleted,
                 isLocked: isLocked,
                 onTap: () {
-                  // Handle chapter tap
-                  print('Tapped on chapter: ${chapter.title}');
+                  if (isLocked) return;
+
+                  // 1️⃣ Get all lessons inside this chapter
+                  final chapterLessons = widget.lessons
+                      .where((lesson) => chapter.lessonIds.contains(lesson.id))
+                      .toList();
+
+                  if (chapterLessons.isEmpty) {
+                    print("❌ No lessons found for this chapter");
+                    return;
+                  }
+
+                  final firstLesson = chapterLessons.first;
+
+                  // 2️⃣ Open video player
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CourseVideoPlayer(
+                        videoUrl: firstLesson.videoUrl,
+                        videoTitle: firstLesson.title,
+                        isYouTube:
+                            firstLesson.videoUrl.contains("youtube.com") ||
+                            firstLesson.videoUrl.contains("youtu"),
+                        autoPlay: true,
+                      ),
+                    ),
+                  );
                 },
               )
               .animate()
@@ -156,7 +197,7 @@ class _ChapterListItem extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                // Chapter number and status
+                // Chapter number & status with neon glow
                 Container(
                   width: 40,
                   height: 40,
@@ -176,7 +217,7 @@ class _ChapterListItem extends StatelessWidget {
 
                 const SizedBox(width: 16),
 
-                // Chapter content
+                // Chapter title & info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,9 +247,7 @@ class _ChapterListItem extends StatelessWidget {
                             ),
                         ],
                       ),
-
                       const SizedBox(height: 4),
-
                       Text(
                         '${chapter.formattedDuration} • ${chapter.lessonsText}',
                         style: TextStyle(
@@ -219,7 +258,6 @@ class _ChapterListItem extends StatelessWidget {
                           fontFamily: 'Inter',
                         ),
                       ),
-
                       if (chapter.description.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         Text(
@@ -235,8 +273,6 @@ class _ChapterListItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
-
-                      // Progress text
                       if (!isLocked && chapter.totalLessons > 0) ...[
                         const SizedBox(height: 8),
                         Text(
@@ -255,7 +291,7 @@ class _ChapterListItem extends StatelessWidget {
 
                 const SizedBox(width: 12),
 
-                // Progress for chapter
+                // Chapter progress
                 if (!isLocked && chapter.totalLessons > 0)
                   CircularProgressCustom(
                     progress: chapter.progress,
@@ -282,9 +318,9 @@ class _ChapterListItem extends StatelessWidget {
     if (isLocked) {
       return Icon(Icons.lock, color: Colors.white.withOpacity(0.5), size: 18);
     } else if (isCompleted) {
-      return Icon(Icons.check, color: Colors.white, size: 18);
+      return const Icon(Icons.check, color: Colors.white, size: 18);
     } else if (isCurrent) {
-      return Icon(Icons.play_arrow, color: Colors.white, size: 18);
+      return const Icon(Icons.play_arrow, color: Colors.white, size: 18);
     } else {
       return Text(
         '${index + 1}',

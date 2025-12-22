@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learnforge_app/core/theme/app_colors.dart';
-import 'package:learnforge_app/core/widgets/empty_state.dart';
-import 'package:learnforge_app/core/widgets/glass_morphic_card.dart';
-import 'package:learnforge_app/core/widgets/gradient_button.dart';
-import 'package:learnforge_app/features/arena/models/challenge_model.dart';
-import 'package:learnforge_app/features/arena/providers/arena_provider.dart';
-import 'package:learnforge_app/features/courses/models/course_model.dart';
-import 'package:learnforge_app/features/courses/providers/course_provider.dart';
-import 'package:learnforge_app/features/courses/providers/enrolled_courses_provider.dart';
-import 'package:learnforge_app/features/courses/providers/selected_course_provider.dart';
-import 'package:learnforge_app/features/profile/providers/profile_provider.dart';
-
-// Define Trend enum at the top level
-enum Trend { up, down }
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/glass_morphic_card.dart';
+import '../../../core/widgets/gradient_button.dart';
+import '../../../core/widgets/particle_background.dart';
+import '../../../features/arena/models/challenge_model.dart';
+import '../../../features/arena/providers/arena_provider.dart';
+import '../../../features/courses/models/youtube_playlist_model.dart';
+import '../../../features/courses/providers/course_provider.dart';
+import '../../../features/profile/providers/profile_provider.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -30,253 +27,281 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     super.initState();
     // Load initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(courseProvider.notifier).loadCourses();
-      ref.read(courseProvider.notifier).loadMyCourses();
-      ref.read(userProfileProvider.notifier).loadUserProfile();
+      ref.read(courseProvider.notifier).loadPlaylists();
+      ref.read(courseProvider.notifier).loadMyPlaylists();
+      ref.read(profileProvider.notifier).loadUserProfile();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final userProfileState = ref.watch(userProfileProvider);
-    final enrolledCourses = ref.watch(enrolledCoursesProvider);
-    final activeChallengesAsync = ref.watch(
-      activeChallengesProvider,
-    ); // This is AsyncValue
-    final userProgress = ref.watch(userCourseProgressProvider);
+    final courseState = ref.watch(courseProvider);
+    final enrolledPlaylists = ref.watch(myPlaylistsProvider);
+    final activeChallengesAsync = ref.watch(activeChallengesProvider);
+    final profileState = ref.watch(profileProvider);
 
-    return Scaffold(
-      backgroundColor: AppColors.dark900,
-      body: activeChallengesAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.neonCyan),
-        ),
-        error: (error, stack) => Center(
-          child: Text(
-            'Error loading challenges: $error',
-            style: const TextStyle(color: AppColors.white),
+    return ParticleBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: activeChallengesAsync.when(
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.neonCyan),
           ),
+          error: (error, stack) => Center(
+            child: Text(
+              'Error loading challenges: $error',
+              style: TextStyles.inter(color: AppColors.white),
+            ),
+          ),
+          data: (activeChallenges) {
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                _buildAppBar(),
+                _buildHeroHeader(profileState),
+                _buildQuickStatsSection(
+                  enrolledPlaylists.length,
+                  activeChallenges.length,
+                  profileState.profile?.experience ?? 0,
+                ),
+                _buildContinueLearningSection(enrolledPlaylists),
+                _buildArenaHighlightsSection(activeChallenges),
+                _buildDailyMissionsSection(
+                  profileState.profile?.userData['streak'] ?? 0,
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 20)),
+              ],
+            );
+          },
         ),
-        data: (activeChallenges) {
-          return CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              _buildAppBar(userProfileState),
-              _buildQuickStats(
-                userProfileState,
-                enrolledCourses.length,
-                activeChallenges.length,
-              ),
-              _buildContinueLearningSection(enrolledCourses, userProgress),
-              _buildActiveChallengesSection(
-                activeChallenges,
-              ), // Now it's List<ChallengeModel>
-              _buildDailyGoalsSection(),
-              _buildLearningInsightsSection(),
-              _buildCommunityActivitySection(),
-            ],
-          );
-        },
       ),
     );
   }
 
-  // -------------------- ENHANCED APP BAR --------------------
-  SliverAppBar _buildAppBar(UserProfileState userProfileState) {
+  // -------------------- TOP APP BAR --------------------
+  SliverAppBar _buildAppBar() {
     return SliverAppBar(
-      expandedHeight: 280,
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.pin,
-        background: Stack(
-          children: [
-            // Animated gradient background
-            Container(
-                  decoration: BoxDecoration(
-                    gradient: SweepGradient(
-                      center: Alignment.topLeft,
-                      colors: [
-                        AppColors.neonPurple.withOpacity(0.4),
-                        AppColors.neonCyan.withOpacity(0.3),
-                        AppColors.neonPink.withOpacity(0.2),
-                        AppColors.neonBlue.withOpacity(0.1),
-                      ],
-                      stops: const [0.1, 0.4, 0.7, 1.0],
-                    ),
-                  ),
-                )
-                .animate(onPlay: (controller) => controller.repeat())
-                .rotate(duration: 20000.ms, begin: 0, end: 1),
-
-            // Content
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Welcome text with animation
-                  Text(
-                    'Welcome back,',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.white.withOpacity(0.8),
-                      fontFamily: 'Inter',
-                    ),
-                  ).animate().fadeIn(duration: 500.ms),
-
-                  const SizedBox(height: 8),
-
-                  // User name with typewriter effect
-                  Text(
-                        userProfileState.profile?.displayName ?? 'Code Master',
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.white,
-                          fontFamily: 'Inter',
-                        ),
-                      )
-                      .animate()
-                      .fadeIn(delay: 300.ms)
-                      .slideY(begin: 0.3, end: 0, duration: 600.ms),
-
-                  const SizedBox(height: 16),
-
-                  // Motivational quote
-                  GlassMorphicCard(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.auto_awesome_rounded,
-                          color: AppColors.neonCyan,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Every line of code brings you closer to mastery',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.white.withOpacity(0.9),
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ).animate().fadeIn(delay: 600.ms),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: Colors.transparent,
+      expandedHeight: 80,
       elevation: 0,
       pinned: true,
-      floating: true,
-      actions: [
-        // Notification bell with badge
-        Stack(
-          children: [
-            IconButton(
-              icon: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [AppColors.neonPurple, AppColors.neonPink],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.neonPurple.withOpacity(0.5),
-                      blurRadius: 10,
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.notifications_outlined,
-                  color: AppColors.white,
-                  size: 22,
-                ),
-              ),
-              onPressed: () => context.push('/notifications'),
-            ),
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Container(
-                width: 12,
-                height: 12,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.neonCyan,
-                ),
+      floating: false,
+      snap: false,
+      toolbarHeight: 72,
+      backgroundColor: AppColors.dark900.withOpacity(0.99),
+
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 16, top: 8),
+        child: GestureDetector(
+          onTap: () {
+            // Optional: navigate to home or about
+          },
+          child: CircleAvatar(
+            radius: 22, // Adjust size as needed
+            backgroundColor: Colors.transparent, // No background color
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/icon-removebg-preview.png',
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
               ),
             ),
-          ],
+          ),
         ),
+      ),
+
+      title: const AnimatedNeonText(text: "LearnForge", fontSize: 24),
+
+      centerTitle: true,
+
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 16, top: 8),
+          child: CircleAvatar(
+            backgroundColor: AppColors.dark700.withOpacity(0.8),
+            child: IconButton(
+              icon: Icon(
+                Icons.notifications_outlined,
+                color: AppColors.neonPink,
+                size: 20,
+              ),
+              onPressed: () => _openNotificationPanel(context),
+            ),
+          ),
+        ),
+        // .animate(onPlay: (controller) => controller.repeat())
+        // .shimmer(
+        //   duration: 2000.ms,
+        //   color: AppColors.neonPink.withOpacity(0.3),
+        // ),
       ],
     );
   }
 
-  // -------------------- CREATIVE QUICK STATS --------------------
-  Widget _buildQuickStats(
-    UserProfileState userState,
-    int courseCount,
-    int challengeCount,
-  ) {
-    final user = userState.profile;
+  // -------------------- WELCOME HEADER --------------------
+
+  Widget _buildHeroHeader(UserProfileState profileState) {
+    final user = profileState.profile;
 
     return SliverToBoxAdapter(
+      child:
+          Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: GlassMorphicCard(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () =>
+                            context.push('/profile'), // <-- open profile page
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: AppColors.neonCyan.withOpacity(0.25),
+                          child: CircleAvatar(
+                            radius: 36,
+                            backgroundColor: AppColors.dark700,
+                            backgroundImage: AssetImage(
+                              'assets/images/avatar_default.png',
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Text(
+                        user?.displayName ?? "Learner",
+                        style: TextStyles.orbitron(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      Text(
+                        "Level ${_calculateLevelFromXP(user?.experience ?? 0)} • ${user?.experience ?? 0} XP",
+                        style: TextStyles.inter(
+                          fontSize: 14,
+                          color: AppColors.grey400,
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Container(
+                        height: 8,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.dark700,
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: LinearProgressIndicator(
+                          value: _calculateLevelProgress(
+                            user?.experience ?? 0,
+                            _calculateLevelFromXP(user?.experience ?? 0),
+                          ),
+                          backgroundColor: Colors.transparent,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.neonCyan,
+                          ),
+                          minHeight: 6,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              .animate()
+              .fadeIn(duration: 600.ms)
+              .slideY(begin: 0.1, end: 0, duration: 600.ms)
+              .shimmer(
+                duration: 2000.ms,
+                color: AppColors.neonCyan.withOpacity(0.1),
+              ),
+    );
+  }
+
+  double _calculateLevelProgress(int experience, int level) {
+    // Simple progression: each level requires 500 XP more than previous
+    final baseXP = (level - 1) * 500;
+    final nextLevelXP = level * 500;
+    final currentLevelXP = experience - baseXP;
+    return currentLevelXP / 500;
+  }
+
+  int _calculateLevelFromXP(int xp) {
+    // Every 500 XP = +1 level
+    if (xp <= 0) return 1;
+
+    return (xp / 500).floor() + 1;
+  }
+
+  // -------------------- QUICK STATS SECTION --------------------
+  Widget _buildQuickStatsSection(
+    int playlistCount,
+    int challengeCount,
+    int totalXP,
+  ) {
+    return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Stats Grid with creative design
+            Padding(
+              padding: const EdgeInsets.only(left: 8, bottom: 12),
+              child: Text(
+                'Quick Stats',
+                style: TextStyles.orbitron(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white,
+                ),
+              ),
+            ),
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 2,
-              childAspectRatio: 1.3,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
+              childAspectRatio: 1.4,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
               children: [
-                _buildCreativeStatCard(
-                  title: 'Learning Streak',
-                  value: '${user?.userData['streak'] ?? 7} days',
-                  subtitle: 'Keep going! 🔥',
-                  icon: Icons.local_fire_department_rounded,
+                _buildStatCard(
+                  icon: '📚',
+                  title: 'My Courses',
+                  value: '$playlistCount',
+                  subtitle: 'Enrolled',
                   color: AppColors.neonPurple,
-                  progress: 0.8,
-                  onTap: () => context.push('/streak'),
-                ),
-                _buildCreativeStatCard(
-                  title: 'Total XP',
-                  value: '${user?.experience ?? 2450}',
-                  subtitle: 'Level ${user?.level ?? 5}',
-                  icon: Icons.auto_awesome_rounded,
-                  color: AppColors.neonCyan,
-                  progress: (user?.experience ?? 0) / 5000,
-                  onTap: () => context.push('/profile'),
-                ),
-                _buildCreativeStatCard(
-                  title: 'Active Courses',
-                  value: '$courseCount',
-                  subtitle: '$courseCount in progress',
-                  icon: Icons.school_rounded,
-                  color: AppColors.neonPink,
-                  progress: courseCount / 10,
                   onTap: () => context.push('/courses'),
                 ),
-                _buildCreativeStatCard(
-                  title: 'Challenges',
+                _buildStatCard(
+                  icon: '🏆',
+                  title: 'Active Challenges',
                   value: '$challengeCount',
-                  subtitle: 'Ready to compete?',
-                  icon: Icons.emoji_events_rounded,
+                  subtitle: 'Participating',
+                  color: AppColors.neonCyan,
+                ),
+                _buildStatCard(
+                  icon: '⏱',
+                  title: 'Hours Watched',
+                  value: '12',
+                  subtitle: 'This week',
+                  color: AppColors.neonPink,
+                ),
+                _buildStatCard(
+                  icon: '💡',
+                  title: 'Total XP',
+                  value: '$totalXP',
+                  subtitle: 'Experience',
                   color: AppColors.neonBlue,
-                  progress: challengeCount / 5,
-                  onTap: () => context.push('/arena'),
                 ),
               ],
             ),
@@ -286,180 +311,101 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildCreativeStatCard({
+  Widget _buildStatCard({
+    required String icon,
     required String title,
     required String value,
     required String subtitle,
-    required IconData icon,
     required Color color,
-    required double progress,
-    required VoidCallback onTap,
+    VoidCallback? onTap,
   }) {
     return GlassMorphicCard(
+      padding: const EdgeInsets.all(16),
       onTap: onTap,
-      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Icon with glow effect
+              Text(icon, style: const TextStyle(fontSize: 20)),
+              const Spacer(),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [color.withOpacity(0.3), color.withOpacity(0.1)],
+                  color: color.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  value,
+                  style: TextStyles.orbitron(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: color,
                   ),
-                  border: Border.all(color: color.withOpacity(0.5), width: 2),
                 ),
-                child: Icon(icon, color: color, size: 24),
-              ),
-
-              // Animated value counter
-              TweenAnimationBuilder(
-                duration: 1500.ms,
-                tween: IntTween(
-                  begin: 0,
-                  end:
-                      int.tryParse(value.replaceAll(RegExp(r'[^0-9]'), '')) ??
-                      0,
-                ),
-                builder: (context, value, child) {
-                  return Text(
-                    value.toString(),
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.white,
-                      fontFamily: 'Inter',
-                    ),
-                  );
-                },
               ),
             ],
           ),
-
-          const SizedBox(height: 16),
-
+          const SizedBox(height: 8),
           Text(
             title,
-            style: TextStyle(
+            style: TextStyles.inter(
               fontSize: 14,
-              color: AppColors.white.withOpacity(0.7),
-              fontFamily: 'Inter',
-            ),
-          ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: color,
+              color: AppColors.white,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
             ),
           ),
-
-          const SizedBox(height: 12),
-
-          // Animated progress bar
-          ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  backgroundColor: AppColors.dark700,
-                  valueColor: AlwaysStoppedAnimation<Color>(color),
-                  minHeight: 6,
-                ),
-              )
-              .animate(onPlay: (controller) => controller.repeat())
-              .shimmer(duration: 2000.ms, color: color.withOpacity(0.3)),
+          Text(subtitle, style: TextStyles.inter(fontSize: 12, color: color)),
         ],
       ),
-    ).animate().scale(duration: 600.ms, curve: Curves.elasticOut);
+    ).animate().scale(duration: 600.ms);
   }
 
-  // -------------------- ENHANCED CONTINUE LEARNING --------------------
-  Widget _buildContinueLearningSection(
-    List<Course> courses,
-    Map<String, double> progress,
-  ) {
+  // -------------------- CONTINUE LEARNING SECTION --------------------
+  Widget _buildContinueLearningSection(List<YouTubePlaylist> playlists) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Continue Learning',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white,
-                    fontFamily: 'Inter',
-                  ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, bottom: 16),
+              child: Text(
+                'Continue Learning',
+                style: TextStyles.orbitron(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white,
                 ),
-                TextButton(
-                  onPressed: () => context.push('/courses'),
-                  child: Row(
-                    children: [
-                      Text(
-                        'View All',
-                        style: TextStyle(
-                          color: AppColors.neonCyan,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: AppColors.neonCyan,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
 
-            const SizedBox(height: 16),
-
-            if (courses.isEmpty)
+            if (playlists.isEmpty)
               EmptyState(
                 title: 'No Courses Enrolled',
                 subtitle: 'Start your learning journey by enrolling in courses',
                 actionLabel: 'Browse Courses',
                 onActionPressed: () => context.push('/courses'),
-                icon: Icons.school_outlined,
+                glowColor: AppColors.neonPurple,
               )
             else
               SizedBox(
-                height: 220,
+                height: 280,
                 child: ListView.builder(
+                  padding: EdgeInsets.only(left: 8),
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: courses.length,
+                  physics: BouncingScrollPhysics(),
+                  itemCount: playlists.length,
                   itemBuilder: (context, index) {
-                    final course = courses[index];
-                    final courseProgress = progress[course.id] ?? 0.0;
-
+                    final playlist = playlists[index];
                     return Container(
-                          width: 300,
-                          margin: EdgeInsets.only(
-                            right: index == courses.length - 1 ? 0 : 16,
-                          ),
-                          child: _buildCourseCard(course, courseProgress),
-                        )
-                        .animate()
-                        .fadeIn(delay: (200 * index).ms)
-                        .slideX(begin: 0.5, end: 0, duration: 500.ms);
+                      margin: EdgeInsets.only(
+                        right: index == playlists.length - 1 ? 8 : 16,
+                      ),
+                      child: _buildLearningCard(playlist),
+                    );
                   },
                 ),
               ),
@@ -469,525 +415,420 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildCourseCard(Course course, double progress) {
+  Widget _buildLearningCard(YouTubePlaylist playlist) {
     return GlassMorphicCard(
-      onTap: () {
-        ref.read(selectedCourseProvider.notifier).state = course;
-        context.push('/course/${course.id}');
-      },
-      padding: const EdgeInsets.all(0),
-      child: Stack(
-        children: [
-          // Course thumbnail with gradient overlay
-          Container(
-            height: 120,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-              image: DecorationImage(
-                image: NetworkImage(course.thumbnail),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-                gradient: LinearGradient(
-                  colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
+      padding: EdgeInsets.zero,
+      onTap: () => context.push('/playlist/${playlist.id}'),
 
-          // Progress indicator overlay
-          Positioned(
-            top: 100,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 4,
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(2),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  backgroundColor: AppColors.dark700,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.neonCyan,
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Course info
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 260,
+        height: 280, // bounded card height -> makes layout predictable
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // THUMBNAIL (fixed height)
+            Container(
+              height: 120,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
                 ),
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.dark900.withOpacity(0.9),
-                    AppColors.dark800.withOpacity(0.8),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                image: DecorationImage(
+                  image: NetworkImage(playlist.thumbnailUrl),
+                  fit: BoxFit.cover,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Stack(
                 children: [
-                  Text(
-                    course.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
-                      fontFamily: 'Inter',
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.45),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
 
-                  const SizedBox(height: 8),
-
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.person_rounded,
-                        color: AppColors.white.withOpacity(0.6),
-                        size: 14,
+                  // XP badge
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
                       ),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          course.instructor,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.white.withOpacity(0.6),
-                            fontFamily: 'Inter',
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      decoration: BoxDecoration(
+                        color: AppColors.neonCyan,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        "+50 XP",
+                        style: TextStyles.inter(
+                          fontSize: 11,
+                          color: AppColors.dark900,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
+                    ),
                   ),
 
-                  const SizedBox(height: 12),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${(progress * 100).toInt()}% complete',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.neonCyan,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                  // Category chip
+                  Positioned(
+                    bottom: 8,
+                    left: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.neonPurple.withOpacity(0.7),
+                      ),
+                      child: Text(
+                        playlist.channelTitle,
+                        style: TextStyles.inter(
+                          fontSize: 10,
+                          color: AppColors.white,
                         ),
                       ),
-
-                      GradientButton(
-                        text: 'Continue',
-                        onPressed: () {
-                          ref.read(selectedCourseProvider.notifier).state =
-                              course;
-                          context.push('/course/${course.id}');
-                        },
-                        height: 32,
-                        width: 100,
-                        borderRadius: 16,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
 
-          // Level badge
-          Positioned(
-            top: 12,
-            right: 12,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: _getLevelColor(course.level).withOpacity(0.9),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                course.level,
-                style: const TextStyle(
-                  color: AppColors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // -------------------- GAMIFIED CHALLENGES SECTION --------------------
-  Widget _buildActiveChallengesSection(List<ChallengeModel> challenges) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Active Challenges',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => context.push('/arena'),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Join More',
-                        style: TextStyle(
-                          color: AppColors.neonPurple,
-                          fontFamily: 'Inter',
+            // BODY: Expanded uses remaining bounded height (safe because SizedBox above)
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // spaceBetween ensures title top, button bottom
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Title + optional progress area (top)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          playlist.title,
+                          style: TextStyles.orbitron(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: AppColors.neonPurple,
-                        size: 16,
-                      ),
-                    ],
-                  ),
+                        const SizedBox(height: 8),
+
+                        if (playlist.userProgress > 0) ...[
+                          LinearProgressIndicator(
+                            value: playlist.userProgress,
+                            backgroundColor: AppColors.dark700,
+                            valueColor: AlwaysStoppedAnimation(
+                              AppColors.neonBlue,
+                            ),
+                            minHeight: 6,
+                          ),
+                          const SizedBox(height: 8),
+                        ] else
+                          const SizedBox(height: 8),
+                      ],
+                    ),
+
+                    // Button area (bottom)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        GradientButton(
+                          text: playlist.userProgress > 0
+                              ? "Continue"
+                              : "Start Learning",
+                          onPressed: () =>
+                              context.push('/playlist/${playlist.id}'),
+                          height: 42,
+                        ),
+                        const SizedBox(height: 4), // safe padding for glow
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            if (challenges.isEmpty)
-              EmptyState(
-                title: 'No Active Challenges',
-                subtitle:
-                    'Join challenges to test your skills and earn rewards',
-                actionLabel: 'Browse Challenges',
-                onActionPressed: () => context.push('/arena'),
-                icon: Icons.emoji_events_outlined,
-                glowColor: AppColors.neonPurple,
-              )
-            else
-              Column(
-                children: challenges.map((challenge) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: _buildChallengeCard(challenge),
-                  ).animate().fadeIn().slideY(
-                    begin: 0.3,
-                    end: 0,
-                    duration: 500.ms,
-                  );
-                }).toList(),
               ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildChallengeCard(ChallengeModel challenge) {
-    final timeLeft = challenge.endDate.difference(DateTime.now());
-    final hoursLeft = timeLeft.inHours;
-
-    return GlassMorphicCard(
-      onTap: () => context.push('/challenge/${challenge.id}'),
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          // Challenge icon with glow
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                colors: [AppColors.neonPurple, AppColors.neonPink],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.neonPurple.withOpacity(0.5),
-                  blurRadius: 15,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.emoji_events_rounded,
-              color: AppColors.white,
-              size: 28,
-            ),
-          ),
-
-          const SizedBox(width: 16),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  challenge.title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white,
-                    fontFamily: 'Inter',
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const SizedBox(height: 6),
-
-                Text(
-                  challenge.description,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.white.withOpacity(0.7),
-                    fontFamily: 'Inter',
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const SizedBox(height: 8),
-
-                Row(
-                  children: [
-                    // Participants
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.people_rounded,
-                          color: AppColors.white.withOpacity(0.6),
-                          size: 14,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${challenge.participantCount}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.white.withOpacity(0.6),
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    // XP Points
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.bolt_rounded,
-                          color: AppColors.neonYellow ?? Colors.amber,
-                          size: 14,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${challenge.points} XP',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.neonYellow ?? Colors.amber,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const Spacer(),
-
-                    // Time left
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: hoursLeft < 24
-                            ? AppColors.neonPink.withOpacity(0.2)
-                            : AppColors.neonCyan.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        hoursLeft < 24 ? 'Ending soon!' : '${hoursLeft}h left',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: hoursLeft < 24
-                              ? AppColors.neonPink
-                              : AppColors.neonCyan,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // -------------------- DAILY GOALS SECTION --------------------
-  Widget _buildDailyGoalsSection() {
+  // -------------------- ARENA HIGHLIGHTS SECTION --------------------
+  Widget _buildArenaHighlightsSection(List<ChallengeModel> challenges) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: GlassMorphicCard(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8, bottom: 16),
+              child: Text(
+                'Arena Highlights',
+                style: TextStyles.orbitron(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white,
+                ),
+              ),
+            ),
+            // Arena Cards
+            SizedBox(
+              height: 160,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
                 children: [
-                  const Text(
-                    'Daily Learning Goals',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.white,
-                      fontFamily: 'Inter',
+                  const SizedBox(width: 8),
+                  _buildArenaCard(
+                    title: 'Solo Challenge',
+                    subtitle: 'Quick Sort Challenge',
+                    icon: Icons.person_rounded,
+                    color: AppColors.neonPurple,
+                    onTap: () => context.push('/arena?solo=true'),
+                  ),
+                  _buildArenaCard(
+                    title: 'Multiplayer Mode',
+                    subtitle: 'Compete with others',
+                    icon: Icons.people_rounded,
+                    color: AppColors.neonCyan,
+                    onTap: () => context.push('/arena?mode=multiplayer'),
+                  ),
+                  _buildArenaCard(
+                    title: 'Collaborate Mode',
+                    subtitle: 'Team up & learn',
+                    icon: Icons.group_work_rounded,
+                    color: AppColors.neonPink,
+                    onTap: () => context.push('/arena?mode=collaborate'),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            // XP Earned and Go to Arena Button
+            GlassMorphicCard(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'XP Earned Today',
+                          style: TextStyles.inter(
+                            fontSize: 14,
+                            color: AppColors.grey400,
+                          ),
+                        ),
+                        Text(
+                          '120 XP',
+                          style: TextStyles.orbitron(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.neonCyan,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [AppColors.neonPurple, AppColors.neonPink],
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      '2/3 Complete',
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
+                  GradientButton(
+                    text: 'Go to Arena',
+                    onPressed: () => context.push('/arena'),
+                    height: 40,
                   ),
                 ],
               ),
-
-              const SizedBox(height: 20),
-
-              _buildGoalItem(
-                icon: Icons.play_lesson_rounded,
-                title: 'Complete 1 chapter',
-                completed: true,
-                xp: 25,
-              ),
-              _buildGoalItem(
-                icon: Icons.timer_rounded,
-                title: '30 minutes of learning',
-                completed: false,
-                progress: 0.6,
-                xp: 50,
-              ),
-              _buildGoalItem(
-                icon: Icons.quiz_rounded,
-                title: 'Take 1 quiz',
-                completed: false,
-                xp: 75,
-              ),
-
-              const SizedBox(height: 16),
-
-              GradientButton(
-                text: 'Set Weekly Goals',
-                onPressed: () => context.push('/goals'),
-                gradient: const LinearGradient(
-                  colors: [AppColors.neonCyan, AppColors.neonBlue],
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-              ),
-            ],
-          ),
-        ).animate().fadeIn(delay: 400.ms),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildGoalItem({
+  Widget _buildArenaCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      width: 200,
+      margin: const EdgeInsets.only(right: 12),
+      child: GlassMorphicCard(
+        onTap: onTap,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyles.orbitron(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.white,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyles.inter(fontSize: 12, color: color),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // -------------------- DAILY MISSIONS SECTION --------------------
+  Widget _buildDailyMissionsSection(int streakDays) {
+    final completedMissions = 1;
+    final totalMissions = 3;
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8, bottom: 16),
+              child: Text(
+                'Daily Missions',
+                style: TextStyles.orbitron(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white,
+                ),
+              ),
+            ),
+            GlassMorphicCard(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  // Streak Tracker
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.local_fire_department_rounded,
+                            color: AppColors.neonPink,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Streak: $streakDays days',
+                            style: TextStyles.inter(
+                              fontSize: 14,
+                              color: AppColors.neonPink,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '$completedMissions/$totalMissions Completed',
+                        style: TextStyles.inter(
+                          fontSize: 14,
+                          color: AppColors.grey400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Mission Items
+                  _buildMissionItem(
+                    icon: Icons.play_lesson_rounded,
+                    title: 'Watch 30 minutes',
+                    completed: true,
+                  ),
+                  _buildMissionItem(
+                    icon: Icons.code_rounded,
+                    title: 'Complete 1 coding exercise',
+                    completed: false,
+                  ),
+                  _buildMissionItem(
+                    icon: Icons.quiz_rounded,
+                    title: 'Take a quick quiz',
+                    completed: false,
+                  ),
+                  const SizedBox(height: 16),
+                  GradientButton(
+                    text: 'Set Goals',
+                    onPressed: () {
+                      print('DEBUG: Set Goals button pressed. Attempting to push /set-goal');
+                      context.push('/set-goal');
+                    },
+                    height: 40,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMissionItem({
     required IconData icon,
     required String title,
     required bool completed,
-    double progress = 0.0,
-    required int xp,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.dark700.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: completed
-              ? AppColors.neonCyan.withOpacity(0.3)
-              : AppColors.dark600,
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          // Icon with status
-          Stack(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.dark700.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: completed
+                  ? AppColors.neonCyan.withOpacity(0.3)
+                  : Colors.transparent,
+            ),
+          ),
+          child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: completed
                       ? AppColors.neonCyan.withOpacity(0.2)
@@ -996,95 +837,125 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 child: Icon(
                   icon,
-                  color: completed
-                      ? AppColors.neonCyan
-                      : AppColors.white.withOpacity(0.5),
-                  size: 20,
+                  color: completed ? AppColors.neonCyan : AppColors.grey400,
+                  size: 18,
                 ),
               ),
-              if (completed)
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      color: AppColors.neonCyan,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.check_rounded,
-                      color: AppColors.white,
-                      size: 10,
-                    ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyles.inter(
+                    color: completed ? AppColors.white : AppColors.grey400,
+                    fontWeight: completed ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
+              ),
+              AnimatedContainer(
+                duration: 300.ms,
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: completed
+                      ? AppColors.neonCyan.withOpacity(0.2)
+                      : AppColors.dark600,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: completed ? AppColors.neonCyan : AppColors.grey600,
+                  ),
+                ),
+                child: Icon(
+                  completed
+                      ? Icons.check_rounded
+                      : Icons.radio_button_unchecked,
+                  color: completed ? AppColors.neonCyan : AppColors.grey400,
+                  size: 16,
+                ),
+              ),
             ],
           ),
+        )
+        .animate(
+          onComplete: (controller) {
+            if (completed) controller.repeat();
+          },
+        )
+        .shimmer(duration: 2000.ms, color: AppColors.neonCyan.withOpacity(0.3));
+  }
 
-          const SizedBox(width: 16),
+  // -------------------- NAVIGATION METHODS --------------------
+  void _openProfileScreen(BuildContext context) {
+    context.push('/profile');
+  }
 
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  void _openNotificationPanel(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => _buildNotificationPanel(),
+    );
+  }
+
+  Widget _buildNotificationPanel() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.7,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.dark800.withOpacity(0.95),
+            AppColors.dark900.withOpacity(0.98),
+          ],
+        ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  title,
-                  style: const TextStyle(
+                  'Notifications',
+                  style: TextStyles.orbitron(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                     color: AppColors.white,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Inter',
                   ),
                 ),
-
-                if (!completed && progress > 0) ...[
-                  const SizedBox(height: 8),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: progress,
-                      backgroundColor: AppColors.dark600,
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        AppColors.neonPurple,
-                      ),
-                      minHeight: 6,
-                    ),
-                  ),
-                ],
+                IconButton(
+                  icon: Icon(Icons.close_rounded, color: AppColors.grey400),
+                  onPressed: () => Navigator.pop(context),
+                ),
               ],
             ),
           ),
-
-          // XP Reward
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color:
-                  AppColors.neonYellow?.withOpacity(0.2) ??
-                  Colors.amber.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color:
-                    AppColors.neonYellow?.withOpacity(0.3) ??
-                    Colors.amber.withOpacity(0.3),
-              ),
-            ),
-            child: Row(
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                Icon(
-                  Icons.bolt_rounded,
-                  color: AppColors.neonYellow ?? Colors.amber,
-                  size: 12,
+                _buildNotificationItem(
+                  title: 'Level Up!',
+                  subtitle: 'You reached Level 5!',
+                  icon: Icons.emoji_events_rounded,
+                  color: AppColors.neonCyan,
                 ),
-                const SizedBox(width: 4),
-                Text(
-                  '$xp XP',
-                  style: TextStyle(
-                    color: AppColors.neonYellow ?? Colors.amber,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
-                  ),
+                _buildNotificationItem(
+                  title: 'New Challenge Available',
+                  subtitle: 'Quick Sort Challenge is live!',
+                  icon: Icons.timer_rounded,
+                  color: AppColors.neonPurple,
+                ),
+                _buildNotificationItem(
+                  title: '+50 XP Earned',
+                  subtitle: 'For completing Flutter Basics',
+                  icon: Icons.star_rounded,
+                  color: AppColors.neonPink,
                 ),
               ],
             ),
@@ -1094,81 +965,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  // -------------------- LEARNING INSIGHTS --------------------
-  Widget _buildLearningInsightsSection() {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Learning Insights',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: AppColors.white,
-                fontFamily: 'Inter',
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              childAspectRatio: 1.4,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              children: [
-                _buildInsightCard(
-                  title: 'Weekly Progress',
-                  value: '+12%',
-                  subtitle: 'From last week',
-                  trend: Trend.up,
-                  color: AppColors.neonGreen ?? Colors.green,
-                ),
-                _buildInsightCard(
-                  title: 'Time Spent',
-                  value: '8.5h',
-                  subtitle: 'This week',
-                  trend: Trend.up,
-                  color: AppColors.neonCyan,
-                ),
-                _buildInsightCard(
-                  title: 'Skills Improved',
-                  value: '3',
-                  subtitle: 'New competencies',
-                  trend: Trend.up,
-                  color: AppColors.neonPurple,
-                ),
-                _buildInsightCard(
-                  title: 'Challenges Won',
-                  value: '2',
-                  subtitle: 'This month',
-                  trend: Trend.up,
-                  color: AppColors.neonPink,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInsightCard({
+  Widget _buildNotificationItem({
     required String title,
-    required String value,
     required String subtitle,
-    required Trend trend,
+    required IconData icon,
     required Color color,
   }) {
-    return GlassMorphicCard(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      decoration: BoxDecoration(
+        color: AppColors.dark700.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
@@ -1176,225 +987,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               color: color.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              trend == Trend.up
-                  ? Icons.trending_up_rounded
-                  : Icons.trending_down_rounded,
-              color: color,
-              size: 20,
-            ),
+            child: Icon(icon, color: color, size: 20),
           ),
-
-          const SizedBox(height: 12),
-
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColors.white,
-              fontFamily: 'Inter',
-            ),
-          ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.white.withOpacity(0.7),
-              fontFamily: 'Inter',
-            ),
-          ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: color,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
-            ),
-          ),
-        ],
-      ),
-    ).animate().fadeIn().scale(duration: 600.ms, curve: Curves.elasticOut);
-  }
-
-  // -------------------- COMMUNITY ACTIVITY --------------------
-  Widget _buildCommunityActivitySection() {
-    final communityActivities = [
-      {
-        'name': 'Sarah Chen',
-        'action': 'completed Flutter Animations course',
-        'time': '2 hours ago',
-        'avatar':
-            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
-      },
-      {
-        'name': 'Mike Rodriguez',
-        'action': 'earned 500 XP in UI Challenge',
-        'time': '5 hours ago',
-        'avatar':
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-      },
-      {
-        'name': 'Alex Johnson',
-        'action': 'started Advanced Dart Programming',
-        'time': '1 day ago',
-        'avatar':
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-      },
-    ];
-
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Community Activity',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: AppColors.white,
-                fontFamily: 'Inter',
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            GlassMorphicCard(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  ...communityActivities.map((activity) {
-                    return _buildCommunityItem(
-                      avatar: activity['avatar']!,
-                      name: activity['name']!,
-                      action: activity['action']!,
-                      time: activity['time']!,
-                    ).animate().fadeIn().slideX(
-                      begin: 0.5,
-                      end: 0,
-                      duration: 500.ms,
-                    );
-                  }),
-
-                  const SizedBox(height: 8),
-
-                  TextButton(
-                    onPressed: () => context.push('/community'),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'See More Activity',
-                          style: TextStyle(
-                            color: AppColors.neonCyan,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: AppColors.neonCyan,
-                          size: 16,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCommunityItem({
-    required String avatar,
-    required String name,
-    required String action,
-    required String time,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        children: [
-          // Avatar with gradient border
-          Container(
-            width: 48,
-            height: 48,
-            padding: const EdgeInsets.all(2),
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [AppColors.neonPurple, AppColors.neonCyan],
-              ),
-            ),
-            child: ClipOval(
-              child: Image.network(
-                avatar,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) {
-                  return Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.dark700,
-                    ),
-                    child: const Icon(
-                      Icons.person_rounded,
-                      color: AppColors.white,
-                      size: 20,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-
           const SizedBox(width: 12),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.white,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' $action',
-                        style: TextStyle(
-                          color: AppColors.white.withOpacity(0.7),
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
+                Text(
+                  title,
+                  style: TextStyles.inter(
+                    fontSize: 14,
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-
-                const SizedBox(height: 2),
-
                 Text(
-                  time,
-                  style: TextStyle(
+                  subtitle,
+                  style: TextStyles.inter(
                     fontSize: 12,
-                    color: AppColors.white.withOpacity(0.5),
-                    fontFamily: 'Inter',
+                    color: AppColors.grey400,
                   ),
                 ),
               ],
@@ -1404,18 +1016,78 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
     );
   }
+}
 
-  // -------------------- HELPER METHODS --------------------
-  Color _getLevelColor(String level) {
-    switch (level.toLowerCase()) {
-      case 'beginner':
-        return AppColors.neonGreen ?? Colors.green;
-      case 'intermediate':
-        return AppColors.neonYellow ?? Colors.amber;
-      case 'advanced':
-        return AppColors.neonPink;
-      default:
-        return AppColors.neonCyan;
-    }
+class AnimatedNeonText extends StatefulWidget {
+  final String text;
+  final double fontSize;
+
+  const AnimatedNeonText({super.key, required this.text, this.fontSize = 24});
+
+  @override
+  _AnimatedNeonTextState createState() => _AnimatedNeonTextState();
+}
+
+class _AnimatedNeonTextState extends State<AnimatedNeonText>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2), // change to 6s for slower sweep
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final baseStyle =
+        TextStyles.orbitron(
+          fontSize: widget.fontSize,
+          fontWeight: FontWeight.bold,
+          color: Colors.white, // color still required for ShaderMask
+        ).copyWith(
+          // add soft glow shadows here via copyWith
+          shadows: [
+            Shadow(blurRadius: 18, color: AppColors.neonBlue.withOpacity(0.65)),
+            Shadow(
+              blurRadius: 36,
+              color: AppColors.neonPurple.withOpacity(0.5),
+            ),
+          ],
+        );
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (_, __) {
+        final start = -1 + _controller.value * 2;
+        final end = 1 + _controller.value * 2;
+
+        return ShaderMask(
+          shaderCallback: (bounds) {
+            return LinearGradient(
+              begin: Alignment(start, 0),
+              end: Alignment(end, 0),
+              colors: [
+                AppColors.neonPurple,
+                AppColors.neonBlue,
+                AppColors.neonCyan,
+              ],
+              stops: const [0.0, 0.5, 1.0],
+            ).createShader(bounds);
+          },
+          blendMode: BlendMode.srcIn,
+          child: Text(widget.text, style: baseStyle),
+        );
+      },
+    );
   }
 }

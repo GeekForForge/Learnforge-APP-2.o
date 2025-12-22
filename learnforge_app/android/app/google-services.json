@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "220012925043",
+    "project_id": "learnforge-174ef",
+    "storage_bucket": "learnforge-174ef.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220012925043:android:d1c118b363e382efd65a06",
+        "android_client_info": {
+          "package_name": "com.example.learnforge_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4sSokm5cEqY92GZTdk49SWC-VAwok4yc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

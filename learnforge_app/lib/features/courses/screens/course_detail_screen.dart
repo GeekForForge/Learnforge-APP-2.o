@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:learnforge_app/core/theme/app_colors.dart';
 import 'package:learnforge_app/core/widgets/gradient_button.dart';
+import 'package:learnforge_app/features/courses/models/chapter_model.dart';
+import 'package:learnforge_app/features/courses/models/course_model.dart';
 import 'package:learnforge_app/features/courses/providers/selected_course_provider.dart';
 import 'package:learnforge_app/features/courses/widgets/chapter_list.dart';
-import 'package:learnforge_app/features/courses/models/chapter_model.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:learnforge_app/core/utils/neon_animations.dart';
+import 'package:learnforge_app/features/courses/widgets/youtube_playlist_card.dart';
+import 'package:learnforge_app/core/widgets/particle_background.dart'; // Add this import
 
 class CourseDetailScreen extends ConsumerStatefulWidget {
   final String courseId;
@@ -21,9 +25,9 @@ class CourseDetailScreen extends ConsumerStatefulWidget {
 class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  int _currentPage = 0;
   bool _isJoined = false;
   double _progress = 0.65;
+  late YoutubePlayerController _youtubeController;
 
   @override
   void initState() {
@@ -33,10 +37,17 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
       duration: const Duration(milliseconds: 1000),
     );
     _animationController.forward();
+
+    // For demo, empty videoId; replace with a real one if available
+    _youtubeController = YoutubePlayerController(
+      initialVideoId: '',
+      flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
+    );
   }
 
   @override
   void dispose() {
+    _youtubeController.dispose();
     _animationController.dispose();
     super.dispose();
   }
@@ -60,8 +71,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
   }
 
   void _startCourse() {
-    // Navigate to first lesson
-    // context.push('/course/${widget.courseId}/lesson/1');
+    // Navigate to first lesson or video
   }
 
   @override
@@ -92,28 +102,14 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
     }
 
     return Scaffold(
-      backgroundColor: AppColors.dark900,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // Animated Background
-          Container(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                center: Alignment.topLeft,
-                radius: 1.5,
-                colors: [
-                  AppColors.neonPurple.withOpacity(0.15),
-                  AppColors.neonCyan.withOpacity(0.1),
-                  AppColors.dark900,
-                ],
-                stops: const [0.1, 0.4, 1.0],
-              ),
-            ),
-          ),
+          // Replace NeonParticleBackground with ParticleBackground
+          ParticleBackground(particleCount: 30),
 
           CustomScrollView(
             slivers: [
-              // App Bar with Course Image
               SliverAppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -144,7 +140,6 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                       ),
                     ],
                   ),
-                  collapseMode: CollapseMode.pin,
                 ),
                 pinned: true,
                 actions: [
@@ -161,15 +156,12 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                   ),
                 ],
               ),
-
-              // Course Content
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Title and Stats
                       Row(
                         children: [
                           Expanded(
@@ -216,13 +208,20 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 24),
-
-                      // Progress Section (if enrolled)
                       if (_isJoined) _buildProgressSection(),
-
-                      // Course Description
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: YoutubePlayer(
+                          controller: _youtubeController,
+                          showVideoProgressIndicator: true,
+                          progressIndicatorColor: AppColors.neonPink,
+                          progressColors: ProgressBarColors(
+                            playedColor: AppColors.neonPink,
+                            handleColor: AppColors.neonBlue,
+                          ),
+                        ),
+                      ),
                       _buildSection(
                         title: 'Course Overview',
                         icon: Icons.description,
@@ -237,10 +236,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 24),
-
-                      // What You'll Learn
                       _buildSection(
                         title: 'What You\'ll Learn',
                         icon: Icons.checklist,
@@ -251,17 +247,16 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                               .toList(),
                         ),
                       ),
-
                       const SizedBox(height: 24),
-
-                      // Course Content/Chapters
                       _buildSection(
                         title: 'Course Content',
                         icon: Icons.library_books,
                         color: AppColors.neonCyan,
-                        child: ChapterList(chapters: _generateMockChapters()),
+                        child: ChapterList(
+                          chapters: selectedCourse.chapters, // FIX
+                          lessons: selectedCourse.lessons, // FIX
+                        ),
                       ),
-
                       const SizedBox(height: 40),
                     ],
                   ),
@@ -269,8 +264,6 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
               ),
             ],
           ),
-
-          // Bottom Action Bar
           Positioned(
             bottom: 0,
             left: 0,
@@ -292,7 +285,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
               ),
               child: Row(
                 children: [
-                  if (!_isJoined) ...[
+                  if (!_isJoined)
                     Expanded(
                       child: GradientButton(
                         text: selectedCourse.isFree
@@ -307,8 +300,8 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                           vertical: 10,
                         ),
                       ),
-                    ),
-                  ] else ...[
+                    )
+                  else ...[
                     Expanded(
                       flex: 2,
                       child: GradientButton(
@@ -341,7 +334,6 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                           ),
                           onPressed: () {
                             // Navigate to discussion
-                            // context.push('/course/${widget.courseId}/discussion');
                           },
                         ),
                       ),
