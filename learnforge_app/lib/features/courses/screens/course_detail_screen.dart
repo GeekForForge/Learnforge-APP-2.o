@@ -3,20 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:learnforge_app/core/theme/app_colors.dart';
 import 'package:learnforge_app/core/widgets/gradient_button.dart';
-import 'package:learnforge_app/features/courses/models/chapter_model.dart';
-import 'package:learnforge_app/features/courses/models/course_model.dart';
 import 'package:learnforge_app/features/courses/providers/selected_course_provider.dart';
 import 'package:learnforge_app/features/courses/widgets/chapter_list.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:learnforge_app/core/utils/neon_animations.dart';
-import 'package:learnforge_app/features/courses/widgets/youtube_playlist_card.dart';
 import 'package:learnforge_app/core/widgets/particle_background.dart'; // Add this import
 
 class CourseDetailScreen extends ConsumerStatefulWidget {
   final String courseId;
 
-  const CourseDetailScreen({Key? key, required this.courseId})
-    : super(key: key);
+  const CourseDetailScreen({super.key, required this.courseId});
 
   @override
   ConsumerState<CourseDetailScreen> createState() => _CourseDetailScreenState();
@@ -26,7 +21,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   bool _isJoined = false;
-  double _progress = 0.65;
+  final double _progress = 0.65;
   late YoutubePlayerController _youtubeController;
 
   @override
@@ -59,7 +54,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: AppColors.neonGreen ?? Colors.green,
+        backgroundColor: AppColors.neonGreen,
         content: const Text(
           'Course Enrolled! Happy Learning!',
           style: TextStyle(color: Colors.white, fontFamily: 'Inter'),
@@ -90,7 +85,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
               Text(
                 'Loading course...',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   fontSize: 16,
                   fontFamily: 'Inter',
                 ),
@@ -129,9 +124,9 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.dark900.withOpacity(0.8),
+                              AppColors.dark900.withValues(alpha: 0.8),
                               Colors.transparent,
-                              AppColors.dark900.withOpacity(0.9),
+                              AppColors.dark900.withValues(alpha: 0.9),
                             ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -229,7 +224,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                         child: Text(
                           selectedCourse.description,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             fontSize: 16,
                             height: 1.6,
                             fontFamily: 'Inter',
@@ -240,7 +235,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                       _buildSection(
                         title: 'What You\'ll Learn',
                         icon: Icons.checklist,
-                        color: AppColors.neonGreen ?? Colors.green,
+                        color: AppColors.neonGreen,
                         child: Column(
                           children: selectedCourse.learningObjectives
                               .map((objective) => _buildLearningItem(objective))
@@ -273,7 +268,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.dark900.withOpacity(0.9),
+                    AppColors.dark900.withValues(alpha: 0.9),
                     AppColors.dark900,
                   ],
                   begin: Alignment.topCenter,
@@ -323,7 +318,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
                           border: Border.all(
-                            color: AppColors.neonPurple.withOpacity(0.5),
+                            color: AppColors.neonPurple.withValues(alpha: 0.5),
                             width: 2,
                           ),
                         ),
@@ -357,7 +352,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
         Text(
           text,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             fontSize: 14,
             fontFamily: 'Inter',
           ),
@@ -373,15 +368,15 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.neonCyan.withOpacity(0.1),
-            AppColors.neonPurple.withOpacity(0.05),
+            AppColors.neonCyan.withValues(alpha: 0.1),
+            AppColors.neonPurple.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.neonCyan.withOpacity(0.3),
+          color: AppColors.neonCyan.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -431,7 +426,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                       borderRadius: BorderRadius.circular(4),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.neonCyan.withOpacity(0.5),
+                          color: AppColors.neonCyan.withValues(alpha: 0.5),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -441,7 +436,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                   .animate(onPlay: (controller) => controller.repeat())
                   .shimmer(
                     duration: 2000.ms,
-                    color: AppColors.neonCyan.withOpacity(0.3),
+                    color: AppColors.neonCyan.withValues(alpha: 0.3),
                   ),
             ],
           ),
@@ -469,7 +464,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.dark800.withOpacity(0.5),
+        color: AppColors.dark800.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.dark700, width: 1),
       ),
@@ -481,7 +476,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 20),
@@ -513,7 +508,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
         children: [
           Icon(
             Icons.check_circle,
-            color: AppColors.neonGreen ?? Colors.green,
+            color: AppColors.neonGreen,
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -521,7 +516,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
             child: Text(
               text,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 fontSize: 16,
                 fontFamily: 'Inter',
               ),
@@ -532,60 +527,60 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
     );
   }
 
-  List<ChapterModel> _generateMockChapters() {
-    return [
-      ChapterModel(
-        id: '1',
-        title: 'Introduction to the Course',
-        description:
-            'Get started with the basics and understand what you will learn',
-        orderIndex: 1,
-        totalLessons: 3,
-        completedLessons: 3,
-        estimatedMinutes: 30,
-        isLocked: false,
-        lessonIds: ['lesson_1_1', 'lesson_1_2', 'lesson_1_3'],
-      ),
-      ChapterModel(
-        id: '2',
-        title: 'Core Concepts',
-        description: 'Dive deep into the fundamental concepts and principles',
-        orderIndex: 2,
-        totalLessons: 5,
-        completedLessons: 5,
-        estimatedMinutes: 45,
-        isLocked: false,
-        lessonIds: [
-          'lesson_2_1',
-          'lesson_2_2',
-          'lesson_2_3',
-          'lesson_2_4',
-          'lesson_2_5',
-        ],
-      ),
-      ChapterModel(
-        id: '3',
-        title: 'Advanced Topics',
-        description: 'Explore advanced techniques and real-world applications',
-        orderIndex: 3,
-        totalLessons: 4,
-        completedLessons: 2,
-        estimatedMinutes: 60,
-        isLocked: false,
-        lessonIds: ['lesson_3_1', 'lesson_3_2', 'lesson_3_3', 'lesson_3_4'],
-      ),
-      ChapterModel(
-        id: '4',
-        title: 'Final Project',
-        description:
-            'Apply everything you have learned in a comprehensive project',
-        orderIndex: 4,
-        totalLessons: 3,
-        completedLessons: 0,
-        estimatedMinutes: 90,
-        isLocked: true,
-        lessonIds: ['lesson_4_1', 'lesson_4_2', 'lesson_4_3'],
-      ),
-    ];
-  }
+  // List<ChapterModel> _generateMockChapters() {
+  //   return [
+  //     ChapterModel(
+  //       id: '1',
+  //       title: 'Introduction to the Course',
+  //       description:
+  //           'Get started with the basics and understand what you will learn',
+  //       orderIndex: 1,
+  //       totalLessons: 3,
+  //       completedLessons: 3,
+  //       estimatedMinutes: 30,
+  //       isLocked: false,
+  //       lessonIds: ['lesson_1_1', 'lesson_1_2', 'lesson_1_3'],
+  //     ),
+  //     ChapterModel(
+  //       id: '2',
+  //       title: 'Core Concepts',
+  //       description: 'Dive deep into the fundamental concepts and principles',
+  //       orderIndex: 2,
+  //       totalLessons: 5,
+  //       completedLessons: 5,
+  //       estimatedMinutes: 45,
+  //       isLocked: false,
+  //       lessonIds: [
+  //         'lesson_2_1',
+  //         'lesson_2_2',
+  //         'lesson_2_3',
+  //         'lesson_2_4',
+  //         'lesson_2_5',
+  //       ],
+  //     ),
+  //     ChapterModel(
+  //       id: '3',
+  //       title: 'Advanced Topics',
+  //       description: 'Explore advanced techniques and real-world applications',
+  //       orderIndex: 3,
+  //       totalLessons: 4,
+  //       completedLessons: 2,
+  //       estimatedMinutes: 60,
+  //       isLocked: false,
+  //       lessonIds: ['lesson_3_1', 'lesson_3_2', 'lesson_3_3', 'lesson_3_4'],
+  //     ),
+  //     ChapterModel(
+  //       id: '4',
+  //       title: 'Final Project',
+  //       description:
+  //           'Apply everything you have learned in a comprehensive project',
+  //       orderIndex: 4,
+  //       totalLessons: 3,
+  //       completedLessons: 0,
+  //       estimatedMinutes: 90,
+  //       isLocked: true,
+  //       lessonIds: ['lesson_4_1', 'lesson_4_2', 'lesson_4_3'],
+  //     ),
+  //   ];
+  // }
 }

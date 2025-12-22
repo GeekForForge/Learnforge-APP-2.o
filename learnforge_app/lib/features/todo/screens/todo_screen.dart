@@ -4,14 +4,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
-import '../../../core/widgets/gradient_button.dart';
-import '../../../core/widgets/progress_indicator_circular.dart';
 import '../providers/todo_provider.dart';
 import '../widgets/todo_card.dart';
 import '../widgets/add_todo_modal.dart';
 
 class TodoScreen extends ConsumerWidget {
-  const TodoScreen({Key? key}) : super(key: key);
+  const TodoScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -230,7 +228,7 @@ class TodoScreen extends ConsumerWidget {
                     Icon(
                       Icons.check_circle_outline,
                       size: 80,
-                      color: AppColors.grey400.withOpacity(0.5),
+                      color: AppColors.grey400.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: 16),
                     Text(

@@ -10,14 +10,12 @@ class AppTheme {
       colorScheme: const ColorScheme.dark(
         primary: AppColors.neonPurple,
         secondary: AppColors.neonCyan,
-        background: AppColors.dark900,
-        surface: AppColors.dark800,
-        onBackground: AppColors.white,
+        surface: AppColors.dark900,
         onSurface: AppColors.white,
       ),
       scaffoldBackgroundColor: AppColors.dark900,
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.dark800.withOpacity(0.8),
+        backgroundColor: AppColors.dark800.withValues(alpha: 0.8),
         elevation: 0,
         titleTextStyle: TextStyles.orbitron(
           fontSize: 20,

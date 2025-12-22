@@ -1,0 +1,7 @@
+Analyzing learnforge_app...                                     
+
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:677:19 - dead_null_aware_expression
+  error - All final variables must be initialized, but 'glowColor' isn't - lib\features\auth\screens\onboarding_screen.dart:128:9 - final_not_initialized_constructor
+warning - The declaration '_onWillPop' isn't referenced - lib\features\courses\screens\youtube_playlist_screen.dart:54:16 - unused_element
+   info - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre - lib\features\courses\screens\youtube_playlist_screen.dart:66:7 - deprecated_member_use
+

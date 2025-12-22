@@ -2,13 +2,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/daily_goals_model.dart';
 
-final dailyGoalsProvider = StateNotifierProvider<DailyGoalsNotifier, DailyGoals>((ref) {
+final dailyGoalsProvider = NotifierProvider<DailyGoalsNotifier, DailyGoals>(() {
   return DailyGoalsNotifier();
 });
 
-class DailyGoalsNotifier extends StateNotifier<DailyGoals> {
-  DailyGoalsNotifier() : super(DailyGoals.defaultGoals()) {
+class DailyGoalsNotifier extends Notifier<DailyGoals> {
+  @override
+  DailyGoals build() {
     _loadGoals();
+    return DailyGoals.defaultGoals();
   }
 
   Future<void> _loadGoals() async {
@@ -25,7 +27,7 @@ class DailyGoalsNotifier extends StateNotifier<DailyGoals> {
       );
     } catch (e) {
       // If loading fails, keep default goals
-      print('Error loading goals: $e');
+      // print('Error loading goals: $e');
     }
   }
 
@@ -47,7 +49,7 @@ class DailyGoalsNotifier extends StateNotifier<DailyGoals> {
       await prefs.setInt('questionCount', questionCount);
       await prefs.setBool('quizEnabled', quizEnabled);
     } catch (e) {
-      print('Error saving goals: $e');
+      // print('Error saving goals: $e');
     }
   }
 }

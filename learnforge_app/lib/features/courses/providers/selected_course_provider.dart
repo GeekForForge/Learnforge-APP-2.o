@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../models/course_model.dart'; // <-- IMPORTANT FIX
 
 final selectedCourseProvider = StateProvider<Course?>((ref) => null);
@@ -8,8 +7,11 @@ final currentSelectedCourseProvider = Provider<Course?>((ref) {
   return ref.watch(selectedCourseProvider);
 });
 
-class SelectedCourseNotifier extends StateNotifier<Course?> {
-  SelectedCourseNotifier() : super(null);
+class SelectedCourseNotifier extends Notifier<Course?> {
+  @override
+  Course? build() {
+    return null;
+  }
 
   void setSelectedCourse(Course course) {
     state = course;
@@ -21,8 +23,8 @@ class SelectedCourseNotifier extends StateNotifier<Course?> {
 }
 
 final selectedCourseNotifierProvider =
-    StateNotifierProvider<SelectedCourseNotifier, Course?>(
-      (ref) => SelectedCourseNotifier(),
+    NotifierProvider<SelectedCourseNotifier, Course?>(
+      () => SelectedCourseNotifier(),
     );
 
 // Helper function to set course by ID

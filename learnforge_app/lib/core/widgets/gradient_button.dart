@@ -15,7 +15,7 @@ class GradientButton extends StatelessWidget {
   final EdgeInsetsGeometry? padding; // Made optional and nullable
 
   const GradientButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.gradient,
@@ -26,7 +26,7 @@ class GradientButton extends StatelessWidget {
     this.textStyle,
     this.isLoading = false,
     this.padding, // Made optional
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class GradientButton extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: AppColors.neonPurple.withOpacity(
-                    0.5,
+                  color: AppColors.neonPurple.withValues(
+                    alpha: 0.5,
                   ), // Better neon glow
                   blurRadius: 8,
                   offset: const Offset(0, 4),

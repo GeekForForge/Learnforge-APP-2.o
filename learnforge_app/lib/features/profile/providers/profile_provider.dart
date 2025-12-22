@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../auth/models/user_model.dart';
 
 // --------------------
@@ -85,8 +83,11 @@ class UserProfileState {
 // --------------------
 // STATE NOTIFIER
 // --------------------
-class UserProfileProvider extends StateNotifier<UserProfileState> {
-  UserProfileProvider() : super(const UserProfileState());
+class UserProfileProvider extends Notifier<UserProfileState> {
+  @override
+  UserProfileState build() {
+    return const UserProfileState();
+  }
 
   Future<void> loadUserProfile() async {
     try {
@@ -123,8 +124,8 @@ class UserProfileProvider extends StateNotifier<UserProfileState> {
 
 // This matches what your dashboard expects: ref.watch(profileProvider)
 final profileProvider =
-    StateNotifierProvider<UserProfileProvider, UserProfileState>(
-      (ref) => UserProfileProvider(),
+    NotifierProvider<UserProfileProvider, UserProfileState>(
+      () => UserProfileProvider(),
     );
 
 // Future provider for the dashboard to get UserModel

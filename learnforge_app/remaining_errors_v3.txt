@@ -1,0 +1,100 @@
+﻿   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\widgets\gradient_button.dart:45:47 - deprecated_member_use
+   info - Invalid use of a private type in a public API - lib\core\widgets\particle_background.dart:15:3 - library_private_types_in_public_api
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\widgets\particle_background.dart:110:36 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\widgets\particle_background.dart:120:36 - deprecated_member_use
+  error - Target of URI doesn't exist: 'package:flutter_riverpod/legacy.dart' - lib\features\arena\providers\arena_provider.dart:2:8 - uri_does_not_exist
+warning - The value of the field '_currentPage' isn't used - lib\features\arena\screens\challenge_detail_screen.dart:20:13 - unused_field
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:50:49 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:264:55 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:298:54 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:303:55 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:315:56 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:628:43 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:677:19 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:682:46 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:15:37 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:17:37 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:19:36 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:21:37 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:101:50 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:105:52 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:114:53 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:122:55 - dead_null_aware_expression
+  error - Target of URI doesn't exist: 'package:flutter_riverpod/legacy.dart' - lib\features\auth\providers\auth_provider.dart:3:8 - uri_does_not_exist
+  error - The function 'StateNotifierProvider' isn't defined - lib\features\auth\providers\auth_provider.dart:7:22 - undefined_function
+  error - Classes can only extend other classes - lib\features\auth\providers\auth_provider.dart:11:28 - extends_non_class
+  error - Too many positional arguments: 0 expected, but 1 found - lib\features\auth\providers\auth_provider.dart:12:26 - extra_positional_arguments
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:25:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:29:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:50:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:52:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:55:7 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:57:7 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:62:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:66:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:67:28 - undefined_identifier
+  error - Undefined name 'state' - lib\features\auth\providers\auth_provider.dart:69:7 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\auth\screens\onboarding_screen.dart:76:49 - deprecated_member_use
+warning - A value for optional parameter 'glowColor' isn't ever given - lib\features\auth\screens\onboarding_screen.dart:132:10 - unused_element_parameter
+  error - Target of URI doesn't exist: 'package:flutter_riverpod/legacy.dart' - lib\features\chat\providers\chat_provider.dart:1:8 - uri_does_not_exist
+  error - The function 'StateNotifierProvider' isn't defined - lib\features\chat\providers\chat_provider.dart:5:22 - undefined_function
+  error - Classes can only extend other classes - lib\features\chat\providers\chat_provider.dart:11:28 - extends_non_class
+  error - Too many positional arguments: 0 expected, but 1 found - lib\features\chat\providers\chat_provider.dart:12:26 - extra_positional_arguments
+  error - Undefined name 'state' - lib\features\chat\providers\chat_provider.dart:24:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\providers\chat_provider.dart:24:17 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\providers\chat_provider.dart:37:7 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\providers\chat_provider.dart:37:19 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\chat\widgets\message_bubble.dart:32:45 - deprecated_member_use
+  error - Target of URI doesn't exist: 'package:flutter_riverpod/legacy.dart' - lib\features\courses\providers\course_provider.dart:2:8 - uri_does_not_exist
+  error - Target of URI doesn't exist: 'package:flutter_riverpod/legacy.dart' - lib\features\courses\providers\selected_course_provider.dart:2:8 - uri_does_not_exist
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\screens\course_detail_screen.dart:58:49 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\screens\course_detail_screen.dart:239:55 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\screens\course_detail_screen.dart:512:43 - dead_null_aware_expression
+warning - The declaration '_generateMockChapters' isn't referenced - lib\features\courses\screens\course_detail_screen.dart:531:22 - unused_element
+   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\features\courses\screens\youtube_playlist_screen.dart:64:12 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\features\courses\widgets\chapter_list.dart:101:21 - avoid_print
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\chapter_list.dart:310:52 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_card_horizontal.dart:141:58 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_card_horizontal.dart:276:39 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_card_horizontal.dart:278:40 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:164:41 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:171:45 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:263:64 - dead_null_aware_expression
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\courses\widgets\course_grid_card.dart:352:67 - deprecated_member_use
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:389:41 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:393:66 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:427:39 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:429:40 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\hero_course_banner.dart:276:39 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\hero_course_banner.dart:278:40 - dead_null_aware_expression
+   info - Don't invoke 'print' in production code - lib\features\dashboard\providers\daily_goals_provider.dart:30:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\dashboard\providers\daily_goals_provider.dart:52:7 - avoid_print
+warning - The value of the local variable 'courseState' isn't used - lib\features\dashboard\screens\dashboard_screen.dart:38:11 - unused_local_variable
+warning - The value of the local variable 'nextLevelXP' isn't used - lib\features\dashboard\screens\dashboard_screen.dart:234:11 - unused_local_variable
+   info - Don't invoke 'print' in production code - lib\features\dashboard\screens\dashboard_screen.dart:797:23 - avoid_print
+warning - The declaration '_openProfileScreen' isn't referenced - lib\features\dashboard\screens\dashboard_screen.dart:886:8 - unused_element
+   info - Invalid use of a private type in a public API - lib\features\dashboard\screens\dashboard_screen.dart:1028:3 - library_private_types_in_public_api
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\dashboard\widgets\welcome_header.dart:59:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\dashboard\widgets\welcome_header.dart:66:47 - deprecated_member_use
+  error - Target of URI doesn't exist: 'package:flutter_riverpod/legacy.dart' - lib\features\notifications\providers\notification_provider.dart:2:8 - uri_does_not_exist
+warning - The left operand can't be null, so the right operand is never executed - lib\features\notifications\screens\notification_screen.dart:116:49 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\notifications\widgets\notification_item.dart:78:39 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\notifications\widgets\notification_item.dart:80:40 - dead_null_aware_expression
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\notifications\widgets\notification_item.dart:251:67 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\onboarding\screens\set_goal_screen.dart:612:34 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\onboarding\screens\set_goal_screen.dart:630:13 - use_build_context_synchronously
+  error - Target of URI doesn't exist: 'package:flutter_riverpod/legacy.dart' - lib\features\profile\providers\profile_provider.dart:2:8 - uri_does_not_exist
+  error - Target of URI doesn't exist: 'package:flutter_riverpod/legacy.dart' - lib\features\todo\providers\todo_provider.dart:1:8 - uri_does_not_exist
+  error - The function 'StateNotifierProvider' isn't defined - lib\features\todo\providers\todo_provider.dart:6:22 - undefined_function
+  error - Classes can only extend other classes - lib\features\todo\providers\todo_provider.dart:12:28 - extends_non_class
+  error - Too many positional arguments: 0 expected, but 1 found - lib\features\todo\providers\todo_provider.dart:13:26 - extra_positional_arguments
+  error - Undefined name 'state' - lib\features\todo\providers\todo_provider.dart:30:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\todo\providers\todo_provider.dart:30:17 - undefined_identifier
+  error - Undefined name 'state' - lib\features\todo\providers\todo_provider.dart:34:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\todo\providers\todo_provider.dart:34:13 - undefined_identifier
+  error - Undefined name 'state' - lib\features\todo\providers\todo_provider.dart:38:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\todo\providers\todo_provider.dart:39:26 - undefined_identifier
+   info - Don't invoke 'print' in production code - lib\routes\app_router.dart:92:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\routes\app_router.dart:95:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\routes\app_router.dart:100:13 - avoid_print
+

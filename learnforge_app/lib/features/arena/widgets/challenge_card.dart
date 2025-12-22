@@ -3,23 +3,22 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
 import '../../../core/widgets/gradient_button.dart';
 import '../models/challenge_model.dart';
-import 'package:intl/intl.dart';
 
 class ChallengeCard extends StatelessWidget {
   final ChallengeModel challenge;
 
-  const ChallengeCard({Key? key, required this.challenge}) : super(key: key);
+  const ChallengeCard({super.key, required this.challenge});
 
   Color get difficultyColor {
     switch (challenge.difficulty.toLowerCase()) {
       case 'easy':
-        return AppColors.success ?? Colors.green;
+        return AppColors.success;
       case 'medium':
-        return AppColors.warning ?? Colors.orange;
+        return AppColors.warning;
       case 'hard':
-        return AppColors.danger ?? Colors.red;
+        return AppColors.danger;
       default:
-        return AppColors.primary ?? AppColors.neonPurple;
+        return AppColors.primary;
     }
   }
 
@@ -68,9 +67,9 @@ class ChallengeCard extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: difficultyColor.withOpacity(0.2),
+                    color: difficultyColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: difficultyColor.withOpacity(0.5)),
+                    border: Border.all(color: difficultyColor.withValues(alpha: 0.5)),
                   ),
                   child: Text(
                     challenge.difficulty,
@@ -99,12 +98,12 @@ class ChallengeCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: (AppColors.primary ?? AppColors.neonPurple)
-                        .withOpacity(0.2),
+                    color: (AppColors.primary)
+                        .withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
-                      color: (AppColors.primary ?? AppColors.neonPurple)
-                          .withOpacity(0.3),
+                      color: (AppColors.primary)
+                          .withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -112,7 +111,7 @@ class ChallengeCard extends StatelessWidget {
                       Icon(
                         Icons.star,
                         size: 12,
-                        color: AppColors.primary ?? AppColors.neonPurple,
+                        color: AppColors.primary,
                       ),
                       const SizedBox(width: 4),
                       Text(
@@ -120,7 +119,7 @@ class ChallengeCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.primary ?? AppColors.neonPurple,
+                          color: AppColors.primary,
                         ),
                       ),
                     ],

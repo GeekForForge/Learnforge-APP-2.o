@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
-import '../../../core/widgets/glass_morphic_card.dart';
 
 class AvatarPickerModal extends StatefulWidget {
   final String currentAvatar;
   final Function(String) onAvatarSelected;
 
   const AvatarPickerModal({
-    Key? key,
+    super.key,
     required this.currentAvatar,
     required this.onAvatarSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<AvatarPickerModal> createState() => _AvatarPickerModalState();
@@ -189,7 +188,7 @@ class _AvatarPickerModalState extends State<AvatarPickerModal> {
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: AppColors.neonPurple.withOpacity(0.5),
+                                  color: AppColors.neonPurple.withValues(alpha: 0.5),
                                   blurRadius: 15,
                                   spreadRadius: 2,
                                 ),
@@ -251,7 +250,7 @@ class _AvatarPickerModalState extends State<AvatarPickerModal> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: 0,
-                  shadowColor: AppColors.neonPurple.withOpacity(0.5),
+                  shadowColor: AppColors.neonPurple.withValues(alpha: 0.5),
                 ),
                 child: Text(
                   'Confirm Selection',

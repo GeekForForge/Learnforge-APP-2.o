@@ -6,7 +6,7 @@ import '../models/message_model.dart';
 class MessageBubble extends StatelessWidget {
   final MessageModel message;
 
-  const MessageBubble({Key? key, required this.message}) : super(key: key);
+  const MessageBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +29,8 @@ class MessageBubble extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           border: !message.isUser
               ? Border.all(
-                  color: AppColors.neonCyan.withOpacity(
-                    0.3,
+                  color: AppColors.neonCyan.withValues(
+                    alpha: 0.3,
                   ), // Fixed: accent → neonCyan
                   width: 1,
                 )
@@ -64,7 +64,7 @@ class MessageBubble extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10,
                 color: message.isUser
-                    ? AppColors.white.withOpacity(0.6)
+                    ? AppColors.white.withValues(alpha: 0.6)
                     : AppColors.grey400, // Fixed: textMuted → grey400
               ),
             ),

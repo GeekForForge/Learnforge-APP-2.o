@@ -1,16 +1,18 @@
 // auth_provider.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../models/user_model.dart';
 import 'auth_state.dart';
 
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+final authProvider = NotifierProvider<AuthNotifier, AuthState>(() {
   return AuthNotifier();
 });
 
-class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(const AuthState.initial());
+class AuthNotifier extends Notifier<AuthState> {
+  @override
+  AuthState build() {
+    return const AuthState.initial();
+  }
 
   // TODO: REMOVE THIS - Temporary bypass for development
   void skipAuthForDev() {

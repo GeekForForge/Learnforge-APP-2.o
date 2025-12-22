@@ -89,15 +89,15 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/playlist/:id',
       builder: (context, state) {
-        print("DEBUG → youtubePlaylists count: ${youtubePlaylists.length}");
+        // print("DEBUG → youtubePlaylists count: ${youtubePlaylists.length}");
 
         final playlistId = state.pathParameters['id'] ?? '';
-        print("DEBUG → Received playlist id: $playlistId");
+        // print("DEBUG → Received playlist id: $playlistId");
 
         final playlist = youtubePlaylists.firstWhere(
           (p) => p.id == playlistId,
           orElse: () {
-            print("DEBUG → Playlist ID not found, using fallback");
+            // print("DEBUG → Playlist ID not found, using fallback");
             return youtubePlaylists.first;
           },
         );

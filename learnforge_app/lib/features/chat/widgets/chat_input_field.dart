@@ -5,7 +5,7 @@ import '../../../core/widgets/glass_morphic_card.dart';
 class ChatInputField extends StatefulWidget {
   final Function(String) onSend;
 
-  const ChatInputField({Key? key, required this.onSend}) : super(key: key);
+  const ChatInputField({super.key, required this.onSend});
 
   @override
   State<ChatInputField> createState() => _ChatInputFieldState();

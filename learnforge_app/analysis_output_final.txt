@@ -1,0 +1,4 @@
+Analyzing learnforge_app...                                     
+
+warning - A value for optional parameter 'glowColor' isn't ever given - lib\features\auth\screens\onboarding_screen.dart:132:10 - unused_element_parameter
+

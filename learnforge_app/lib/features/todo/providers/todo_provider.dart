@@ -1,17 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../models/todo_model.dart';
 import '../../../core/constants/dummy_data.dart';
 import 'package:uuid/uuid.dart';
 
-final todoProvider = StateNotifierProvider<TodoNotifier, List<TodoModel>>((
-  ref,
-) {
+final todoProvider = NotifierProvider<TodoNotifier, List<TodoModel>>(() {
   return TodoNotifier();
 });
 
-class TodoNotifier extends StateNotifier<List<TodoModel>> {
-  TodoNotifier() : super(DummyData.getTodos());
+class TodoNotifier extends Notifier<List<TodoModel>> {
+  @override
+  List<TodoModel> build() {
+    return DummyData.getTodos();
+  }
 
   void addTodo(
     String title,

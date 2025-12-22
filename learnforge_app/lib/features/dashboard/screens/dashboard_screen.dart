@@ -15,7 +15,7 @@ import '../../../features/courses/providers/course_provider.dart';
 import '../../../features/profile/providers/profile_provider.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
   ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
@@ -35,7 +35,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final courseState = ref.watch(courseProvider);
+//     final courseState = ref.watch(courseProvider);
     final enrolledPlaylists = ref.watch(myPlaylistsProvider);
     final activeChallengesAsync = ref.watch(activeChallengesProvider);
     final profileState = ref.watch(profileProvider);
@@ -87,7 +87,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       floating: false,
       snap: false,
       toolbarHeight: 72,
-      backgroundColor: AppColors.dark900.withOpacity(0.99),
+      backgroundColor: AppColors.dark900.withValues(alpha: 0.99),
 
       leading: Padding(
         padding: const EdgeInsets.only(left: 16, top: 8),
@@ -118,7 +118,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 16, top: 8),
           child: CircleAvatar(
-            backgroundColor: AppColors.dark700.withOpacity(0.8),
+            backgroundColor: AppColors.dark700.withValues(alpha: 0.8),
             child: IconButton(
               icon: Icon(
                 Icons.notifications_outlined,
@@ -132,7 +132,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         // .animate(onPlay: (controller) => controller.repeat())
         // .shimmer(
         //   duration: 2000.ms,
-        //   color: AppColors.neonPink.withOpacity(0.3),
+        //   color: AppColors.neonPink.withValues(alpha: 0.3),
         // ),
       ],
     );
@@ -160,7 +160,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             context.push('/profile'), // <-- open profile page
                         child: CircleAvatar(
                           radius: 40,
-                          backgroundColor: AppColors.neonCyan.withOpacity(0.25),
+                          backgroundColor: AppColors.neonCyan.withValues(alpha: 0.25),
                           child: CircleAvatar(
                             radius: 36,
                             backgroundColor: AppColors.dark700,
@@ -223,7 +223,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               .slideY(begin: 0.1, end: 0, duration: 600.ms)
               .shimmer(
                 duration: 2000.ms,
-                color: AppColors.neonCyan.withOpacity(0.1),
+                color: AppColors.neonCyan.withValues(alpha: 0.1),
               ),
     );
   }
@@ -231,7 +231,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   double _calculateLevelProgress(int experience, int level) {
     // Simple progression: each level requires 500 XP more than previous
     final baseXP = (level - 1) * 500;
-    final nextLevelXP = level * 500;
+//     final nextLevelXP = level * 500;
     final currentLevelXP = experience - baseXP;
     return currentLevelXP / 500;
   }
@@ -333,7 +333,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -450,7 +450,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [
-                            Colors.black.withOpacity(0.45),
+                            Colors.black.withValues(alpha: 0.45),
                             Colors.transparent,
                           ],
                         ),
@@ -493,7 +493,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: AppColors.neonPurple.withOpacity(0.7),
+                        color: AppColors.neonPurple.withValues(alpha: 0.7),
                       ),
                       child: Text(
                         playlist.channelTitle,
@@ -687,7 +687,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 24),
@@ -794,7 +794,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   GradientButton(
                     text: 'Set Goals',
                     onPressed: () {
-                      print('DEBUG: Set Goals button pressed. Attempting to push /set-goal');
+                      // print('DEBUG: Set Goals button pressed. Attempting to push /set-goal');
                       context.push('/set-goal');
                     },
                     height: 40,
@@ -817,11 +817,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: AppColors.dark700.withOpacity(0.3),
+            color: AppColors.dark700.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: completed
-                  ? AppColors.neonCyan.withOpacity(0.3)
+                  ? AppColors.neonCyan.withValues(alpha: 0.3)
                   : Colors.transparent,
             ),
           ),
@@ -831,7 +831,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: completed
-                      ? AppColors.neonCyan.withOpacity(0.2)
+                      ? AppColors.neonCyan.withValues(alpha: 0.2)
                       : AppColors.dark600,
                   shape: BoxShape.circle,
                 ),
@@ -856,7 +856,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: completed
-                      ? AppColors.neonCyan.withOpacity(0.2)
+                      ? AppColors.neonCyan.withValues(alpha: 0.2)
                       : AppColors.dark600,
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -879,13 +879,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             if (completed) controller.repeat();
           },
         )
-        .shimmer(duration: 2000.ms, color: AppColors.neonCyan.withOpacity(0.3));
+        .shimmer(duration: 2000.ms, color: AppColors.neonCyan.withValues(alpha: 0.3));
   }
 
   // -------------------- NAVIGATION METHODS --------------------
-  void _openProfileScreen(BuildContext context) {
-    context.push('/profile');
-  }
+  // void _openProfileScreen(BuildContext context) {
+  //   context.push('/profile');
+  // }
 
   void _openNotificationPanel(BuildContext context) {
     showModalBottomSheet(
@@ -904,8 +904,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            AppColors.dark800.withOpacity(0.95),
-            AppColors.dark900.withOpacity(0.98),
+            AppColors.dark800.withValues(alpha: 0.95),
+            AppColors.dark900.withValues(alpha: 0.98),
           ],
         ),
         borderRadius: const BorderRadius.only(
@@ -975,16 +975,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.dark700.withOpacity(0.5),
+        color: AppColors.dark700.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 20),
@@ -1025,7 +1025,7 @@ class AnimatedNeonText extends StatefulWidget {
   const AnimatedNeonText({super.key, required this.text, this.fontSize = 24});
 
   @override
-  _AnimatedNeonTextState createState() => _AnimatedNeonTextState();
+  State<AnimatedNeonText> createState() => _AnimatedNeonTextState();
 }
 
 class _AnimatedNeonTextState extends State<AnimatedNeonText>
@@ -1057,10 +1057,10 @@ class _AnimatedNeonTextState extends State<AnimatedNeonText>
         ).copyWith(
           // add soft glow shadows here via copyWith
           shadows: [
-            Shadow(blurRadius: 18, color: AppColors.neonBlue.withOpacity(0.65)),
+            Shadow(blurRadius: 18, color: AppColors.neonBlue.withValues(alpha: 0.65)),
             Shadow(
               blurRadius: 36,
-              color: AppColors.neonPurple.withOpacity(0.5),
+              color: AppColors.neonPurple.withValues(alpha: 0.5),
             ),
           ],
         );

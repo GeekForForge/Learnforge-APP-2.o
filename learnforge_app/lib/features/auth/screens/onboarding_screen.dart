@@ -6,7 +6,7 @@ import '../../../core/widgets/gradient_button.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+  const OnboardingScreen({super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -73,8 +73,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         color: _currentPage == index
                             ? AppColors
                                   .neonPurple // Fixed: primary → neonPurple
-                            : AppColors.grey400.withOpacity(
-                                0.3,
+                            : AppColors.grey400.withValues(
+                                alpha: 0.3,
                               ), // Fixed: textMuted → grey400
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -123,13 +123,10 @@ class _OnboardingPage extends StatelessWidget {
   final String title;
   final String description;
   final String icon;
-  final Color glowColor;
-
   const _OnboardingPage({
     required this.title,
     required this.description,
     required this.icon,
-    this.glowColor = AppColors.neonPurple,
   });
 
   @override
@@ -138,7 +135,7 @@ class _OnboardingPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: GlassMorphicCard(
-          glowColor: glowColor,
+          glowColor: AppColors.neonPurple,
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -147,8 +144,8 @@ class _OnboardingPage extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: glowColor.withOpacity(0.1),
-                  border: Border.all(color: glowColor.withOpacity(0.3)),
+                  color: AppColors.neonPurple.withValues(alpha: 0.1),
+                  border: Border.all(color: AppColors.neonPurple.withValues(alpha: 0.3)),
                 ),
                 child: Text(icon, style: const TextStyle(fontSize: 60))
                     .animate()

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:learnforge_app/core/theme/app_colors.dart';
 import '../widgets/notification_item.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+  const NotificationScreen({super.key});
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
@@ -114,7 +113,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: AppColors.neonGreen ?? Colors.green,
+        backgroundColor: AppColors.neonGreen,
         content: Text(
           'All notifications marked as read',
           style: TextStyle(color: AppColors.white, fontFamily: 'Inter'),
@@ -138,8 +137,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 center: Alignment.topRight,
                 radius: 1.5,
                 colors: [
-                  AppColors.neonPurple.withOpacity(0.1),
-                  AppColors.neonCyan.withOpacity(0.05),
+                  AppColors.neonPurple.withValues(alpha: 0.1),
+                  AppColors.neonCyan.withValues(alpha: 0.05),
                   AppColors.dark900,
                 ],
                 stops: const [0.1, 0.3, 1.0],
@@ -165,7 +164,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.dark900.withOpacity(0.9),
+                          AppColors.dark900.withValues(alpha: 0.9),
                           Colors.transparent,
                         ],
                         begin: Alignment.topCenter,
@@ -217,7 +216,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           style: TextStyle(
                             color: _showUnreadOnly
                                 ? AppColors.white
-                                : AppColors.white.withOpacity(0.7),
+                                : AppColors.white.withValues(alpha: 0.7),
                             fontFamily: 'Inter',
                           ),
                         ),
@@ -297,15 +296,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.neonPurple.withOpacity(0.3),
-                              AppColors.neonCyan.withOpacity(0.1),
+                              AppColors.neonPurple.withValues(alpha: 0.3),
+                              AppColors.neonCyan.withValues(alpha: 0.1),
                             ],
                           ),
                         ),
                         child: Icon(
                           Icons.notifications_off_rounded,
                           size: 50,
-                          color: AppColors.white.withOpacity(0.5),
+                          color: AppColors.white.withValues(alpha: 0.5),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -325,7 +324,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             : 'Notifications will appear here',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: AppColors.white.withOpacity(0.7),
+                          color: AppColors.white.withValues(alpha: 0.7),
                           fontSize: 16,
                           fontFamily: 'Inter',
                         ),
@@ -422,11 +421,11 @@ class _NotificationParticle extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.4),
+            color: color.withValues(alpha: 0.4),
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.3),
+                color: color.withValues(alpha: 0.3),
                 blurRadius: 6,
                 spreadRadius: 1,
               ),

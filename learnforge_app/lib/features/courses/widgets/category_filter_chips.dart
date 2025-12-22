@@ -9,11 +9,11 @@ class CategoryFilterChips extends StatefulWidget {
   final Function(String) onCategorySelected;
 
   const CategoryFilterChips({
-    Key? key,
+    super.key,
     required this.categories,
     required this.selectedCategory,
     required this.onCategorySelected,
-  }) : super(key: key);
+  });
 
   @override
   State<CategoryFilterChips> createState() => _CategoryFilterChipsState();
@@ -104,23 +104,23 @@ class _CategoryChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.neonPurple
-              : AppColors.dark700.withOpacity(0.5),
+              : AppColors.dark700.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: isSelected
                 ? AppColors.neonPurple
-                : AppColors.neonPurple.withOpacity(0.4),
+                : AppColors.neonPurple.withValues(alpha: 0.4),
             width: 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.neonPurple.withOpacity(0.5),
+                    color: AppColors.neonPurple.withValues(alpha: 0.5),
                     blurRadius: 12,
                     spreadRadius: 2,
                   ),
                   BoxShadow(
-                    color: AppColors.neonPink.withOpacity(0.3),
+                    color: AppColors.neonPink.withValues(alpha: 0.3),
                     blurRadius: 20,
                     spreadRadius: 4,
                   ),

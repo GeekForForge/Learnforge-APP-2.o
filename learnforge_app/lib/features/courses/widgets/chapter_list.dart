@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:learnforge_app/core/theme/app_colors.dart';
 import 'package:learnforge_app/features/courses/models/chapter_model.dart';
 import 'package:learnforge_app/features/courses/models/course_model.dart';
-import 'package:learnforge_app/features/courses/models/course_model.dart';
 import 'package:learnforge_app/features/courses/widgets/course_video_player.dart';
 import 'progress_bar_custom.dart';
 
@@ -12,10 +11,10 @@ class ChapterList extends StatefulWidget {
   final List<Lesson> lessons;
 
   const ChapterList({
-    Key? key,
+    super.key,
     required this.chapters,
     required this.lessons, // ADD THIS
-  }) : super(key: key);
+  });
 
   @override
   State<ChapterList> createState() => _ChapterListState();
@@ -41,7 +40,7 @@ class _ChapterListState extends State<ChapterList> {
                   fontFamily: 'Inter',
                   shadows: [
                     Shadow(
-                      color: AppColors.neonPurple.withOpacity(0.9),
+                      color: AppColors.neonPurple.withValues(alpha: 0.9),
                       blurRadius: 8,
                       offset: const Offset(0, 0),
                     ),
@@ -51,7 +50,7 @@ class _ChapterListState extends State<ChapterList> {
               Text(
                 '${widget.chapters.length} chapters',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   fontSize: 14,
                   fontFamily: 'Inter',
                 ),
@@ -99,7 +98,7 @@ class _ChapterListState extends State<ChapterList> {
                       .toList();
 
                   if (chapterLessons.isEmpty) {
-                    print("❌ No lessons found for this chapter");
+                    // print("❌ No lessons found for this chapter");
                     return;
                   }
 
@@ -129,7 +128,7 @@ class _ChapterListState extends State<ChapterList> {
                 duration: 400.ms,
                 curve: Curves.easeOut,
               );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -152,13 +151,12 @@ class _ChapterListItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const _ChapterListItem({
-    Key? key,
     required this.chapter,
     required this.index,
     required this.isCompleted,
     required this.isLocked,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -168,19 +166,19 @@ class _ChapterListItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
         color: isCurrent
-            ? AppColors.neonPurple.withOpacity(0.2)
-            : AppColors.dark800.withOpacity(0.8),
+            ? AppColors.neonPurple.withValues(alpha: 0.2)
+            : AppColors.dark800.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: isCurrent
-              ? AppColors.neonPurple.withOpacity(0.5)
+              ? AppColors.neonPurple.withValues(alpha: 0.5)
               : AppColors.dark700,
           width: 1,
         ),
         boxShadow: isCurrent
             ? [
                 BoxShadow(
-                  color: AppColors.neonPurple.withOpacity(0.3),
+                  color: AppColors.neonPurple.withValues(alpha: 0.3),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),
@@ -206,7 +204,7 @@ class _ChapterListItem extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: _getStatusColor(isCurrent).withOpacity(0.3),
+                        color: _getStatusColor(isCurrent).withValues(alpha: 0.3),
                         blurRadius: 8,
                         spreadRadius: 2,
                       ),
@@ -229,7 +227,7 @@ class _ChapterListItem extends StatelessWidget {
                               'Chapter ${index + 1}: ${chapter.title}',
                               style: TextStyle(
                                 color: isLocked
-                                    ? Colors.white.withOpacity(0.5)
+                                    ? Colors.white.withValues(alpha: 0.5)
                                     : Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -242,7 +240,7 @@ class _ChapterListItem extends StatelessWidget {
                           if (isLocked)
                             Icon(
                               Icons.lock_outline,
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                               size: 16,
                             ),
                         ],
@@ -252,8 +250,8 @@ class _ChapterListItem extends StatelessWidget {
                         '${chapter.formattedDuration} • ${chapter.lessonsText}',
                         style: TextStyle(
                           color: isLocked
-                              ? Colors.white.withOpacity(0.4)
-                              : Colors.white.withOpacity(0.7),
+                              ? Colors.white.withValues(alpha: 0.4)
+                              : Colors.white.withValues(alpha: 0.7),
                           fontSize: 14,
                           fontFamily: 'Inter',
                         ),
@@ -264,8 +262,8 @@ class _ChapterListItem extends StatelessWidget {
                           chapter.description,
                           style: TextStyle(
                             color: isLocked
-                                ? Colors.white.withOpacity(0.4)
-                                : Colors.white.withOpacity(0.6),
+                                ? Colors.white.withValues(alpha: 0.4)
+                                : Colors.white.withValues(alpha: 0.6),
                             fontSize: 14,
                             fontFamily: 'Inter',
                           ),
@@ -309,14 +307,14 @@ class _ChapterListItem extends StatelessWidget {
 
   Color _getStatusColor(bool isCurrent) {
     if (isLocked) return AppColors.dark600;
-    if (isCompleted) return AppColors.neonGreen ?? Colors.green;
+    if (isCompleted) return AppColors.neonGreen;
     if (isCurrent) return AppColors.neonPurple;
     return AppColors.neonCyan;
   }
 
   Widget _getStatusIcon(bool isCurrent) {
     if (isLocked) {
-      return Icon(Icons.lock, color: Colors.white.withOpacity(0.5), size: 18);
+      return Icon(Icons.lock, color: Colors.white.withValues(alpha: 0.5), size: 18);
     } else if (isCompleted) {
       return const Icon(Icons.check, color: Colors.white, size: 18);
     } else if (isCurrent) {

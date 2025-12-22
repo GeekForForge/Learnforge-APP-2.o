@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../models/message_model.dart';
 import '../../../core/constants/dummy_data.dart';
 
-final chatProvider = StateNotifierProvider<ChatNotifier, List<MessageModel>>((
-  ref,
-) {
+final chatProvider = NotifierProvider<ChatNotifier, List<MessageModel>>(() {
   return ChatNotifier();
 });
 
-class ChatNotifier extends StateNotifier<List<MessageModel>> {
-  ChatNotifier() : super(DummyData.getChatMessages());
+class ChatNotifier extends Notifier<List<MessageModel>> {
+  @override
+  List<MessageModel> build() {
+    return DummyData.getChatMessages();
+  }
 
   void sendMessage(String content) {
     final newMessage = MessageModel(

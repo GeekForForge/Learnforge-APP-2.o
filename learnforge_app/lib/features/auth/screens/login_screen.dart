@@ -9,7 +9,7 @@ import '../providers/auth_provider.dart';
 import '../providers/auth_state.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.neonPurple.withOpacity(0.15),
+                  color: AppColors.neonPurple.withValues(alpha: 0.15),
                 ),
               ),
             ),
@@ -64,7 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 height: 200,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.neonBlue.withOpacity(0.1),
+                  color: AppColors.neonBlue.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -93,7 +93,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.neonBlue.withOpacity(0.3),
+                          color: AppColors.neonBlue.withValues(alpha: 0.3),
                           blurRadius: 20,
                           offset: const Offset(0, 8),
                         ),
@@ -141,7 +141,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -158,7 +158,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                           side: BorderSide(
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withValues(alpha: 0.1),
                             width: 1,
                           ),
                         ),

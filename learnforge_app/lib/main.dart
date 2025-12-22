@@ -26,7 +26,7 @@ void main() async {
 }
 
 class LearnForgeApp extends StatelessWidget {
-  const LearnForgeApp({Key? key}) : super(key: key);
+  const LearnForgeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +47,7 @@ class LearnForgeApp extends StatelessWidget {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
             // Ensure consistent text scaling
-            textScaleFactor: MediaQuery.of(
-              context,
-            ).textScaleFactor.clamp(0.8, 1.2),
+            textScaler: TextScaler.linear(MediaQuery.of(context).textScaler.scale(1.0).clamp(0.8, 1.2)),
           ),
           child: child!,
         );

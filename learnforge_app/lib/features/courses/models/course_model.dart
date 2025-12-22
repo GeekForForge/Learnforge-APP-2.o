@@ -1,7 +1,6 @@
 // lib/features/courses/models/course_model.dart
 
 import 'package:learnforge_app/features/courses/models/chapter_model.dart';
-import 'package:learnforge_app/features/courses/models/course_model.dart';
 
 /// Lesson model (self-contained here; if you already have lesson_model.dart,
 /// you can remove this class and import it instead)

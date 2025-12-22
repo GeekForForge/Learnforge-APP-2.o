@@ -11,7 +11,7 @@ import '../widgets/avatar_picker_modal.dart';
 
 
 class ProfileScreen extends ConsumerWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +28,7 @@ class ProfileScreen extends ConsumerWidget {
         body: const Center(child: CircularProgressIndicator()),
       );
     } else if (authState is Authenticated) {
-      final user = (authState as Authenticated).user;
+      final user = (authState).user;
       return Scaffold(
         backgroundColor: AppColors.dark900, // Fixed: darkBg → dark900
         appBar: AppBar(
@@ -53,12 +53,12 @@ class ProfileScreen extends ConsumerWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppColors.neonPurple.withOpacity(0.5),
+                              color: AppColors.neonPurple.withValues(alpha: 0.5),
                               width: 3,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.neonPurple.withOpacity(0.3),
+                                color: AppColors.neonPurple.withValues(alpha: 0.3),
                                 blurRadius: 15,
                                 spreadRadius: 2,
                               ),
@@ -98,7 +98,7 @@ class ProfileScreen extends ConsumerWidget {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.neonPurple.withOpacity(0.5),
+                                    color: AppColors.neonPurple.withValues(alpha: 0.5),
                                     blurRadius: 8,
                                     spreadRadius: 1,
                                   ),
@@ -259,7 +259,7 @@ class ProfileScreen extends ConsumerWidget {
         ),
       );
     } else if (authState is Error) {
-      final message = (authState as Error).message;
+      final message = (authState).message;
       return Scaffold(
         appBar: AppBar(title: const Text('Profile')),
         body: Center(child: Text('Error: $message')),
@@ -309,9 +309,9 @@ class _StatColumn extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Text(icon, style: const TextStyle(fontSize: 20)),
         ),
@@ -379,7 +379,7 @@ class _SettingsTile extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: color, // Fixed: primary → dynamic color
+            activeThumbColor: color, // Fixed: primary → dynamic color
           ),
         ],
       ),

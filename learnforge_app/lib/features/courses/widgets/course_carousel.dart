@@ -15,14 +15,14 @@ class CourseCarousel extends StatelessWidget {
   final int animationDelay;
 
   const CourseCarousel({
-    Key? key,
+    super.key,
     required this.title,
     required this.emoji,
     required this.courses,
     this.onSeeAll,
     this.showProgress = true,
     this.animationDelay = 0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

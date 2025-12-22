@@ -30,15 +30,15 @@ class GlassMorphicCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.dark700.withOpacity(0.8),
-              AppColors.dark800.withOpacity(0.6),
+              AppColors.dark700.withValues(alpha: 0.8),
+              AppColors.dark800.withValues(alpha: 0.6),
             ],
           ),
           borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(color: glowColor.withOpacity(0.3), width: 1),
+          border: Border.all(color: glowColor.withValues(alpha: 0.3), width: 1),
           boxShadow: [
             BoxShadow(
-              color: glowColor.withOpacity(0.2),
+              color: glowColor.withValues(alpha: 0.2),
               blurRadius: 20,
               spreadRadius: 2,
             ),

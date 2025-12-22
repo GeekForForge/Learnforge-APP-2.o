@@ -11,10 +11,10 @@ class ActiveCourseCard extends StatelessWidget {
   final Color glowColor;
 
   const ActiveCourseCard({
-    Key? key,
+    super.key,
     required this.course,
     this.glowColor = AppColors.neonPurple,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ActiveCourseCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: glowColor.withOpacity(0.3),
+            color: glowColor.withValues(alpha: 0.3),
             blurRadius: 15,
             spreadRadius: 1,
           ),

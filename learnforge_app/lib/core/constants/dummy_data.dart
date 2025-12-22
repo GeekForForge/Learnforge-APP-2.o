@@ -1,6 +1,5 @@
 import 'package:uuid/uuid.dart';
 import '../../features/arena/models/challenge_model.dart';
-import '../../features/arena/models/leaderboard_model.dart';
 import '../../features/chat/models/message_model.dart';
 import '../../features/todo/models/todo_model.dart';
 import '../../features/notifications/models/notification_model.dart';

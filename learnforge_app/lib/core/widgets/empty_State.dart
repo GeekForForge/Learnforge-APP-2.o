@@ -13,14 +13,14 @@ class EmptyState extends StatelessWidget {
   final Color glowColor;
 
   const EmptyState({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     this.icon,
     this.onActionPressed,
     this.actionLabel,
     this.glowColor = AppColors.neonPurple,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +92,8 @@ class EmptyState extends StatelessWidget {
       height: 120,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: glowColor.withOpacity(0.1),
-        border: Border.all(color: glowColor.withOpacity(0.3), width: 2),
+        color: glowColor.withValues(alpha: 0.1),
+        border: Border.all(color: glowColor.withValues(alpha: 0.3), width: 2),
       ),
       child: Icon(icon ?? Icons.inbox_outlined, size: 50, color: glowColor),
     ).animate().scale(duration: 600.ms, curve: Curves.elasticOut).fadeIn();

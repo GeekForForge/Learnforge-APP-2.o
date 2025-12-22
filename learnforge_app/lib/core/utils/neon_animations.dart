@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:learnforge_app/core/theme/app_colors.dart';
 
 class NeonParticleBackground extends StatelessWidget {
-  const NeonParticleBackground({Key? key}) : super(key: key);
+  const NeonParticleBackground({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +41,10 @@ class NeonParticleBackground extends StatelessWidget {
       height: 80,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color.withOpacity(0.4),
+        color: color.withValues(alpha: 0.4),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.7),
+            color: color.withValues(alpha: 0.7),
             blurRadius: 30,
             spreadRadius: 10,
           ),
@@ -71,7 +71,7 @@ extension NeonAnimations on Widget {
   Widget glowPulse({Color? glowColor, Duration? duration}) {
     return animate(onPlay: (controller) => controller.repeat()).shimmer(
       duration: duration ?? 2000.ms,
-      color: glowColor?.withOpacity(0.3) ?? Colors.white.withOpacity(0.3),
+      color: glowColor?.withValues(alpha: 0.3) ?? Colors.white.withValues(alpha: 0.3),
     );
   }
 

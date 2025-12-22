@@ -21,7 +21,7 @@ class NotificationItem extends StatefulWidget {
   final VoidCallback? onDismiss;
 
   const NotificationItem({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
     required this.time,
@@ -29,7 +29,7 @@ class NotificationItem extends StatefulWidget {
     this.isRead = false,
     this.onTap,
     this.onDismiss,
-  }) : super(key: key);
+  });
 
   @override
   State<NotificationItem> createState() => _NotificationItemState();
@@ -75,16 +75,16 @@ class _NotificationItemState extends State<NotificationItem> {
       case NotificationType.system:
         return AppColors.neonCyan;
       case NotificationType.message:
-        return AppColors.neonGreen ?? Colors.green;
+        return AppColors.neonGreen;
       case NotificationType.reminder:
-        return AppColors.neonYellow ?? Colors.amber;
+        return AppColors.neonYellow;
     }
   }
 
   Gradient _getGradientForType(NotificationType type) {
     final color = _getColorForType(type);
     return LinearGradient(
-      colors: [color.withOpacity(0.8), color.withOpacity(0.4)],
+      colors: [color.withValues(alpha: 0.8), color.withValues(alpha: 0.4)],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
@@ -101,12 +101,12 @@ class _NotificationItemState extends State<NotificationItem> {
         child: Dismissible(
           key: Key(widget.title + widget.time),
           direction: DismissDirection.endToStart,
-          background: Container(
+        background: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.neonPink.withOpacity(0.3),
-                  AppColors.neonPurple.withOpacity(0.1),
+                  AppColors.neonPink.withValues(alpha: 0.3),
+                  AppColors.neonPurple.withValues(alpha: 0.1),
                 ],
                 begin: Alignment.centerRight,
                 end: Alignment.centerLeft,
@@ -136,8 +136,8 @@ class _NotificationItemState extends State<NotificationItem> {
                     gradient: widget.isRead
                         ? LinearGradient(
                             colors: [
-                              AppColors.dark700.withOpacity(0.6),
-                              AppColors.dark600.withOpacity(0.4),
+                              AppColors.dark700.withValues(alpha: 0.6),
+                              AppColors.dark600.withValues(alpha: 0.4),
                             ],
                           )
                         : _getGradientForType(widget.type),
@@ -145,13 +145,13 @@ class _NotificationItemState extends State<NotificationItem> {
                     boxShadow: [
                       if (!widget.isRead)
                         BoxShadow(
-                          color: _getColorForType(widget.type).withOpacity(0.3),
+                          color: _getColorForType(widget.type).withValues(alpha: 0.3),
                           blurRadius: 15,
                           spreadRadius: 2,
                           offset: const Offset(0, 4),
                         ),
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 10,
                         spreadRadius: 1,
                         offset: const Offset(0, 2),
@@ -162,7 +162,7 @@ class _NotificationItemState extends State<NotificationItem> {
                         : Border.all(
                             color: _getColorForType(
                               widget.type,
-                            ).withOpacity(0.3),
+                            ).withValues(alpha: 0.3),
                             width: 1,
                           ),
                   ),
@@ -188,12 +188,12 @@ class _NotificationItemState extends State<NotificationItem> {
                                       shape: BoxShape.circle,
                                       color: _getColorForType(
                                         widget.type,
-                                      ).withOpacity(0.2),
+                                      ).withValues(alpha: 0.2),
                                       boxShadow: [
                                         BoxShadow(
                                           color: _getColorForType(
                                             widget.type,
-                                          ).withOpacity(0.4),
+                                          ).withValues(alpha: 0.4),
                                           blurRadius: 10,
                                           spreadRadius: 2,
                                         ),
@@ -210,7 +210,7 @@ class _NotificationItemState extends State<NotificationItem> {
                                         _getColorForType(widget.type),
                                         _getColorForType(
                                           widget.type,
-                                        ).withOpacity(0.7),
+                                        ).withValues(alpha: 0.7),
                                       ],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
@@ -219,7 +219,7 @@ class _NotificationItemState extends State<NotificationItem> {
                                       BoxShadow(
                                         color: _getColorForType(
                                           widget.type,
-                                        ).withOpacity(0.3),
+                                        ).withValues(alpha: 0.3),
                                         blurRadius: 8,
                                         offset: const Offset(0, 4),
                                       ),
@@ -248,8 +248,8 @@ class _NotificationItemState extends State<NotificationItem> {
                                           widget.title,
                                           style: TextStyle(
                                             color: widget.isRead
-                                                ? AppColors.white.withOpacity(
-                                                    0.7,
+                                                ? AppColors.white.withValues(
+                                                    alpha: 0.7,
                                                   )
                                                 : AppColors.white,
                                             fontSize: 16,
@@ -297,7 +297,7 @@ class _NotificationItemState extends State<NotificationItem> {
                                   Text(
                                     widget.message,
                                     style: TextStyle(
-                                      color: AppColors.white.withOpacity(0.8),
+                                      color: AppColors.white.withValues(alpha: 0.8),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                       fontFamily: 'Inter',
@@ -311,7 +311,7 @@ class _NotificationItemState extends State<NotificationItem> {
                                   Text(
                                     widget.time,
                                     style: TextStyle(
-                                      color: AppColors.white.withOpacity(0.6),
+                                      color: AppColors.white.withValues(alpha: 0.6),
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: 'Inter',

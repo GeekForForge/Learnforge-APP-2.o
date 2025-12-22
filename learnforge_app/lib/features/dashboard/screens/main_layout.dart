@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 
 class MainLayout extends StatefulWidget {
   final Widget child;
 
-  const MainLayout({Key? key, required this.child}) : super(key: key);
+  const MainLayout({super.key, required this.child});
 
   @override
   State<MainLayout> createState() => _MainLayoutState();
@@ -58,16 +57,16 @@ class _MainLayoutState extends State<MainLayout> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.dark800.withOpacity(0.9),
-              AppColors.dark900.withOpacity(0.9),
+              AppColors.dark800.withValues(alpha: 0.9),
+              AppColors.dark900.withValues(alpha: 0.9),
             ],
           ),
           border: Border(
-            top: BorderSide(color: AppColors.neonPurple.withOpacity(0.3)),
+            top: BorderSide(color: AppColors.neonPurple.withValues(alpha: 0.3)),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.neonPurple.withOpacity(0.3),
+              color: AppColors.neonPurple.withValues(alpha: 0.3),
               blurRadius: 25,
               spreadRadius: 3,
             ),
@@ -111,7 +110,7 @@ class _MainLayoutState extends State<MainLayout> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: _selectedIndex == entry.key
-                                  ? entry.value['color'].withOpacity(0.15)
+                                  ? entry.value['color'].withValues(alpha: 0.15)
                                   : Colors.transparent,
                               border: _selectedIndex == entry.key
                                   ? Border.all(

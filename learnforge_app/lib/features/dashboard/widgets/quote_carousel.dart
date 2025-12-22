@@ -8,7 +8,7 @@ import '../../../core/widgets/glass_morphic_card.dart';
 class QuoteCarousel extends StatefulWidget {
   final List<String> quotes;
 
-  const QuoteCarousel({Key? key, this.quotes = const []}) : super(key: key);
+  const QuoteCarousel({super.key, this.quotes = const []});
 
   @override
   State<QuoteCarousel> createState() => _QuoteCarouselState();
@@ -95,12 +95,12 @@ class _QuoteCarouselState extends State<QuoteCarousel> {
                 decoration: BoxDecoration(
                   color: _currentIndex == index
                       ? AppColors.neonCyan
-                      : AppColors.grey400.withOpacity(0.3),
+                      : AppColors.grey400.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(3),
                   boxShadow: _currentIndex == index
                       ? [
                           BoxShadow(
-                            color: AppColors.neonCyan.withOpacity(0.5),
+                            color: AppColors.neonCyan.withValues(alpha: 0.5),
                             blurRadius: 4,
                             spreadRadius: 1,
                           ),

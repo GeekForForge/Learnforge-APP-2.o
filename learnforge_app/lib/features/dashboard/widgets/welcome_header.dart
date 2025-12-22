@@ -8,10 +8,10 @@ class WelcomeHeader extends StatelessWidget {
   final int streakDays;
 
   const WelcomeHeader({
-    Key? key,
+    super.key,
     this.userName = 'Learner',
     this.streakDays = 0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,15 +56,15 @@ class WelcomeHeader extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: AppColors.neonPurple.withOpacity(
-                  0.5,
+                color: AppColors.neonPurple.withValues(
+                  alpha: 0.5,
                 ), // Fixed: accent → neonPurple
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.neonPurple.withOpacity(
-                    0.3,
+                  color: AppColors.neonPurple.withValues(
+                    alpha: 0.3,
                   ), // Fixed: accent → neonPurple
                   blurRadius: 10,
                   spreadRadius: 2,

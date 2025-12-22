@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
@@ -10,10 +9,10 @@ class YouTubePlaylistCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const YouTubePlaylistCard({
-    Key? key,
+    super.key,
     required this.playlist,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,7 @@ class YouTubePlaylistCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.8),
+                    color: Colors.black.withValues(alpha: 0.8),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -81,9 +80,9 @@ class YouTubePlaylistCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
-              color: AppColors.neonPurple.withOpacity(0.2),
+              color: AppColors.neonPurple.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: AppColors.neonPurple.withOpacity(0.5)),
+              border: Border.all(color: AppColors.neonPurple.withValues(alpha: 0.5)),
             ),
             child: Text(
               playlist.category,

@@ -7,8 +7,7 @@ import 'package:learnforge_app/core/widgets/gradient_button.dart';
 class ChallengeDetailScreen extends StatefulWidget {
   final String challengeId;
 
-  const ChallengeDetailScreen({Key? key, required this.challengeId})
-    : super(key: key);
+  const ChallengeDetailScreen({super.key, required this.challengeId});
 
   @override
   State<ChallengeDetailScreen> createState() => _ChallengeDetailScreenState();
@@ -18,9 +17,9 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late PageController _pageController;
-  int _currentPage = 0;
+//   final int _currentPage = 0;
   bool _isJoined = false;
-  double _progress = 0.65;
+  final double _progress = 0.65;
 
   @override
   void initState() {
@@ -48,7 +47,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
     // Show success animation
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: AppColors.neonGreen ?? Colors.green,
+        backgroundColor: AppColors.neonGreen,
         content: Text(
           'Challenge Joined! Good luck!',
           style: TextStyle(color: AppColors.white, fontFamily: 'Inter'),
@@ -77,8 +76,8 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                 center: Alignment.topLeft,
                 radius: 1.5,
                 colors: [
-                  AppColors.neonPurple.withOpacity(0.15),
-                  AppColors.neonCyan.withOpacity(0.1),
+                  AppColors.neonPurple.withValues(alpha: 0.15),
+                  AppColors.neonCyan.withValues(alpha: 0.1),
                   AppColors.dark900,
                 ],
                 stops: const [0.1, 0.4, 1.0],
@@ -114,9 +113,9 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.dark900.withOpacity(0.8),
+                              AppColors.dark900.withValues(alpha: 0.8),
                               Colors.transparent,
-                              AppColors.dark900.withOpacity(0.9),
+                              AppColors.dark900.withValues(alpha: 0.9),
                             ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -143,7 +142,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.neonPurple.withOpacity(0.5),
+                                color: AppColors.neonPurple.withValues(alpha: 0.5),
                                 blurRadius: 15,
                                 spreadRadius: 2,
                               ),
@@ -248,7 +247,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                         child: Text(
                           'Build an intelligent AI chatbot using modern NLP techniques. Create a conversational agent that can understand context, maintain conversations, and provide helpful responses across various domains.',
                           style: TextStyle(
-                            color: AppColors.white.withOpacity(0.8),
+                            color: AppColors.white.withValues(alpha: 0.8),
                             fontSize: 16,
                             height: 1.6,
                             fontFamily: 'Inter',
@@ -262,7 +261,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                       _buildSection(
                         title: 'Requirements',
                         icon: Icons.checklist_rounded,
-                        color: AppColors.neonGreen ?? Colors.green,
+                        color: AppColors.neonGreen,
                         child: Column(
                           children: [
                             _buildRequirementItem(
@@ -296,12 +295,12 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                             _buildTechChip('React', AppColors.neonBlue),
                             _buildTechChip(
                               'Node.js',
-                              AppColors.neonGreen ?? Colors.green,
+                              AppColors.neonGreen,
                             ),
                             _buildTechChip('MongoDB', AppColors.neonCyan),
                             _buildTechChip(
                               'Docker',
-                              AppColors.neonYellow ?? Colors.amber,
+                              AppColors.neonYellow,
                             ),
                           ],
                         ),
@@ -313,7 +312,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                       _buildSection(
                         title: '🏆 Prizes & Rewards',
                         icon: Icons.emoji_events_rounded,
-                        color: AppColors.neonYellow ?? Colors.amber,
+                        color: AppColors.neonYellow,
                         child: Column(
                           children: [
                             _buildPrizeItem(
@@ -386,7 +385,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.dark900.withOpacity(0.9),
+                    AppColors.dark900.withValues(alpha: 0.9),
                     AppColors.dark900,
                   ],
                   begin: Alignment.topCenter,
@@ -434,7 +433,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
                           border: Border.all(
-                            color: AppColors.neonPurple.withOpacity(0.5),
+                            color: AppColors.neonPurple.withValues(alpha: 0.5),
                             width: 2,
                           ),
                         ),
@@ -470,7 +469,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
         Text(
           text,
           style: TextStyle(
-            color: AppColors.white.withOpacity(0.8),
+            color: AppColors.white.withValues(alpha: 0.8),
             fontSize: 14,
             fontFamily: 'Inter',
           ),
@@ -486,15 +485,15 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.neonCyan.withOpacity(0.1),
-            AppColors.neonPurple.withOpacity(0.05),
+            AppColors.neonCyan.withValues(alpha: 0.1),
+            AppColors.neonPurple.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.neonCyan.withOpacity(0.3),
+          color: AppColors.neonCyan.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -544,7 +543,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                       borderRadius: BorderRadius.circular(4),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.neonCyan.withOpacity(0.5),
+                          color: AppColors.neonCyan.withValues(alpha: 0.5),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -554,7 +553,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                   .animate(onPlay: (controller) => controller.repeat())
                   .shimmer(
                     duration: 2000.ms,
-                    color: AppColors.neonCyan.withOpacity(0.3),
+                    color: AppColors.neonCyan.withValues(alpha: 0.3),
                   ),
             ],
           ),
@@ -562,7 +561,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
           Text(
             'Complete the remaining tasks to finish the challenge',
             style: TextStyle(
-              color: AppColors.white.withOpacity(0.6),
+              color: AppColors.white.withValues(alpha: 0.6),
               fontSize: 14,
               fontFamily: 'Inter',
             ),
@@ -582,7 +581,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.dark800.withOpacity(0.5),
+        color: AppColors.dark800.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.dark700, width: 1),
       ),
@@ -594,7 +593,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 20),
@@ -626,7 +625,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
         children: [
           Icon(
             Icons.check_circle_rounded,
-            color: AppColors.neonGreen ?? Colors.green,
+            color: AppColors.neonGreen,
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -634,7 +633,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
             child: Text(
               text,
               style: TextStyle(
-                color: AppColors.white.withOpacity(0.8),
+                color: AppColors.white.withValues(alpha: 0.8),
                 fontSize: 16,
                 fontFamily: 'Inter',
               ),
@@ -649,9 +648,9 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Text(
         tech,
@@ -674,13 +673,12 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color:
-                  AppColors.neonYellow?.withOpacity(0.2) ??
-                  Colors.amber.withOpacity(0.2),
+                  AppColors.neonYellow.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
               icon,
-              color: AppColors.neonYellow ?? Colors.amber,
+              color: AppColors.neonYellow,
               size: 20,
             ),
           ),
@@ -701,7 +699,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                 Text(
                   prize,
                   style: TextStyle(
-                    color: AppColors.white.withOpacity(0.7),
+                    color: AppColors.white.withValues(alpha: 0.7),
                     fontSize: 14,
                     fontFamily: 'Inter',
                   ),
@@ -728,7 +726,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
               boxShadow: isCurrent
                   ? [
                       BoxShadow(
-                        color: AppColors.neonPurple.withOpacity(0.5),
+                        color: AppColors.neonPurple.withValues(alpha: 0.5),
                         blurRadius: 8,
                         spreadRadius: 2,
                       ),
@@ -753,7 +751,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen>
                 Text(
                   date,
                   style: TextStyle(
-                    color: AppColors.white.withOpacity(0.6),
+                    color: AppColors.white.withValues(alpha: 0.6),
                     fontSize: 14,
                     fontFamily: 'Inter',
                   ),
@@ -825,11 +823,11 @@ class _ChallengeParticle extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.5),
+            color: color.withValues(alpha: 0.5),
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.4),
+                color: color.withValues(alpha: 0.4),
                 blurRadius: 6,
                 spreadRadius: 1,
               ),

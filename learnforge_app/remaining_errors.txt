@@ -1,0 +1,128 @@
+﻿   info - The import of 'dart:ui' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\core\theme\app_colors.dart:1:8 - unnecessary_import
+  error - The argument for the named parameter 'surface' was already specified - lib\core\theme\app_theme.dart:14:9 - duplicate_named_argument
+  error - The argument for the named parameter 'onSurface' was already specified - lib\core\theme\app_theme.dart:16:9 - duplicate_named_argument
+   info - Parameter 'key' could be a super parameter - lib\core\utils\neon_animations.dart:6:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\core\widgets\empty_state.dart:15:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\core\widgets\gradient_button.dart:17:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\widgets\gradient_button.dart:45:47 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\core\widgets\particle_background.dart:12:9 - use_super_parameters
+   info - Invalid use of a private type in a public API - lib\core\widgets\particle_background.dart:16:3 - library_private_types_in_public_api
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\widgets\particle_background.dart:111:36 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\widgets\particle_background.dart:121:36 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\core\widgets\progress_indicator_circular.dart:15:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\arena\screens\arena_screen.dart:11:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\arena\screens\challenge_detail_screen.dart:10:9 - use_super_parameters
+   info - The private field _currentPage could be 'final' - lib\features\arena\screens\challenge_detail_screen.dart:21:7 - prefer_final_fields
+warning - The value of the field '_currentPage' isn't used - lib\features\arena\screens\challenge_detail_screen.dart:21:7 - unused_field
+   info - The private field _progress could be 'final' - lib\features\arena\screens\challenge_detail_screen.dart:23:10 - prefer_final_fields
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:51:49 - dead_null_aware_expression
+  error - The named parameter 'surface' isn't defined - lib\features\arena\screens\challenge_detail_screen.dart:100:19 - undefined_named_parameter
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:265:55 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:299:54 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:304:55 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:316:56 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:629:43 - dead_null_aware_expression
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\features\arena\screens\challenge_detail_screen.dart:677:39 - invalid_null_aware_operator
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\screens\challenge_detail_screen.dart:683:46 - dead_null_aware_expression
+   info - Parameter 'key' could be a super parameter - lib\features\arena\widgets\challenge_card.dart:10:9 - use_super_parameters
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:15:37 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:17:37 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:19:36 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:21:37 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:101:50 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:105:52 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:114:53 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\arena\widgets\challenge_card.dart:122:55 - dead_null_aware_expression
+   info - Parameter 'key' could be a super parameter - lib\features\arena\widgets\leaderboard_entry.dart:10:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\auth\screens\login_screen.dart:12:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\auth\screens\onboarding_screen.dart:9:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\auth\screens\onboarding_screen.dart:76:49 - deprecated_member_use
+warning - A value for optional parameter 'glowColor' isn't ever given - lib\features\auth\screens\onboarding_screen.dart:132:10 - unused_element_parameter
+   info - Parameter 'key' could be a super parameter - lib\features\auth\screens\splash_screen.dart:7:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\chat\screens\chat_screen.dart:10:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\chat\widgets\chat_input_field.dart:8:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\chat\widgets\message_bubble.dart:9:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\chat\widgets\message_bubble.dart:32:45 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\features\courses\screens\course_detail_screen.dart:15:9 - use_super_parameters
+   info - The private field _progress could be 'final' - lib\features\courses\screens\course_detail_screen.dart:26:10 - prefer_final_fields
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\screens\course_detail_screen.dart:59:49 - dead_null_aware_expression
+  error - The named parameter 'surface' isn't defined - lib\features\courses\screens\course_detail_screen.dart:115:19 - undefined_named_parameter
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\screens\course_detail_screen.dart:240:55 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\screens\course_detail_screen.dart:513:43 - dead_null_aware_expression
+warning - The declaration '_generateMockChapters' isn't referenced - lib\features\courses\screens\course_detail_screen.dart:532:22 - unused_element
+warning - Unused import: '../../../core/theme/app_colors.dart' - lib\features\courses\screens\courses_screen.dart:3:8 - unused_import
+   info - Parameter 'key' could be a super parameter - lib\features\courses\screens\courses_screen.dart:11:9 - use_super_parameters
+   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\features\courses\screens\youtube_playlist_screen.dart:64:12 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\category_filter_chips.dart:11:9 - use_super_parameters
+warning - Duplicate import - lib\features\courses\widgets\chapter_list.dart:6:8 - duplicate_import
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\chapter_list.dart:14:9 - use_super_parameters
+   info - Don't invoke 'print' in production code - lib\features\courses\widgets\chapter_list.dart:102:21 - avoid_print
+   info - Unnecessary use of 'toList' in a spread - lib\features\courses\widgets\chapter_list.dart:132:12 - unnecessary_to_list_in_spreads
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\chapter_list.dart:154:9 - use_super_parameters
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\chapter_list.dart:312:52 - dead_null_aware_expression
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\course_card_horizontal.dart:11:9 - use_super_parameters
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_card_horizontal.dart:141:58 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_card_horizontal.dart:276:39 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_card_horizontal.dart:278:40 - dead_null_aware_expression
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\course_carousel.dart:17:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\course_grid_card.dart:23:9 - use_super_parameters
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\features\courses\widgets\course_grid_card.dart:163:56 - invalid_null_aware_operator
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\features\courses\widgets\course_grid_card.dart:170:60 - invalid_null_aware_operator
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:263:64 - dead_null_aware_expression
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\courses\widgets\course_grid_card.dart:352:67 - deprecated_member_use
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\features\courses\widgets\course_grid_card.dart:388:60 - invalid_null_aware_operator
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:393:66 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:427:39 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\course_grid_card.dart:429:40 - dead_null_aware_expression
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\course_video_player.dart:13:9 - use_super_parameters
+  error - Expected to find ')' - lib\features\courses\widgets\course_video_player.dart:85:83 - expected_token
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\hero_course_banner.dart:13:9 - use_super_parameters
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\hero_course_banner.dart:276:39 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\courses\widgets\hero_course_banner.dart:278:40 - dead_null_aware_expression
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\progress_bar_custom.dart:13:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\progress_bar_custom.dart:112:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\courses\widgets\youtube_playlist_card.dart:11:9 - use_super_parameters
+  error - The function 'StateNotifierProvider' isn't defined - lib\features\dashboard\providers\daily_goals_provider.dart:5:28 - undefined_function
+  error - Classes can only extend other classes - lib\features\dashboard\providers\daily_goals_provider.dart:9:34 - extends_non_class
+  error - Too many positional arguments: 0 expected, but 1 found - lib\features\dashboard\providers\daily_goals_provider.dart:10:32 - extra_positional_arguments
+  error - Undefined name 'state' - lib\features\dashboard\providers\daily_goals_provider.dart:21:7 - undefined_identifier
+   info - Don't invoke 'print' in production code - lib\features\dashboard\providers\daily_goals_provider.dart:28:7 - avoid_print
+  error - Undefined name 'state' - lib\features\dashboard\providers\daily_goals_provider.dart:37:5 - undefined_identifier
+   info - Don't invoke 'print' in production code - lib\features\dashboard\providers\daily_goals_provider.dart:50:7 - avoid_print
+   info - Parameter 'key' could be a super parameter - lib\features\dashboard\screens\dashboard_screen.dart:18:9 - use_super_parameters
+warning - The value of the local variable 'courseState' isn't used - lib\features\dashboard\screens\dashboard_screen.dart:38:11 - unused_local_variable
+warning - The value of the local variable 'nextLevelXP' isn't used - lib\features\dashboard\screens\dashboard_screen.dart:234:11 - unused_local_variable
+   info - Don't invoke 'print' in production code - lib\features\dashboard\screens\dashboard_screen.dart:797:23 - avoid_print
+warning - The declaration '_openProfileScreen' isn't referenced - lib\features\dashboard\screens\dashboard_screen.dart:886:8 - unused_element
+   info - Invalid use of a private type in a public API - lib\features\dashboard\screens\dashboard_screen.dart:1028:3 - library_private_types_in_public_api
+   info - Parameter 'key' could be a super parameter - lib\features\dashboard\screens\main_layout.dart:8:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\dashboard\widgets\active_course_card.dart:13:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\dashboard\widgets\quote_carousel.dart:11:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\dashboard\widgets\welcome_header.dart:10:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\dashboard\widgets\welcome_header.dart:59:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\dashboard\widgets\welcome_header.dart:66:47 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\features\notifications\screens\notification_screen.dart:7:9 - use_super_parameters
+warning - The left operand can't be null, so the right operand is never executed - lib\features\notifications\screens\notification_screen.dart:116:49 - dead_null_aware_expression
+  error - The named parameter 'surface' isn't defined - lib\features\notifications\screens\notification_screen.dart:163:19 - undefined_named_parameter
+   info - Parameter 'key' could be a super parameter - lib\features\notifications\widgets\notification_item.dart:23:9 - use_super_parameters
+warning - The left operand can't be null, so the right operand is never executed - lib\features\notifications\widgets\notification_item.dart:78:39 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\features\notifications\widgets\notification_item.dart:80:40 - dead_null_aware_expression
+  error - The named parameter 'surface' isn't defined - lib\features\notifications\widgets\notification_item.dart:104:11 - undefined_named_parameter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\notifications\widgets\notification_item.dart:251:67 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\onboarding\screens\set_goal_screen.dart:612:34 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\onboarding\screens\set_goal_screen.dart:630:13 - use_build_context_synchronously
+   info - Parameter 'key' could be a super parameter - lib\features\profile\screens\profile_screen.dart:14:9 - use_super_parameters
+warning - Unnecessary cast - lib\features\profile\screens\profile_screen.dart:31:21 - unnecessary_cast
+warning - Unnecessary cast - lib\features\profile\screens\profile_screen.dart:262:24 - unnecessary_cast
+   info - Parameter 'key' could be a super parameter - lib\features\profile\widgets\avatar_picker_modal.dart:10:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\todo\screens\todo_screen.dart:12:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\features\todo\widgets\add_todo_modal.dart:11:9 - use_super_parameters
+  error - The named parameter 'backgroundColor' isn't defined - lib\features\todo\widgets\add_todo_modal.dart:45:13 - undefined_named_parameter
+   info - Parameter 'key' could be a super parameter - lib\features\todo\widgets\todo_card.dart:13:9 - use_super_parameters
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\features\todo\widgets\todo_card.dart:145:37 - invalid_null_aware_operator
+warning - The '!' will have no effect because the receiver can't be null - lib\features\todo\widgets\todo_card.dart:148:37 - unnecessary_non_null_assertion
+   info - Parameter 'key' could be a super parameter - lib\main.dart:29:9 - use_super_parameters
+   info - Don't invoke 'print' in production code - lib\routes\app_router.dart:92:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\routes\app_router.dart:95:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\routes\app_router.dart:100:13 - avoid_print
+

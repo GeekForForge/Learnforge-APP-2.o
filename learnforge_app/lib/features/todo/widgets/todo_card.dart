@@ -11,11 +11,11 @@ class TodoCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   const TodoCard({
-    Key? key,
+    super.key,
     required this.todo,
     required this.onToggle,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   Color get priorityColor {
     switch (todo.priority) {
@@ -65,12 +65,12 @@ class TodoCard extends StatelessWidget {
                   width: 2,
                 ),
                 color: todo.isCompleted
-                    ? AppColors.neonCyan.withOpacity(0.2)
+                    ? AppColors.neonCyan.withValues(alpha: 0.2)
                     : Colors.transparent,
                 boxShadow: todo.isCompleted
                     ? [
                         BoxShadow(
-                          color: AppColors.neonCyan.withOpacity(0.3),
+                          color: AppColors.neonCyan.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -113,10 +113,10 @@ class TodoCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: priorityColor.withOpacity(0.15),
+                        color: priorityColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                          color: priorityColor.withOpacity(0.3),
+                          color: priorityColor.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -142,10 +142,10 @@ class TodoCard extends StatelessWidget {
                 ),
 
                 // Description (if available)
-                if (todo.description?.isNotEmpty == true) ...[
+                if (todo.description.isNotEmpty == true) ...[
                   const SizedBox(height: 4),
                   Text(
-                    todo.description!,
+                    todo.description,
                     style: TextStyles.inter(
                       fontSize: 12,
                       color: AppColors.grey400,
@@ -166,7 +166,7 @@ class TodoCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.dark700,
-                border: Border.all(color: AppColors.grey400.withOpacity(0.3)),
+                border: Border.all(color: AppColors.grey400.withValues(alpha: 0.3)),
               ),
               child: Icon(
                 Icons.close,

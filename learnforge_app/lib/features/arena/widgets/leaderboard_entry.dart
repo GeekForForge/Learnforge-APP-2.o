@@ -3,12 +3,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:learnforge_app/features/arena/models/challenge_model.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
-import '../models/leaderboard_model.dart';
 
 class LeaderboardList extends StatelessWidget {
   final List<LeaderboardEntryModel> entries;
 
-  const LeaderboardList({Key? key, required this.entries}) : super(key: key);
+  const LeaderboardList({super.key, required this.entries});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class LeaderboardList extends StatelessWidget {
               ? BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: AppColors.neonPurple.withOpacity(0.5),
+                    color: AppColors.neonPurple.withValues(alpha: 0.5),
                     width: 2,
                   ),
                 )
@@ -90,10 +89,10 @@ class LeaderboardList extends StatelessWidget {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.neonCyan.withOpacity(0.2),
+                        color: AppColors.neonCyan.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: AppColors.neonCyan.withOpacity(0.3),
+                          color: AppColors.neonCyan.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(

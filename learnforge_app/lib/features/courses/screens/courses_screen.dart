@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/particle_background.dart';
 import '../../../core/constants/dummy_data.dart';
 import '../widgets/hero_course_banner.dart';
@@ -9,7 +7,7 @@ import '../widgets/category_filter_chips.dart';
 import '../widgets/course_carousel.dart';
 
 class CoursesScreen extends ConsumerStatefulWidget {
-  const CoursesScreen({Key? key}) : super(key: key);
+  const CoursesScreen({super.key});
 
   @override
   ConsumerState<CoursesScreen> createState() => _CoursesScreenState();

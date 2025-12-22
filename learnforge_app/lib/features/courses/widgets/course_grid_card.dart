@@ -21,7 +21,7 @@ class CourseGridCard extends StatelessWidget {
   final VoidCallback? onEnroll;
 
   const CourseGridCard({
-    Key? key,
+    super.key,
     required this.courseId,
     required this.title,
     required this.instructor,
@@ -37,7 +37,7 @@ class CourseGridCard extends StatelessWidget {
     this.isEnrolled = false,
     this.onTap,
     this.onEnroll,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,18 +54,18 @@ class CourseGridCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.neonPink.withOpacity(0.5),
+                  color: AppColors.neonPink.withValues(alpha: 0.5),
                   blurRadius: 20,
                   spreadRadius: 2,
                 ),
                 BoxShadow(
-                  color: AppColors.neonBlue.withOpacity(0.4),
+                  color: AppColors.neonBlue.withValues(alpha: 0.4),
                   blurRadius: 40,
                   spreadRadius: 12,
                 ),
               ],
               border: Border.all(
-                color: AppColors.neonPurple.withOpacity(0.7),
+                color: AppColors.neonPurple.withValues(alpha: 0.7),
                 width: 2,
               ),
             ),
@@ -106,7 +106,7 @@ class CourseGridCard extends StatelessWidget {
                             gradient: LinearGradient(
                               colors: [
                                 Colors.transparent,
-                                Colors.black.withOpacity(0.7),
+                                Colors.black.withValues(alpha: 0.7),
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -124,11 +124,11 @@ class CourseGridCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: _getLevelColor(level).withOpacity(0.9),
+                              color: _getLevelColor(level).withValues(alpha: 0.9),
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
-                                  color: _getLevelColor(level).withOpacity(0.7),
+                                  color: _getLevelColor(level).withValues(alpha: 0.7),
                                   blurRadius: 12,
                                   spreadRadius: 2,
                                 ),
@@ -160,16 +160,14 @@ class CourseGridCard extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: isFree
-                                  ? AppColors.neonGreen?.withOpacity(0.9) ??
-                                        Colors.green
-                                  : AppColors.neonPurple.withOpacity(0.9),
+                                    ? AppColors.neonGreen.withValues(alpha: 0.9)
+                                  : AppColors.neonPurple.withValues(alpha: 0.9),
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
                                   color: isFree
-                                      ? AppColors.neonGreen?.withOpacity(0.7) ??
-                                            Colors.green.withOpacity(0.7)
-                                      : AppColors.neonPurple.withOpacity(0.7),
+                                      ? AppColors.neonGreen.withValues(alpha: 0.7)
+                                      : AppColors.neonPurple.withValues(alpha: 0.7),
                                   blurRadius: 12,
                                   spreadRadius: 2,
                                 ),
@@ -234,7 +232,7 @@ class CourseGridCard extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.person,
-                                color: Colors.white.withOpacity(0.6),
+                                color: Colors.white.withValues(alpha: 0.6),
                                 size: 12,
                               ),
                               const SizedBox(width: 4),
@@ -242,7 +240,7 @@ class CourseGridCard extends StatelessWidget {
                                 child: Text(
                                   instructor,
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontSize: 12,
                                     fontFamily: 'Inter',
                                   ),
@@ -260,14 +258,14 @@ class CourseGridCard extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.star,
-                                color: AppColors.neonYellow ?? Colors.amber,
+                                color: AppColors.neonYellow,
                                 size: 12,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 rating.toStringAsFixed(1),
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: Colors.white.withValues(alpha: 0.8),
                                   fontSize: 12,
                                   fontFamily: 'Inter',
                                 ),
@@ -276,7 +274,7 @@ class CourseGridCard extends StatelessWidget {
                               Text(
                                 '(${_formatCount(totalRatings)})',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white.withValues(alpha: 0.6),
                                   fontSize: 12,
                                   fontFamily: 'Inter',
                                 ),
@@ -284,14 +282,14 @@ class CourseGridCard extends StatelessWidget {
                               const Spacer(),
                               Icon(
                                 Icons.people,
-                                color: Colors.white.withOpacity(0.6),
+                                color: Colors.white.withValues(alpha: 0.6),
                                 size: 12,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 _formatCount(enrolledCount),
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white.withValues(alpha: 0.6),
                                   fontSize: 12,
                                   fontFamily: 'Inter',
                                 ),
@@ -314,7 +312,7 @@ class CourseGridCard extends StatelessWidget {
                                 Text(
                                   '$completedLessons/$totalLessons',
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontSize: 12,
                                     fontFamily: 'Inter',
                                   ),
@@ -323,14 +321,14 @@ class CourseGridCard extends StatelessWidget {
                               ] else ...[
                                 Icon(
                                   Icons.video_library,
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white.withValues(alpha: 0.6),
                                   size: 14,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   '$totalLessons lessons',
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontSize: 12,
                                     fontFamily: 'Inter',
                                   ),
@@ -349,8 +347,8 @@ class CourseGridCard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(14),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: AppColors.neonPink.withOpacity(
-                                          0.6,
+                                        color: AppColors.neonPink.withValues(
+                                          alpha: 0.6,
                                         ),
                                         blurRadius: 8,
                                         spreadRadius: 1,
@@ -385,12 +383,11 @@ class CourseGridCard extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color:
-                                        AppColors.neonGreen?.withOpacity(0.2) ??
-                                        Colors.green.withOpacity(0.2),
+                                        AppColors.neonGreen.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(14),
                                     border: Border.all(
                                       color:
-                                          AppColors.neonGreen ?? Colors.green,
+                                          AppColors.neonGreen,
                                       width: 1,
                                     ),
                                   ),
@@ -424,9 +421,9 @@ class CourseGridCard extends StatelessWidget {
   Color _getLevelColor(String level) {
     switch (level.toLowerCase()) {
       case 'beginner':
-        return AppColors.neonGreen ?? Colors.green;
+        return AppColors.neonGreen;
       case 'intermediate':
-        return AppColors.neonYellow ?? Colors.amber;
+        return AppColors.neonYellow;
       case 'advanced':
         return AppColors.neonPink;
       default:

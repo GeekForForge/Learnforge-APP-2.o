@@ -11,12 +11,12 @@ class HeroCourseBanner extends StatelessWidget {
   final bool isBookmarked;
 
   const HeroCourseBanner({
-    Key? key,
+    super.key,
     required this.course,
     this.onContinue,
     this.onBookmark,
     this.isBookmarked = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,8 @@ class HeroCourseBanner extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Colors.transparent,
-              Colors.black.withOpacity(0.5),
-              Colors.black.withOpacity(0.9),
+              Colors.black.withValues(alpha: 0.5),
+              Colors.black.withValues(alpha: 0.9),
             ],
             stops: const [0.0, 0.5, 1.0],
           ),
@@ -92,7 +92,7 @@ class HeroCourseBanner extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: _getLevelColor(course.level).withOpacity(0.2),
+                        color: _getLevelColor(course.level).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: _getLevelColor(course.level),
@@ -185,7 +185,7 @@ class HeroCourseBanner extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.neonPurple.withOpacity(0.6),
+                              color: AppColors.neonPurple.withValues(alpha: 0.6),
                               blurRadius: 20,
                               spreadRadius: 2,
                             ),
@@ -228,15 +228,15 @@ class HeroCourseBanner extends StatelessWidget {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: AppColors.dark700.withOpacity(0.8),
+                        color: AppColors.dark700.withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: AppColors.neonPink.withOpacity(0.5),
+                          color: AppColors.neonPink.withValues(alpha: 0.5),
                           width: 1,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.neonPink.withOpacity(0.4),
+                            color: AppColors.neonPink.withValues(alpha: 0.4),
                             blurRadius: 15,
                             spreadRadius: 1,
                           ),
@@ -273,9 +273,9 @@ class HeroCourseBanner extends StatelessWidget {
   Color _getLevelColor(String level) {
     switch (level.toLowerCase()) {
       case 'beginner':
-        return AppColors.neonGreen ?? Colors.green;
+        return AppColors.neonGreen;
       case 'intermediate':
-        return AppColors.neonYellow ?? Colors.amber;
+        return AppColors.neonYellow;
       case 'advanced':
         return AppColors.neonPink;
       default:

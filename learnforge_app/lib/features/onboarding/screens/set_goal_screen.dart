@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/theme/app_colors.dart';
@@ -120,7 +121,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.neonPurple.withOpacity(0.15),
+                color: AppColors.neonPurple.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -136,7 +137,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
               height: 250,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.neonCyan.withOpacity(0.15),
+                color: AppColors.neonCyan.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -144,7 +145,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
         // Noise Overlay (Optional - Simulated with opacity)
         Positioned.fill(
           child: Container(
-            color: Colors.black.withOpacity(0.02), // Subtle texture feel
+            color: Colors.black.withValues(alpha: 0.02), // Subtle texture feel
           ),
         ),
       ],
@@ -166,7 +167,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
         
         ShaderMask(
           shaderCallback: (bounds) => LinearGradient(
-            colors: [Colors.white, Colors.white.withOpacity(0.8)],
+            colors: [Colors.white, Colors.white.withValues(alpha: 0.8)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ).createShader(bounds),
@@ -180,7 +181,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
           ),
         ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.1).then().shimmer(
           duration: 2000.ms,
-          color: AppColors.neonBlue.withOpacity(0.3),
+          color: AppColors.neonBlue.withValues(alpha: 0.3),
         ),
 
         const SizedBox(height: 8),
@@ -189,9 +190,9 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.neonCyan.withOpacity(0.3)),
+            border: Border.all(color: AppColors.neonCyan.withValues(alpha: 0.3)),
             borderRadius: BorderRadius.circular(4),
-            color: AppColors.neonCyan.withOpacity(0.05),
+            color: AppColors.neonCyan.withValues(alpha: 0.05),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -252,7 +253,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
                     color: isSelected 
-                        ? AppColors.neonPurple.withOpacity(0.2)
+                        ? AppColors.neonPurple.withValues(alpha: 0.2)
                         : Colors.transparent,
                     border: Border.all(
                       color: isSelected ? AppColors.neonPurple : Colors.grey[800]!,
@@ -261,7 +262,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: isSelected ? [
                       BoxShadow(
-                        color: AppColors.neonPurple.withOpacity(0.3),
+                        color: AppColors.neonPurple.withValues(alpha: 0.3),
                         blurRadius: 8,
                         spreadRadius: 1,
                       )
@@ -284,7 +285,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
             '≈ ${( _selectedWatchTime / 15 ).toStringAsFixed(1)} lessons per day',
             style: TextStyles.inter(
               fontSize: 12,
-              color: AppColors.neonPurple.withOpacity(0.7),
+              color: AppColors.neonPurple.withValues(alpha: 0.7),
               fontStyle: FontStyle.italic,
             ),
           ),
@@ -315,7 +316,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
                 width: 80,
                 decoration: BoxDecoration(
                   color: isSelected 
-                      ? AppColors.neonCyan.withOpacity(0.15)
+                      ? AppColors.neonCyan.withValues(alpha: 0.15)
                       : Colors.transparent,
                   border: Border.all(
                     color: isSelected ? AppColors.neonCyan : Colors.grey[800]!,
@@ -324,7 +325,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: isSelected ? [
                     BoxShadow(
-                      color: AppColors.neonCyan.withOpacity(0.2),
+                      color: AppColors.neonCyan.withValues(alpha: 0.2),
                       blurRadius: 10,
                     )
                   ] : [],
@@ -384,7 +385,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: _quizEnabled 
-                ? AppColors.neonPink.withOpacity(0.1)
+                ? AppColors.neonPink.withValues(alpha: 0.1)
                 : Colors.transparent,
             border: Border.all(
               color: _quizEnabled ? AppColors.neonPink : Colors.grey[800]!,
@@ -473,7 +474,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  color.withOpacity(0.5),
+                  color.withValues(alpha: 0.5),
                   Colors.transparent,
                 ],
               ),
@@ -568,7 +569,7 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
                 width: 2,
               ),
               borderRadius: BorderRadius.circular(4),
-              color: _confirmed ? AppColors.neonGreen.withOpacity(0.2) : Colors.transparent,
+              color: _confirmed ? AppColors.neonGreen.withValues(alpha: 0.2) : Colors.transparent,
             ),
             child: _confirmed 
                 ? const Icon(Icons.check, size: 16, color: AppColors.neonGreen)
@@ -606,6 +607,8 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
               quizEnabled: _quizEnabled,
             );
             
+            if (!mounted) return;
+            
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Row(
@@ -615,4 +618,19 @@ class _SetGoalScreenState extends ConsumerState<SetGoalScreen> {
                     Text(
                       'MISSION PARAMETERS LOCKED',
                       style: TextStyles.orbitron(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
-      
+                    ),
+                  ],
+                ),
+                backgroundColor: AppColors.neonGreen,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+            
+            // Navigate to dashboard
+            context.go('/dashboard');
+          },
+        ),
+      ),
+    ).animate().fadeIn(delay: 1000.ms);
+  }
+}

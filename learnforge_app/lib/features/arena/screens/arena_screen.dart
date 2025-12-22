@@ -6,10 +6,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
 import '../providers/arena_provider.dart';
 import '../widgets/challenge_card.dart';
-import '../widgets/leaderboard_list.dart';
 
 class ArenaScreen extends ConsumerWidget {
-  const ArenaScreen({Key? key}) : super(key: key);
+  const ArenaScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

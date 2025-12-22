@@ -51,19 +51,18 @@ class _YouTubePlaylistScreenState extends State<YouTubePlaylistScreen> {
     super.dispose();
   }
 
-  Future<bool> _onWillPop() async {
-    if (isFullScreen) {
-      _controller.toggleFullScreenMode();
-      return false;
-    }
-    return true;
-  }
+  // Unused _onWillPop removed
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      /// FIXES BACK BUTTON ISSUE
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: !isFullScreen,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (isFullScreen) {
+          _controller.toggleFullScreenMode();
+        }
+      },
       child: YoutubePlayerBuilder(
         onEnterFullScreen: () {
           setState(() => isFullScreen = true);

@@ -11,14 +11,14 @@ class ProgressBarCustom extends StatelessWidget {
   final bool animated;
 
   const ProgressBarCustom({
-    Key? key,
+    super.key,
     required this.progress,
     this.height = 8,
     this.backgroundColor,
     this.progressColor,
     this.showPercentage = false,
     this.animated = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class ProgressBarCustom extends StatelessWidget {
                     boxShadow: [
                       BoxShadow(
                         color: (progressColor ?? AppColors.neonCyan)
-                            .withOpacity(0.3),
+                            .withValues(alpha: 0.3),
                         blurRadius: 8,
                         spreadRadius: 1,
                       ),
@@ -79,7 +79,7 @@ class ProgressBarCustom extends StatelessWidget {
               Text(
                 'Progress',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   fontSize: 12,
                   fontFamily: 'Inter',
                 ),
@@ -110,14 +110,14 @@ class CircularProgressCustom extends StatelessWidget {
   final bool showPercentage;
 
   const CircularProgressCustom({
-    Key? key,
+    super.key,
     required this.progress,
     this.size = 60,
     this.strokeWidth = 6,
     this.backgroundColor,
     this.progressColor,
     this.showPercentage = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

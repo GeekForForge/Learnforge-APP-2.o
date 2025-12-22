@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -34,9 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 center: Alignment.center,
                 radius: 2.0,
                 colors: [
-                  AppColors.neonPurple.withOpacity(0.15),
-                  AppColors.neonCyan.withOpacity(0.1),
-                  AppColors.neonPink.withOpacity(0.05),
+                  AppColors.neonPurple.withValues(alpha: 0.15),
+                  AppColors.neonCyan.withValues(alpha: 0.1),
+                  AppColors.neonPink.withValues(alpha: 0.05),
                   AppColors.dark900,
                 ],
                 stops: const [0.1, 0.3, 0.6, 1.0],
@@ -51,9 +51,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.neonPurple.withOpacity(0.05),
+                  AppColors.neonPurple.withValues(alpha: 0.05),
                   Colors.transparent,
-                  AppColors.neonCyan.withOpacity(0.05),
+                  AppColors.neonCyan.withValues(alpha: 0.05),
                 ],
               ),
             ),
@@ -78,19 +78,19 @@ class _SplashScreenState extends State<SplashScreen> {
                             shape: BoxShape.circle,
                             gradient: RadialGradient(
                               colors: [
-                                AppColors.neonPurple.withOpacity(0.3),
-                                AppColors.neonCyan.withOpacity(0.1),
+                                AppColors.neonPurple.withValues(alpha: 0.3),
+                                AppColors.neonCyan.withValues(alpha: 0.1),
                                 Colors.transparent,
                               ],
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.neonPurple.withOpacity(0.4),
+                                color: AppColors.neonPurple.withValues(alpha: 0.4),
                                 blurRadius: 40,
                                 spreadRadius: 10,
                               ),
                               BoxShadow(
-                                color: AppColors.neonCyan.withOpacity(0.3),
+                                color: AppColors.neonCyan.withValues(alpha: 0.3),
                                 blurRadius: 30,
                                 spreadRadius: 5,
                               ),
@@ -157,7 +157,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         .animate(onPlay: (controller) => controller.repeat())
                         .shimmer(
                           duration: 2000.ms,
-                          color: AppColors.neonPurple.withOpacity(0.2),
+                          color: AppColors.neonPurple.withValues(alpha: 0.2),
                         ),
                   ],
                 ),
@@ -177,7 +177,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             foreground: Paint()
                               ..style = PaintingStyle.stroke
                               ..strokeWidth = 3
-                              ..color = AppColors.neonPurple.withOpacity(0.5),
+                              ..color = AppColors.neonPurple.withValues(alpha: 0.5),
                           ),
                         ),
                         // Main text
@@ -190,12 +190,12 @@ class _SplashScreenState extends State<SplashScreen> {
                             color: AppColors.white,
                             shadows: [
                               Shadow(
-                                color: AppColors.neonPurple.withOpacity(0.8),
+                                color: AppColors.neonPurple.withValues(alpha: 0.8),
                                 blurRadius: 15,
                                 offset: const Offset(0, 0),
                               ),
                               Shadow(
-                                color: AppColors.neonCyan.withOpacity(0.6),
+                                color: AppColors.neonCyan.withValues(alpha: 0.6),
                                 blurRadius: 25,
                                 offset: const Offset(0, 0),
                               ),
@@ -257,7 +257,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     borderRadius: BorderRadius.circular(3),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.dark900.withOpacity(0.5),
+                        color: AppColors.dark900.withValues(alpha: 0.5),
                         blurRadius: 10,
                         spreadRadius: 2,
                       ),
@@ -285,7 +285,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           .shimmer(
                             duration: 1500.ms,
                             angle: 0.5,
-                            color: AppColors.neonCyan.withOpacity(0.5),
+                            color: AppColors.neonCyan.withValues(alpha: 0.5),
                           ),
                     ],
                   ),
@@ -368,11 +368,11 @@ class _AnimatedParticle extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.6),
+            color: color.withValues(alpha: 0.6),
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.4),
+                color: color.withValues(alpha: 0.4),
                 blurRadius: 8,
                 spreadRadius: 2,
               ),

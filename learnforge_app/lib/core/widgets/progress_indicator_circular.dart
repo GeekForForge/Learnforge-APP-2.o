@@ -13,7 +13,7 @@ class CircularProgressIndicatorCustom extends StatelessWidget {
   final Color? textColor;
 
   const CircularProgressIndicatorCustom({
-    Key? key,
+    super.key,
     required this.progress,
     this.size = 120,
     this.label = '',
@@ -22,7 +22,7 @@ class CircularProgressIndicatorCustom extends StatelessWidget {
     this.progressColor,
     this.glowColor,
     this.textColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class CircularProgressIndicatorCustom extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: glowColor!.withOpacity(0.3),
+                  color: glowColor!.withValues(alpha: 0.3),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),
@@ -52,7 +52,7 @@ class CircularProgressIndicatorCustom extends StatelessWidget {
               shape: BoxShape.circle,
               color: Colors.transparent,
               border: Border.all(
-                color: (backgroundColor ?? AppColors.dark700).withOpacity(0.3),
+                color: (backgroundColor ?? AppColors.dark700).withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -88,7 +88,7 @@ class CircularProgressIndicatorCustom extends StatelessWidget {
                       labelStyle ??
                       TextStyle(
                         fontSize: size * 0.1, // Responsive font size
-                        color: textColor?.withOpacity(0.7) ?? AppColors.grey400,
+                        color: textColor?.withValues(alpha: 0.7) ?? AppColors.grey400,
                       ),
                 ),
               ],

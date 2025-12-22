@@ -11,12 +11,12 @@ class CourseVideoPlayer extends StatefulWidget {
   final bool autoPlay;
 
   const CourseVideoPlayer({
-    Key? key,
+    super.key,
     required this.videoUrl,
     this.videoTitle,
     this.isYouTube = false,
     this.autoPlay = false,
-  }) : super(key: key);
+  });
 
   @override
   State<CourseVideoPlayer> createState() => _CourseVideoPlayerState();
@@ -82,7 +82,7 @@ class _CourseVideoPlayerState extends State<CourseVideoPlayer> {
   }
 
   Future<void> _initializeVideoPlayer() async {
-    _videoController = VideoPlayerController.network(widget.videoUrl);
+    _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
     await _videoController.initialize();
     if (mounted) {
       setState(() {
@@ -164,7 +164,7 @@ class _CourseVideoPlayerState extends State<CourseVideoPlayer> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 20,
             spreadRadius: 5,
           ),
@@ -205,7 +205,7 @@ class _CourseVideoPlayerState extends State<CourseVideoPlayer> {
         progressColors: ProgressBarColors(
           playedColor: AppColors.neonCyan,
           handleColor: AppColors.neonPurple,
-          bufferedColor: AppColors.neonPurple.withOpacity(0.3),
+          bufferedColor: AppColors.neonPurple.withValues(alpha: 0.3),
           backgroundColor: Colors.white24,
         ),
         onReady: () => setState(() => _isLoading = false),
@@ -243,7 +243,7 @@ class _CourseVideoPlayerState extends State<CourseVideoPlayer> {
                   ? 'Loading YouTube video...'
                   : 'Loading video...',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 16,
                 fontFamily: 'Inter',
               ),
@@ -279,7 +279,7 @@ class _CourseVideoPlayerState extends State<CourseVideoPlayer> {
                 'Please check your connection and try again',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   fontSize: 14,
                   fontFamily: 'Inter',
                 ),
@@ -324,7 +324,7 @@ class _CourseVideoPlayerState extends State<CourseVideoPlayer> {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -342,7 +342,7 @@ class _CourseVideoPlayerState extends State<CourseVideoPlayer> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -405,11 +405,11 @@ class _CourseVideoPlayerState extends State<CourseVideoPlayer> {
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: AppColors.neonPurple.withOpacity(0.9),
+                        color: AppColors.neonPurple.withValues(alpha: 0.9),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.neonPurple.withOpacity(0.5),
+                            color: AppColors.neonPurple.withValues(alpha: 0.5),
                             blurRadius: 10,
                             spreadRadius: 2,
                           ),

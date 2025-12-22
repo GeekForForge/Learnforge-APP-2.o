@@ -8,7 +8,7 @@ import '../../../core/widgets/gradient_button.dart';
 class AddTodoModal extends StatefulWidget {
   final Function(String, String, DateTime, String) onAdd;
 
-  const AddTodoModal({Key? key, required this.onAdd}) : super(key: key);
+  const AddTodoModal({super.key, required this.onAdd});
 
   @override
   State<AddTodoModal> createState() => _AddTodoModalState();
@@ -41,8 +41,7 @@ class _AddTodoModalState extends State<AddTodoModal> {
               onPrimary: Colors.white,
               surface: AppColors.dark800,
               onSurface: Colors.white,
-            ),
-            dialogBackgroundColor: AppColors.dark900,
+            ).copyWith(surface: AppColors.dark900),
           ),
           child: child!,
         );

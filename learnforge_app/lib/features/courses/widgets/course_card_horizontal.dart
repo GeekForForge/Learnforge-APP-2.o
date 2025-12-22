@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../models/course_model.dart';
@@ -10,11 +9,11 @@ class CourseCardHorizontal extends StatelessWidget {
   final bool showProgress;
 
   const CourseCardHorizontal({
-    Key? key,
+    super.key,
     required this.course,
     this.onTap,
     this.showProgress = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +31,17 @@ class CourseCardHorizontal extends StatelessWidget {
           color: AppColors.dark800,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppColors.neonPurple.withOpacity(0.6),
+            color: AppColors.neonPurple.withValues(alpha: 0.6),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.neonPink.withOpacity(0.4),
+              color: AppColors.neonPink.withValues(alpha: 0.4),
               blurRadius: 15,
               spreadRadius: 1,
             ),
             BoxShadow(
-              color: AppColors.neonBlue.withOpacity(0.3),
+              color: AppColors.neonBlue.withValues(alpha: 0.3),
               blurRadius: 25,
               spreadRadius: 3,
             ),
@@ -83,7 +82,7 @@ class CourseCardHorizontal extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withValues(alpha: 0.7),
                       ],
                     ),
                   ),
@@ -99,11 +98,11 @@ class CourseCardHorizontal extends StatelessWidget {
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: _getLevelColor(course.level).withOpacity(0.9),
+                      color: _getLevelColor(course.level).withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: _getLevelColor(course.level).withOpacity(0.7),
+                          color: _getLevelColor(course.level).withValues(alpha: 0.7),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -131,7 +130,7 @@ class CourseCardHorizontal extends StatelessWidget {
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
+                      color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -139,7 +138,7 @@ class CourseCardHorizontal extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.star,
-                          color: AppColors.neonYellow ?? Colors.amber,
+                          color: AppColors.neonYellow,
                           size: 10,
                         ),
                         const SizedBox(width: 2),
@@ -274,9 +273,9 @@ class CourseCardHorizontal extends StatelessWidget {
   Color _getLevelColor(String level) {
     switch (level.toLowerCase()) {
       case 'beginner':
-        return AppColors.neonGreen ?? Colors.green;
+        return AppColors.neonGreen;
       case 'intermediate':
-        return AppColors.neonYellow ?? Colors.amber;
+        return AppColors.neonYellow;
       case 'advanced':
         return AppColors.neonPink;
       default:

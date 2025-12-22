@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../models/youtube_playlist_model.dart';
 
 class CourseState {
@@ -42,10 +41,12 @@ class CourseState {
   }
 }
 
-class CourseProvider extends StateNotifier<CourseState> {
-  CourseProvider() : super(const CourseState()) {
+class CourseProvider extends Notifier<CourseState> {
+  @override
+  CourseState build() {
     // Load playlists when provider is created
     loadPlaylists();
+    return const CourseState();
   }
 
   Future<void> loadPlaylists() async {
@@ -163,8 +164,8 @@ class CourseProvider extends StateNotifier<CourseState> {
 }
 
 // Updated Providers
-final courseProvider = StateNotifierProvider<CourseProvider, CourseState>(
-  (ref) => CourseProvider(),
+final courseProvider = NotifierProvider<CourseProvider, CourseState>(
+  () => CourseProvider(),
 );
 
 final featuredPlaylistsProvider = Provider<List<YouTubePlaylist>>((ref) {

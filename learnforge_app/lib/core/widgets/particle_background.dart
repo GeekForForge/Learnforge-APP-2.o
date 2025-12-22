@@ -9,11 +9,10 @@ class ParticleBackground extends StatefulWidget {
   /// Optional child widget rendered above the particles.
   final Widget? child;
 
-  const ParticleBackground({Key? key, this.particleCount = 20, this.child})
-    : super(key: key);
+  const ParticleBackground({super.key, this.particleCount = 20, this.child});
 
   @override
-  _ParticleBackgroundState createState() => _ParticleBackgroundState();
+  State<ParticleBackground> createState() => _ParticleBackgroundState();
 }
 
 class _ParticleBackgroundState extends State<ParticleBackground>
@@ -108,7 +107,7 @@ class ParticlePainter extends CustomPainter {
     final paint = Paint()..style = PaintingStyle.fill;
 
     for (var particle in particles) {
-      paint.color = particle.color.withOpacity(particle.opacity);
+      paint.color = particle.color.withValues(alpha: particle.opacity);
 
       // Draw main particle
       canvas.drawCircle(
@@ -118,7 +117,7 @@ class ParticlePainter extends CustomPainter {
       );
 
       // Glow effect
-      paint.color = particle.color.withOpacity(particle.opacity * 0.3);
+      paint.color = particle.color.withValues(alpha: particle.opacity * 0.3);
       canvas.drawCircle(
         Offset(particle.x * size.width / 100, particle.y * size.height / 100),
         particle.radius * 3,
