@@ -1,4 +1,5 @@
 // auth_provider.dart
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import '../models/user_model.dart';
@@ -11,21 +12,48 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(const AuthState.initial());
 
-  Future<void> login(String email, String password) async {
+  // TODO: REMOVE THIS - Temporary bypass for development
+  void skipAuthForDev() {
+    final mockUser = UserModel(
+      id: 'dev_user_123',
+      name: 'Dev User',
+      email: 'dev@learnforge.com',
+      avatar: 'assets/images/avatar_default.png',
+      createdAt: DateTime.now(),
+      streakDays: 5,
+      totalXP: 1250,
+    );
+    state = AuthState.authenticated(mockUser);
+  }
+
+  Future<void> signInWithGitHub() async {
     state = const AuthState.loading();
     try {
-      // Simulate login delay and user retrieval
-      await Future.delayed(const Duration(seconds: 2));
-      final user = UserModel(
-        id: '1',
-        name: 'John Developer',
-        email: email,
-        avatar: 'assets/images/avatar_default.png',
-        createdAt: DateTime.now(),
-        streakDays: 5,
-        totalXP: 2650,
-      );
-      state = AuthState.authenticated(user);
+      // Create a GitHub provider
+      final provider = GithubAuthProvider();
+      
+      // Sign in with Firebase
+      final userCredential = await FirebaseAuth.instance.signInWithProvider(provider);
+      final user = userCredential.user;
+
+      if (user != null) {
+        // Map Firebase User to App User Model
+        // Note: Streak and XP would typically come from a database (Firestore)
+        final appUser = UserModel(
+          id: user.uid,
+          name: user.displayName ?? 'Learner',
+          email: user.email ?? '',
+          avatar: user.photoURL ?? 'assets/images/avatar_default.png',
+          createdAt: user.metadata.creationTime ?? DateTime.now(),
+          streakDays: 0, // Default for new login
+          totalXP: 0,    // Default for new login
+        );
+        state = AuthState.authenticated(appUser);
+      } else {
+        state = const AuthState.error("Sign in cancelled");
+      }
+    } on FirebaseAuthException catch (e) {
+      state = AuthState.error(e.message ?? "Authentication failed");
     } catch (e) {
       state = AuthState.error(e.toString());
     }

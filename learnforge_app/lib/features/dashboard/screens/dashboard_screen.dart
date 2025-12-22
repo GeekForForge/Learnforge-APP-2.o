@@ -793,7 +793,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   const SizedBox(height: 16),
                   GradientButton(
                     text: 'Set Goals',
-                    onPressed: () => context.push('/goals'),
+                    onPressed: () {
+                      print('DEBUG: Set Goals button pressed. Attempting to push /set-goal');
+                      context.push('/set-goal');
+                    },
                     height: 40,
                   ),
                 ],

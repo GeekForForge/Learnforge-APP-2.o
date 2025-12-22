@@ -12,6 +12,7 @@ import 'package:learnforge_app/features/notifications/screens/notification_scree
 import '../features/auth/screens/splash_screen.dart';
 import '../features/auth/screens/onboarding_screen.dart';
 import '../features/auth/screens/login_screen.dart';
+import '../features/onboarding/screens/set_goal_screen.dart'; // Added import
 
 // Dashboard
 import '../features/dashboard/screens/dashboard_screen.dart';
@@ -40,6 +41,10 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const OnboardingScreen(),
     ),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+    GoRoute(
+      path: '/set-goal',
+      builder: (context, state) => const SetGoalScreen(),
+    ), // Added Route
 
     // -------------------- DASHBOARD --------------------
     GoRoute(
