@@ -10,7 +10,7 @@ import '../../../core/widgets/gradient_button.dart';
 import '../../../core/widgets/particle_background.dart';
 import '../../../features/arena/models/challenge_model.dart';
 import '../../../features/arena/providers/arena_provider.dart';
-import '../../../features/courses/models/youtube_playlist_model.dart';
+import '../../../features/courses/models/course_model.dart';
 import '../../../features/courses/providers/course_provider.dart';
 import '../../../features/profile/providers/profile_provider.dart';
 
@@ -27,17 +27,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     super.initState();
     // Load initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(courseProvider.notifier).loadPlaylists();
-      ref.read(courseProvider.notifier).loadMyPlaylists();
       ref.read(profileProvider.notifier).loadUserProfile();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-//     final courseState = ref.watch(courseProvider);
-    final enrolledPlaylists = ref.watch(myPlaylistsProvider);
-    final activeChallengesAsync = ref.watch(activeChallengesProvider);
+    // Navigate courses instead of playlists
+    final courseState = ref.watch(courseProvider);
+    final courses = courseState.courses;
+    
+    // Using filtered courses as "Enrolled" for now (e.g., first 3)
+    // In real app, check user enrollment logic
+    final enrolledCourses = courses.isNotEmpty ? courses.take(2).toList() : <Course>[];
+    
+    final activeChallengesAsync = ref.watch(challengesProvider);
     final profileState = ref.watch(profileProvider);
 
     return ParticleBackground(
@@ -60,11 +64,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 _buildAppBar(),
                 _buildHeroHeader(profileState),
                 _buildQuickStatsSection(
-                  enrolledPlaylists.length,
+                  enrolledCourses.length,
                   activeChallenges.length,
                   profileState.profile?.experience ?? 0,
                 ),
-                _buildContinueLearningSection(enrolledPlaylists),
+                _buildContinueLearningSection(enrolledCourses),
                 _buildArenaHighlightsSection(activeChallenges),
                 _buildDailyMissionsSection(
                   profileState.profile?.userData['streak'] ?? 0,
@@ -129,11 +133,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
           ),
         ),
-        // .animate(onPlay: (controller) => controller.repeat())
-        // .shimmer(
-        //   duration: 2000.ms,
-        //   color: AppColors.neonPink.withValues(alpha: 0.3),
-        // ),
       ],
     );
   }
@@ -363,7 +362,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   // -------------------- CONTINUE LEARNING SECTION --------------------
-  Widget _buildContinueLearningSection(List<YouTubePlaylist> playlists) {
+  Widget _buildContinueLearningSection(List<Course> courses) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -382,7 +381,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ),
 
-            if (playlists.isEmpty)
+            if (courses.isEmpty)
               EmptyState(
                 title: 'No Courses Enrolled',
                 subtitle: 'Start your learning journey by enrolling in courses',
@@ -394,17 +393,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               SizedBox(
                 height: 280,
                 child: ListView.builder(
-                  padding: EdgeInsets.only(left: 8),
+                  padding: const EdgeInsets.only(left: 8),
                   scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  itemCount: playlists.length,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: courses.length,
                   itemBuilder: (context, index) {
-                    final playlist = playlists[index];
+                    final course = courses[index];
                     return Container(
                       margin: EdgeInsets.only(
-                        right: index == playlists.length - 1 ? 8 : 16,
+                        right: index == courses.length - 1 ? 8 : 16,
                       ),
-                      child: _buildLearningCard(playlist),
+                      child: _buildLearningCard(course),
                     );
                   },
                 ),
@@ -415,14 +414,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildLearningCard(YouTubePlaylist playlist) {
+  Widget _buildLearningCard(Course course) {
+    // Determine progress (mocked for now, or use enrolledCount as a weak proxy if >0)
+    final progress = 0.0;
+
     return GlassMorphicCard(
       padding: EdgeInsets.zero,
-      onTap: () => context.push('/playlist/${playlist.id}'),
-
+      onTap: () => context.push('/courses/${course.id}'), // Route to course detail
       child: SizedBox(
         width: 260,
-        height: 280, // bounded card height -> makes layout predictable
+        height: 280,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -434,8 +435,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   top: Radius.circular(16),
                 ),
                 image: DecorationImage(
-                  image: NetworkImage(playlist.thumbnailUrl),
+                  image: NetworkImage(course.thumbnail),
                   fit: BoxFit.cover,
+                  onError: (obj, stack) {}, // Simple error handling
                 ),
               ),
               child: Stack(
@@ -482,7 +484,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                   ),
 
-                  // Category chip
+                  // Category chip (using Instructor as proxy or category if available)
                   Positioned(
                     bottom: 8,
                     left: 10,
@@ -496,7 +498,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         color: AppColors.neonPurple.withValues(alpha: 0.7),
                       ),
                       child: Text(
-                        playlist.channelTitle,
+                        course.categories.isNotEmpty ? course.categories.first : course.instructor,
                         style: TextStyles.inter(
                           fontSize: 10,
                           color: AppColors.white,
@@ -508,13 +510,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ),
 
-            // BODY: Expanded uses remaining bounded height (safe because SizedBox above)
+            // BODY
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  // spaceBetween ensures title top, button bottom
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Title + optional progress area (top)
@@ -522,7 +523,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          playlist.title,
+                          course.title,
                           style: TextStyles.orbitron(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -533,11 +534,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         const SizedBox(height: 8),
 
-                        if (playlist.userProgress > 0) ...[
+                        if (progress > 0) ...[
                           LinearProgressIndicator(
-                            value: playlist.userProgress,
+                            value: progress,
                             backgroundColor: AppColors.dark700,
-                            valueColor: AlwaysStoppedAnimation(
+                            valueColor: const AlwaysStoppedAnimation(
                               AppColors.neonBlue,
                             ),
                             minHeight: 6,
@@ -553,14 +554,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         GradientButton(
-                          text: playlist.userProgress > 0
+                          text: progress > 0
                               ? "Continue"
                               : "Start Learning",
                           onPressed: () =>
-                              context.push('/playlist/${playlist.id}'),
+                              context.push('/courses/${course.id}'),
                           height: 42,
                         ),
-                        const SizedBox(height: 4), // safe padding for glow
+                        const SizedBox(height: 4), 
                       ],
                     ),
                   ],

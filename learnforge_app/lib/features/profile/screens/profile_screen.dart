@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
 import '../../../core/widgets/gradient_button.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../../core/widgets/particle_background.dart';
 import '../widgets/avatar_picker_modal.dart';
 
 
@@ -30,212 +31,216 @@ class ProfileScreen extends ConsumerWidget {
     } else if (authState is Authenticated) {
       final user = (authState).user;
       return Scaffold(
-        backgroundColor: AppColors.dark900, // Fixed: darkBg → dark900
+        backgroundColor: AppColors.dark900,
         appBar: AppBar(
           title: const Text('Profile'),
-          backgroundColor:
-              AppColors.dark800, // Fixed: darkBgSecondary → dark800
+          backgroundColor: AppColors.dark800,
           elevation: 0,
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              // Profile Header
-              GlassMorphicCard(
-                glowColor: AppColors.neonPurple,
-                child: Column(
-                  children: [
-                    Stack(
+              // Add Particle effect for "more nice" look
+              const Positioned.fill(
+                child: ParticleBackground(particleCount: 20),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Profile Header
+                  GlassMorphicCard(
+                    glowColor: AppColors.neonPurple,
+                    child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.neonPurple.withValues(alpha: 0.5),
-                              width: 3,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.neonPurple.withValues(alpha: 0.3),
-                                blurRadius: 15,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: user.avatar.startsWith('assets/')
-                              ? CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: AppColors.dark700,
-                                  backgroundImage: AssetImage(user.avatar),
-                                )
-                              : CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: AppColors.dark700,
-                                  child: Text(
-                                    user.avatar,
-                                    style: const TextStyle(fontSize: 50),
-                                  ),
-                                ),
-                        ),
-                        // Edit button
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () {
-                              _showAvatarPicker(context, ref, user.avatar);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
+                        Stack(
+                          children: [
+                            Container(
                               decoration: BoxDecoration(
-                                color: AppColors.neonPurple,
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: AppColors.dark900,
-                                  width: 2,
+                                  color: AppColors.neonPurple.withValues(alpha: 0.5),
+                                  width: 3,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.neonPurple.withValues(alpha: 0.5),
-                                    blurRadius: 8,
-                                    spreadRadius: 1,
+                                    color: AppColors.neonPurple.withValues(alpha: 0.3),
+                                    blurRadius: 15,
+                                    spreadRadius: 2,
                                   ),
                                 ],
                               ),
-                              child: const Icon(
-                                Icons.edit,
-                                color: AppColors.white,
-                                size: 16,
+                              child: user.avatar.startsWith('assets/')
+                                  ? CircleAvatar(
+                                radius: 50,
+                                backgroundColor: AppColors.dark700,
+                                backgroundImage: AssetImage(user.avatar),
+                              )
+                                  : CircleAvatar(
+                                radius: 50,
+                                backgroundColor: AppColors.dark700,
+                                child: Text(
+                                  user.avatar,
+                                  style: const TextStyle(fontSize: 50),
+                                ),
                               ),
                             ),
+                            // Edit button
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _showAvatarPicker(context, ref, user.avatar);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.neonPurple,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.dark900,
+                                      width: 2,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.neonPurple.withValues(alpha: 0.5),
+                                        blurRadius: 8,
+                                        spreadRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: AppColors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          user.name,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white,
+                            fontFamily: 'Orbitron',
                           ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          user.email,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.grey400,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _StatColumn(
+                              label: 'Streak',
+                              value: '${user.streakDays}',
+                              icon: '🔥',
+                              color: AppColors.neonPink,
+                            ),
+                            _StatColumn(
+                              label: 'XP',
+                              value: '${user.totalXP}',
+                              icon: '⚡',
+                              color: AppColors.neonCyan,
+                            ),
+                            _StatColumn(
+                              label: 'Badges',
+                              value: '${user.badges.length}',
+                              icon: '🏆',
+                              color: AppColors.neonBlue,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      user.name,
+                  ).animate().slideY(duration: 400.ms, curve: Curves.easeOut),
+                  const SizedBox(height: 24),
+
+                  // Badges Section
+                  if (user.badges.isNotEmpty) ...[
+                    const Text(
+                      'Achievements',
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.white, // Fixed: textLight → white
+                        color: AppColors.white,
                         fontFamily: 'Orbitron',
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      user.email,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.grey400, // Fixed: textMuted → grey400
-                        fontFamily: 'Inter',
+                    const SizedBox(height: 12),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
                       ),
+                      itemCount: user.badges.length,
+                      itemBuilder: (context, index) {
+                        return GlassMorphicCard(
+                          glowColor: [
+                            AppColors.neonPurple,
+                            AppColors.neonCyan,
+                            AppColors.neonPink,
+                            AppColors.neonBlue,
+                          ][index % 4],
+                          child: Center(
+                            child: Text(
+                              user.badges[index],
+                              style: const TextStyle(fontSize: 32),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _StatColumn(
-                          label: 'Streak',
-                          value: '${user.streakDays}',
-                          icon: '🔥',
-                          color: AppColors.neonPink,
-                        ),
-                        _StatColumn(
-                          label: 'XP',
-                          value: '${user.totalXP}',
-                          icon: '⚡',
-                          color: AppColors.neonCyan,
-                        ),
-                        _StatColumn(
-                          label: 'Badges',
-                          value: '${user.badges.length}',
-                          icon: '🏆',
-                          color: AppColors.neonBlue,
-                        ),
-                      ],
-                    ),
+                    const SizedBox(height: 24),
                   ],
-                ),
-              ).animate().slideY(duration: 400.ms, curve: Curves.easeOut),
-              const SizedBox(height: 24),
 
-              // Badges Section
-              if (user.badges.isNotEmpty) ...[
-                Text(
-                  'Achievements',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white, // Fixed: textLight → white
-                    fontFamily: 'Orbitron',
+                  // Settings
+                  const Text(
+                    'Preferences',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.white,
+                      fontFamily: 'Orbitron',
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
+                  const SizedBox(height: 12),
+                  _SettingsTile(
+                    title: 'Dark Mode',
+                    icon: Icons.dark_mode,
+                    value: true,
+                    onChanged: (value) {},
+                    color: AppColors.neonPurple,
                   ),
-                  itemCount: user.badges.length,
-                  itemBuilder: (context, index) {
-                    return GlassMorphicCard(
-                      glowColor: [
-                        AppColors.neonPurple,
-                        AppColors.neonCyan,
-                        AppColors.neonPink,
-                        AppColors.neonBlue,
-                      ][index % 4],
-                      child: Center(
-                        child: Text(
-                          user.badges[index],
-                          style: const TextStyle(fontSize: 32),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 24),
-              ],
+                  _SettingsTile(
+                    title: 'Notifications',
+                    icon: Icons.notifications,
+                    value: true,
+                    onChanged: (value) {},
+                    color: AppColors.neonCyan,
+                  ),
+                  const SizedBox(height: 24),
 
-              // Settings
-              Text(
-                'Preferences',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white, // Fixed: textLight → white
-                  fontFamily: 'Orbitron',
-                ),
-              ),
-              const SizedBox(height: 12),
-              _SettingsTile(
-                title: 'Dark Mode',
-                icon: Icons.dark_mode,
-                value: true,
-                onChanged: (value) {},
-                color: AppColors.neonPurple,
-              ),
-              _SettingsTile(
-                title: 'Notifications',
-                icon: Icons.notifications,
-                value: true,
-                onChanged: (value) {},
-                color: AppColors.neonCyan,
-              ),
-              const SizedBox(height: 24),
-
-              // Logout
-              GradientButton(
+                  // Logout
+                  GradientButton(
                     text: 'Logout',
                     onPressed: () {
                       ref.read(authProvider.notifier).logout();
-                      // Note: Using Navigator might not work with go_router, adjust as needed
                       context.go('/login');
                     },
                     gradient: const LinearGradient(
@@ -246,14 +251,16 @@ class ProfileScreen extends ConsumerWidget {
                       vertical: 10,
                     ),
                   )
-                  .animate()
-                  .slideY(
+                      .animate()
+                      .slideY(
                     begin: 1,
                     end: 0,
                     duration: 600.ms,
                     curve: Curves.easeOut,
                   )
-                  .fadeIn(),
+                      .fadeIn(),
+                ],
+              ),
             ],
           ),
         ),
@@ -265,7 +272,6 @@ class ProfileScreen extends ConsumerWidget {
         body: Center(child: Text('Error: $message')),
       );
     } else {
-      // Fallback: unknown state
       return Scaffold(
         appBar: AppBar(title: const Text('Profile')),
         body: const Center(child: Text('Unknown state')),
@@ -321,16 +327,16 @@ class _StatColumn extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: color, // Fixed: primary → dynamic color
+            color: color,
             fontFamily: 'Orbitron',
           ),
         ),
         const SizedBox(height: 2),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 11,
-            color: AppColors.grey400, // Fixed: textMuted → grey400
+            color: AppColors.grey400,
             fontFamily: 'Inter',
           ),
         ),
@@ -363,14 +369,14 @@ class _SettingsTile extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: color), // Fixed: accent → dynamic color
+              Icon(icon, color: color),
               const SizedBox(width: 12),
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.white, // Fixed: textLight → white
+                  color: AppColors.white,
                   fontFamily: 'Inter',
                 ),
               ),
@@ -379,7 +385,7 @@ class _SettingsTile extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeThumbColor: color, // Fixed: primary → dynamic color
+            activeThumbColor: color,
           ),
         ],
       ),

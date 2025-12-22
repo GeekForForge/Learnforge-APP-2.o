@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/course_provider.dart';
 import '../../../core/widgets/particle_background.dart';
-import '../../../core/constants/dummy_data.dart';
 import '../widgets/hero_course_banner.dart';
 import '../widgets/category_filter_chips.dart';
 import '../widgets/course_carousel.dart';
@@ -28,8 +28,45 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Get all courses
-    final allCourses = DummyData.getCourses();
+    // Get courses from provider
+    final courseState = ref.watch(courseProvider);
+    final allCourses = courseState.courses;
+    
+    if (courseState.isLoading) {
+      return const Scaffold(backgroundColor: Colors.transparent, body: Center(child: CircularProgressIndicator()));
+    }
+    
+    if (courseState.error != null) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(child: Text('Error: ${courseState.error}', style: const TextStyle(color: Colors.white))),
+      );
+    }
+    
+    // Check if courses are empty
+    if (allCourses.isEmpty) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Icon(Icons.school_outlined, size: 100, color: Colors.white.withValues(alpha: 0.3)),
+              const SizedBox(height: 20),
+              const Text(
+                'No courses available',
+                style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Courses will appear here once loaded',
+                style: TextStyle(fontSize: 14, color: Colors.white54),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     
     // Filter courses by category
     final filteredCourses = _selectedCategory == 'All'
@@ -62,11 +99,13 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
       return course.isFree;
     }).toList();
 
-    // Featured course for hero banner
-    final featuredCourse = allCourses.firstWhere(
-      (course) => course.isFeatured,
-      orElse: () => allCourses.first,
-    );
+    // Featured course for hero banner - safely handle empty lists
+    final featuredCourse = allCourses.isNotEmpty
+        ? (allCourses.firstWhere(
+            (course) => course.isFeatured,
+            orElse: () => allCourses.first,
+          ))
+        : null;
 
     return ParticleBackground(
       particleCount: 25,
@@ -74,21 +113,22 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         backgroundColor: Colors.transparent,
         body: CustomScrollView(
           slivers: [
-            // Hero Course Banner
-            SliverToBoxAdapter(
-              child: HeroCourseBanner(
-                course: featuredCourse,
-                onContinue: () {
-                  // Navigate to course detail
-                  debugPrint('Continue course: ${featuredCourse.id}');
-                },
-                onBookmark: () {
-                  // Toggle bookmark
-                  debugPrint('Bookmark course: ${featuredCourse.id}');
-                },
-                isBookmarked: false,
+            // Hero Course Banner - only show if we have a featured course
+            if (featuredCourse != null)
+              SliverToBoxAdapter(
+                child: HeroCourseBanner(
+                  course: featuredCourse,
+                  onContinue: () {
+                    // Navigate to course detail
+                    debugPrint('Continue course: ${featuredCourse.id}');
+                  },
+                  onBookmark: () {
+                    // Toggle bookmark
+                    debugPrint('Bookmark course: ${featuredCourse.id}');
+                  },
+                  isBookmarked: false,
+                ),
               ),
-            ),
 
             // Category Filter Chips
             SliverToBoxAdapter(

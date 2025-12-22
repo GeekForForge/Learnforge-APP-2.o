@@ -250,6 +250,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen>
                         child: ChapterList(
                           chapters: selectedCourse.chapters, // FIX
                           lessons: selectedCourse.lessons, // FIX
+                          courseId: selectedCourse.id,
                         ),
                       ),
                       const SizedBox(height: 40),

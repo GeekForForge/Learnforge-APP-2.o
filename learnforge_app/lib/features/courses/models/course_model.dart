@@ -62,6 +62,34 @@ class Lesson {
       if (orderIndex != null) 'orderIndex': orderIndex,
     };
   }
+
+  Lesson copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? videoUrl,
+    String? thumbnail,
+    int? duration,
+    bool? isPreview,
+    bool? isCompleted,
+    List<String>? resources,
+    String? chapterId,
+    int? orderIndex,
+  }) {
+    return Lesson(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      videoUrl: videoUrl ?? this.videoUrl,
+      thumbnail: thumbnail ?? this.thumbnail,
+      duration: duration ?? this.duration,
+      isPreview: isPreview ?? this.isPreview,
+      isCompleted: isCompleted ?? this.isCompleted,
+      resources: resources ?? this.resources,
+      chapterId: chapterId ?? this.chapterId,
+      orderIndex: orderIndex ?? this.orderIndex,
+    );
+  }
 }
 
 class Course {
@@ -125,19 +153,19 @@ class Course {
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      id: json['id'] ?? '',
-      title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      instructor: json['instructor'] ?? '',
+      id: (json['courseId'] ?? json['id'] ?? '').toString(),
+      title: json['courseTitle'] ?? json['title'] ?? '',
+      description: json['courseDescription'] ?? json['description'] ?? '',
+      instructor: json['instructor'] ?? 'LearnForge Instructor',
       instructorImage: json['instructorImage'] ?? '',
-      thumbnail: json['thumbnail'] ?? '',
+      thumbnail: json['courseThumbnail'] ?? json['thumbnail'] ?? 'https://via.placeholder.com/300x200?text=Course',
       rating: (json['rating'] ?? 0).toDouble(),
       totalRatings: json['totalRatings'] ?? 0,
       enrolledCount: json['enrolledCount'] ?? 0,
       level: json['level'] ?? 'Beginner',
       duration: json['duration'] ?? 0,
       totalLessons: json['totalLessons'] ?? 0,
-      price: (json['price'] ?? 0).toDouble(),
+      price: (json['coursePrice'] ?? json['price'] ?? 0).toDouble(),
       isFree: json['isFree'] ?? false,
       isFeatured: json['isFeatured'] ?? false,
       categories: List<String>.from(json['categories'] ?? []),
@@ -168,38 +196,63 @@ class Course {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'instructor': instructor,
-      'instructorImage': instructorImage,
-      'thumbnail': thumbnail,
-      'rating': rating,
-      'totalRatings': totalRatings,
-      'enrolledCount': enrolledCount,
-      'level': level,
-      'duration': duration,
-      'totalLessons': totalLessons,
-      'price': price,
-      'isFree': isFree,
-      'isFeatured': isFeatured,
-      'categories': categories,
-      'learningObjectives': learningObjectives,
 
-      // lessons and chapters (non-nullable lists)
-      'lessons': lessons.map((l) => l.toJson()).toList(),
-      'chapters': chapters.map((c) => c.toJson()).toList(),
 
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-
-      if (language != null) 'language': language,
-      if (subtitle != null) 'subtitle': subtitle,
-      if (prerequisites != null) 'prerequisites': prerequisites,
-      if (youtubePlaylistUrl != null) 'youtubePlaylistUrl': youtubePlaylistUrl,
-      if (firstVideoId != null) 'firstVideoId': firstVideoId,
-    };
+  Course copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? instructor,
+    String? instructorImage,
+    String? thumbnail,
+    double? rating,
+    int? totalRatings,
+    int? enrolledCount,
+    String? level,
+    int? duration,
+    int? totalLessons,
+    double? price,
+    bool? isFree,
+    bool? isFeatured,
+    List<String>? categories,
+    List<String>? learningObjectives,
+    List<Lesson>? lessons,
+    List<ChapterModel>? chapters,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? language,
+    String? subtitle,
+    List<String>? prerequisites,
+    String? youtubePlaylistUrl,
+    String? firstVideoId,
+  }) {
+    return Course(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      instructor: instructor ?? this.instructor,
+      instructorImage: instructorImage ?? this.instructorImage,
+      thumbnail: thumbnail ?? this.thumbnail,
+      rating: rating ?? this.rating,
+      totalRatings: totalRatings ?? this.totalRatings,
+      enrolledCount: enrolledCount ?? this.enrolledCount,
+      level: level ?? this.level,
+      duration: duration ?? this.duration,
+      totalLessons: totalLessons ?? this.totalLessons,
+      price: price ?? this.price,
+      isFree: isFree ?? this.isFree,
+      isFeatured: isFeatured ?? this.isFeatured,
+      categories: categories ?? this.categories,
+      learningObjectives: learningObjectives ?? this.learningObjectives,
+      lessons: lessons ?? this.lessons,
+      chapters: chapters ?? this.chapters,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      language: language ?? this.language,
+      subtitle: subtitle ?? this.subtitle,
+      prerequisites: prerequisites ?? this.prerequisites,
+      youtubePlaylistUrl: youtubePlaylistUrl ?? this.youtubePlaylistUrl,
+      firstVideoId: firstVideoId ?? this.firstVideoId,
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:learnforge_app/features/arena/widgets/leaderboard_entry.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/glass_morphic_card.dart';
@@ -70,7 +71,53 @@ class ArenaScreen extends ConsumerWidget {
                     }).toList(),
                   ),
                 ).animate().slideY(duration: 400.ms, curve: Curves.easeOut),
-                const SizedBox(height: 20),
+                // Start Practice Banner
+                GlassMorphicCard(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.neonBlue.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.flash_on, color: AppColors.neonBlue, size: 32),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Practice Arena',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Test your skills with random MCQs',
+                              style: TextStyle(color: AppColors.grey400, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          // Start Quiz Logic
+                          ref.read(arenaProvider.notifier).startQuiz(topic: 'Java'); // Default for now
+                          context.push('/arena/quiz');
+                        },
+                        icon: const Icon(Icons.arrow_forward_ios, color: AppColors.neonBlue),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Tabs
 
                 // Challenges
                 ...challenges
