@@ -152,6 +152,23 @@ class Course {
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
+    // Helper to safely parse int from string or int
+    int _parseInt(dynamic value, [int defaultValue = 0]) {
+      if (value == null) return defaultValue;
+      if (value is int) return value;
+      if (value is String) return int.tryParse(value) ?? defaultValue;
+      return defaultValue;
+    }
+
+    // Helper to safely parse double from string or num
+    double _parseDouble(dynamic value, [double defaultValue = 0.0]) {
+      if (value == null) return defaultValue;
+      if (value is double) return value;
+      if (value is int) return value.toDouble();
+      if (value is String) return double.tryParse(value) ?? defaultValue;
+      return defaultValue;
+    }
+
     return Course(
       id: (json['courseId'] ?? json['id'] ?? '').toString(),
       title: json['courseTitle'] ?? json['title'] ?? '',
@@ -159,17 +176,17 @@ class Course {
       instructor: json['instructor'] ?? 'LearnForge Instructor',
       instructorImage: json['instructorImage'] ?? '',
       thumbnail: json['courseThumbnail'] ?? json['thumbnail'] ?? 'https://via.placeholder.com/300x200?text=Course',
-      rating: (json['rating'] ?? 0).toDouble(),
-      totalRatings: json['totalRatings'] ?? 0,
-      enrolledCount: json['enrolledCount'] ?? 0,
+      rating: _parseDouble(json['rating']),
+      totalRatings: _parseInt(json['totalRatings']),
+      enrolledCount: _parseInt(json['enrolledCount']),
       level: json['level'] ?? 'Beginner',
-      duration: json['duration'] ?? 0,
-      totalLessons: json['totalLessons'] ?? 0,
-      price: (json['coursePrice'] ?? json['price'] ?? 0).toDouble(),
-      isFree: json['isFree'] ?? false,
-      isFeatured: json['isFeatured'] ?? false,
-      categories: List<String>.from(json['categories'] ?? []),
-      learningObjectives: List<String>.from(json['learningObjectives'] ?? []),
+      duration: _parseInt(json['duration']),
+      totalLessons: _parseInt(json['totalLessons']),
+      price: _parseDouble(json['coursePrice'] ?? json['price']),
+      isFree: json['isFree'] == true || json['isFree'] == 'true',
+      isFeatured: json['isFeatured'] == true || json['isFeatured'] == 'true',
+      categories: (json['categories'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      learningObjectives: (json['learningObjectives'] as List?)?.map((e) => e.toString()).toList() ?? [],
 
       // parse lessons
       lessons: (json['lessons'] as List? ?? [])
@@ -183,16 +200,14 @@ class Course {
           .map((c) => ChapterModel.fromJson(c))
           .toList(),
 
-      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
-      updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.now(),
+      createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? '') ?? DateTime.now(),
 
-      language: json['language'],
-      subtitle: json['subtitle'],
-      prerequisites: json['prerequisites'] != null
-          ? List<String>.from(json['prerequisites'])
-          : null,
-      youtubePlaylistUrl: json['youtubePlaylistUrl'],
-      firstVideoId: json['firstVideoId'],
+      language: json['language']?.toString(),
+      subtitle: json['subtitle']?.toString(),
+      prerequisites: (json['prerequisites'] as List?)?.map((e) => e.toString()).toList(),
+      youtubePlaylistUrl: json['youtubePlaylistUrl']?.toString(),
+      firstVideoId: json['firstVideoId']?.toString(),
     );
   }
 

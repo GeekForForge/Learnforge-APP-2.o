@@ -53,19 +53,60 @@ class CourseCardHorizontal extends StatelessWidget {
             // Thumbnail Section (60%)
             Stack(
               children: [
-                // Thumbnail
-                Container(
-                  height: 132,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                    image: DecorationImage(
-                      image: NetworkImage(course.thumbnail),
-                      fit: BoxFit.cover,
-                    ),
+                // Thumbnail with error handling
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  child: Image.network(
+                    course.thumbnail,
+                    height: 132,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      // Fallback placeholder if image fails to load
+                      return Container(
+                        height: 132,
+                        width: double.infinity,
+                        color: AppColors.dark700,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.school,
+                              size: 48,
+                              color: AppColors.neonPurple.withValues(alpha: 0.5),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Course',
+                              style: TextStyle(
+                                color: AppColors.grey400,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        height: 132,
+                        width: double.infinity,
+                        color: AppColors.dark700,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                            color: AppColors.neonPurple,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
 

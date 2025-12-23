@@ -6,19 +6,27 @@ import 'package:learnforge_app/features/courses/models/course_model.dart';
 
 class CourseRepository {
   Future<List<Course>> getAllCourses() async {
-    // try {
-      final uri = Uri.parse('${ApiConstants.baseUrl}/courses');
+    try {
+      final uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.courses}');
+      print('🔍 Fetching courses from: $uri');
+      
       final response = await http.get(uri);
-
+      print('📡 Response status: ${response.statusCode}');
+      
       if (response.statusCode == 200) {
+        print('✅ Courses loaded successfully');
         final List<dynamic> data = json.decode(response.body);
+        print('📚 Found ${data.length} courses');
         return data.map((json) => Course.fromJson(json)).toList();
       } else {
+        print('❌ Failed with status: ${response.statusCode}');
+        print('Response body: ${response.body}');
         throw Exception('Failed to load courses: ${response.statusCode}');
       }
-    // } catch (e) {
-    //   throw Exception('Network error: $e');
-    // }
+    } catch (e) {
+      print('🚨 Error loading courses: $e');
+      throw Exception('Network error: $e');
+    }
   }
 
   Future<Course> getCourseById(String id) async {

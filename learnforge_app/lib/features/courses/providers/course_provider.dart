@@ -35,18 +35,30 @@ class CourseProvider extends Notifier<CourseState> {
 
   @override
   CourseState build() {
+    print('🏗️ CourseProvider: Initializing...');
     _repository = CourseRepository();
+    print('🏗️ CourseProvider: Calling loadCourses...');
     loadCourses();
+    print('🏗️ CourseProvider: Initialized with empty state');
     return const CourseState();
   }
 
   Future<void> loadCourses() async {
+    print('📚 CourseProvider: loadCourses() started');
     try {
+      print('📚 CourseProvider: Setting loading state to true');
       state = state.copyWith(isLoading: true, error: null);
+      
+      print('📚 CourseProvider: Calling repository.getAllCourses()');
       final courses = await _repository.getAllCourses();
+      
+      print('📚 CourseProvider: Received ${courses.length} courses from repository');
       state = state.copyWith(courses: courses, isLoading: false);
+      print('✅ CourseProvider: State updated with courses');
     } catch (e) {
+      print('❌ CourseProvider: Error occurred: $e');
       state = state.copyWith(error: 'Failed to load courses: $e', isLoading: false);
+      print('❌ CourseProvider: Error state set: ${state.error}');
     }
   }
 

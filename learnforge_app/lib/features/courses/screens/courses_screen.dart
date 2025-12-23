@@ -27,16 +27,34 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    print('🚀 CoursesScreen: initState - Loading courses...');
+    // Force load courses when screen is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('🚀 CoursesScreen: Post-frame callback - calling loadCourses');
+      ref.read(courseProvider.notifier).loadCourses();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Get courses from provider
     final courseState = ref.watch(courseProvider);
     final allCourses = courseState.courses;
     
+    print('🎨 CoursesScreen: Building...');
+    print('🎨 CoursesScreen: isLoading=${courseState.isLoading}');
+    print('🎨 CoursesScreen: error=${courseState.error}');
+    print('🎨 CoursesScreen: courses count=${allCourses.length}');
+    
     if (courseState.isLoading) {
+      print('🎨 CoursesScreen: Showing loading indicator');
       return const Scaffold(backgroundColor: Colors.transparent, body: Center(child: CircularProgressIndicator()));
     }
     
     if (courseState.error != null) {
+      print('🎨 CoursesScreen: Showing error: ${courseState.error}');
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(child: Text('Error: ${courseState.error}', style: const TextStyle(color: Colors.white))),

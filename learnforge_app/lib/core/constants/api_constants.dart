@@ -5,6 +5,11 @@ class ApiConstants {
   // Arena Endpoints
   static const String arenaStart = '/arena/start';
   static const String arenaSubmit = '/arena/submit';
-  static const String arenaLeaderboard = '/arena/leaderboard'; // or /arena-result/leaderboard
+  static const String arenaLeaderboard = '/arena/leaderboard';
   static const String arenaStats = '/arena/stats';
+  
+  // Course Endpoints
+  static const String courses = '/courses';
+  static const String courseById = '/courses'; // Will append /{id}
+  static const String courseSearch = '/courses/search';
 }
