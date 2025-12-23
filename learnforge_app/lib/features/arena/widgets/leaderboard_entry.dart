@@ -19,17 +19,31 @@ class LeaderboardList extends StatelessWidget {
       itemBuilder: (context, index) {
         final entry = entries[index];
         return Container(
-          decoration: entry.isCurrentUser
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppColors.neonPurple.withValues(alpha: 0.5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: entry.isCurrentUser
+                ? Border.all(
+                    color: AppColors.neonCyan.withValues(alpha: 0.8),
                     width: 2,
-                  ),
-                )
-              : null,
+                  )
+                : entry.rank <= 3
+                    ? Border.all(
+                        color: _getRankColors(entry.rank).first.withValues(alpha: 0.6),
+                        width: 1.5,
+                      )
+                    : null,
+            boxShadow: entry.isCurrentUser
+                ? [
+                    BoxShadow(
+                      color: AppColors.neonCyan.withValues(alpha: 0.3),
+                      blurRadius: 10,
+                    ),
+                  ]
+                : null,
+          ),
           child:
               GlassMorphicCard(
+                glowColor: entry.rank <= 3 ? _getRankColors(entry.rank).first : Colors.transparent,
                 child: Row(
                   children: [
                     // Rank Badge

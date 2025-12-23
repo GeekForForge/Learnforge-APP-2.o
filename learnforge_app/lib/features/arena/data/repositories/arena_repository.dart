@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:learnforge_app/core/constants/api_constants.dart';
 import 'package:learnforge_app/features/arena/data/models/question_model.dart';
+import 'package:learnforge_app/core/constants/dummy_data.dart'; // Added Import
 
 class ArenaRepository {
   Future<List<QuestionModel>> getQuestions({
@@ -17,7 +18,7 @@ class ArenaRepository {
     });
 
     try {
-      final response = await http.get(uri);
+      final response = await http.get(uri).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -26,7 +27,10 @@ class ArenaRepository {
         throw Exception('Failed to load questions: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Network error: $e');
+      // Fallback to Dummy Data if backend fails
+      print('API Error: $e. Using Dummy Data.');
+      await Future.delayed(const Duration(seconds: 1)); // Simulate delay
+      return DummyData.getQuestions();
     }
   }
 

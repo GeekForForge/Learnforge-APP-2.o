@@ -10,6 +10,7 @@ class ChallengeModel {
   final int participantCount;
   final String? userRank;
   final DateTime endDate;
+  final String mode; // 'solo', 'collab'
 
   ChallengeModel({
     required this.id,
@@ -23,6 +24,7 @@ class ChallengeModel {
     required this.endDate,
     this.participantCount = 0,
     this.userRank,
+    this.mode = 'solo',
   });
 }
 

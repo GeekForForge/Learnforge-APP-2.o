@@ -18,6 +18,7 @@ import '../features/home/screens/main_screen.dart';
 import '../features/arena/screens/arena_screen.dart';
 import '../features/arena/screens/challenge_detail_screen.dart';
 import '../features/arena/screens/quiz_screen.dart';
+import '../features/arena/screens/practice_arena_screen.dart';
 
 // Chat
 import '../features/chat/screens/chat_screen.dart';
@@ -68,6 +69,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/arena/quiz',
       builder: (context, state) => const QuizScreen(),
+    ),
+    GoRoute(
+      path: '/arena/practice',
+      builder: (context, state) => const PracticeArenaScreen(),
     ),
     GoRoute(
       path: '/challenge/:id',

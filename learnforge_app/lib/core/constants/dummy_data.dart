@@ -1,5 +1,6 @@
 import 'package:uuid/uuid.dart';
 import '../../features/arena/models/challenge_model.dart';
+import '../../features/arena/data/models/question_model.dart'; // Added Import
 import '../../features/chat/models/message_model.dart';
 import '../../features/todo/models/todo_model.dart';
 import '../../features/notifications/models/notification_model.dart';
@@ -362,6 +363,7 @@ class DummyData {
         status: 'live',
         participantCount: 245,
         userRank: '12',
+        mode: 'solo',
       ),
       ChallengeModel(
         id: uuid.v4(),
@@ -374,6 +376,20 @@ class DummyData {
         endDate: now.add(const Duration(days: 2)),
         status: 'upcoming',
         participantCount: 189,
+        mode: 'collab',
+      ),
+      ChallengeModel(
+        id: uuid.v4(),
+        title: 'Team Algo Sprint',
+        description: 'Solve 3 graph problems with a partner.',
+        difficulty: 'Hard',
+        points: 300,
+        startTime: now,
+        endTime: now.add(const Duration(hours: 2)),
+        endDate: now.add(const Duration(hours: 2)),
+        status: 'live',
+        participantCount: 56,
+        mode: 'collab',
       ),
       ChallengeModel(
         id: uuid.v4(),
@@ -387,6 +403,7 @@ class DummyData {
         status: 'completed',
         participantCount: 312,
         userRank: '35',
+        mode: 'solo',
       ),
     ];
   }
@@ -570,4 +587,52 @@ class DummyData {
     '🏆 Keep crushing your tasks!',
     '📈 Your growth is limitless.',
   ];
+
+  // ---------------------------------------------------
+  // ARENA QUESTIONS
+  // ---------------------------------------------------
+  static List<QuestionModel> getQuestions() {
+    return [
+      QuestionModel(
+        id: 101,
+        text: 'What is the time complexity of accessing an element in an Array?',
+        options: ['O(1)', 'O(n)', 'O(log n)', 'O(n log n)'],
+        correctAnswer: 'O(1)',
+        difficulty: 'Easy',
+        topic: 'Arrays',
+      ),
+      QuestionModel(
+        id: 102,
+        text: 'Which data structure follows LIFO principle?',
+        options: ['Queue', 'Stack', 'Linked List', 'Tree'],
+        correctAnswer: 'Stack',
+        difficulty: 'Easy',
+        topic: 'Stack',
+      ),
+      QuestionModel(
+        id: 103,
+        text: 'What is the worst-case time complexity of QuickSort?',
+        options: ['O(n)', 'O(n log n)', 'O(n^2)', 'O(log n)'],
+        correctAnswer: 'O(n^2)',
+        difficulty: 'Medium',
+        topic: 'Algorithms',
+      ),
+      QuestionModel(
+        id: 104,
+        text: 'Which of these is NOT a linear data structure?',
+        options: ['Array', 'LinkedList', 'Stack', 'Tree'],
+        correctAnswer: 'Tree',
+        difficulty: 'Medium',
+        topic: 'Trees',
+      ),
+      QuestionModel(
+        id: 105,
+        text: 'In a graph, what is a cycle?',
+        options: ['A path starts & ends at same vertex', 'A path with no repeated edges', 'A disconnected graph', 'A tree'],
+        correctAnswer: 'A path starts & ends at same vertex',
+        difficulty: 'Medium',
+        topic: 'Graphs',
+      ),
+    ];
+  }
 }

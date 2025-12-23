@@ -609,13 +609,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     onTap: () => context.push('/arena?solo=true'),
                   ),
                   _buildArenaCard(
-                    title: 'Multiplayer Mode',
-                    subtitle: 'Compete with others',
-                    icon: Icons.people_rounded,
-                    color: AppColors.neonCyan,
-                    onTap: () => context.push('/arena?mode=multiplayer'),
-                  ),
-                  _buildArenaCard(
                     title: 'Collaborate Mode',
                     subtitle: 'Team up & learn',
                     icon: Icons.group_work_rounded,

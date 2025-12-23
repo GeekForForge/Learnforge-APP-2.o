@@ -8,11 +8,13 @@ class TextStyles {
     double fontSize = 16,
     FontWeight fontWeight = FontWeight.w400,
     Color color = AppColors.white,
+    double? letterSpacing,
   }) {
     return GoogleFonts.orbitron(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
+      letterSpacing: letterSpacing,
     );
   }
 
@@ -21,13 +23,15 @@ class TextStyles {
     double fontSize = 14,
     FontWeight fontWeight = FontWeight.w400,
     Color color = AppColors.white,
-    FontStyle fontStyle = FontStyle.normal, // Add this
+    FontStyle fontStyle = FontStyle.normal,
+    double? letterSpacing,
   }) {
     return GoogleFonts.inter(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
-      fontStyle: fontStyle, // Add this
+      fontStyle: fontStyle,
+      letterSpacing: letterSpacing,
     );
   }
 
